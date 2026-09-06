@@ -98,6 +98,63 @@
     font-size:9px; color:var(--muted); margin-top:2px;
   }
 
+  /* ---------- 情報ボタン（最高記録の下） ---------- */
+  .info-btn-wrapper {
+    position: fixed;
+    top: 118px;
+    left: 20px;
+    z-index: 50;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .info-btn-wrapper.hidden-ui {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9);
+  }
+  .info-btn {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--panel-edge);
+    color: var(--gold-soft);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    width: 94px;
+    text-align: center;
+  }
+  .info-btn:hover {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+  .info-btn .badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--vermillion);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--panel);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .info-btn .badge.hidden {
+    opacity: 0;
+    transform: scale(0.5);
+    pointer-events: none;
+  }
+
   /* ---------- Top Navigation ---------- */
   .top-nav{
     position:fixed; top:20px; right:20px;
@@ -288,7 +345,7 @@
   }
 
   /* ---------- Shop/Setting Modal Overlay ---------- */
-  #shop-overlay, #settings-overlay {
+  #shop-overlay, #settings-overlay, #info-overlay {
     position: fixed; inset: 0;
     background: rgba(20, 24, 18, 0.92);
     backdrop-filter: blur(8px);
@@ -297,10 +354,10 @@
     opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
   }
-  #shop-overlay.active, #settings-overlay.active {
+  #shop-overlay.active, #settings-overlay.active, #info-overlay.active {
     opacity: 1; pointer-events: auto;
   }
-  .shop-card, .settings-card {
+  .shop-card, .settings-card, .info-card {
     background: var(--panel);
     border: 1px solid var(--panel-edge);
     border-radius: 16px;
@@ -316,10 +373,11 @@
     -webkit-overflow-scrolling: touch;
   }
   #shop-overlay.active .shop-card,
-  #settings-overlay.active .settings-card {
+  #settings-overlay.active .settings-card,
+  #info-overlay.active .info-card {
     transform: translateY(0);
   }
-  .shop-title, .settings-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 4px 0; letter-spacing: 0.05em; }
+  .shop-title, .settings-title, .info-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 4px 0; letter-spacing: 0.05em; }
   .shop-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
   .shop-currency {
     display: flex; flex-wrap: wrap;
@@ -372,7 +430,7 @@
   .shop-item-btn.equip-btn{ background:var(--jade); }
   .shop-item-btn.owned-btn{ background:var(--muted); }
 
-  .shop-close-btn, .settings-close-btn {
+  .shop-close-btn, .settings-close-btn, .info-close-btn {
     background: transparent;
     border: 1px solid var(--muted);
     color: var(--muted);
@@ -385,9 +443,66 @@
     margin-top: 16px;
     align-self:center;
   }
-  .shop-close-btn:hover, .settings-close-btn:hover {
+  .shop-close-btn:hover, .settings-close-btn:hover, .info-close-btn:hover {
     border-color: var(--text);
     color: var(--text);
+  }
+
+  /* ---------- 情報モーダル内コンテンツ ---------- */
+  .info-content {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.9;
+    padding: 4px 0;
+  }
+  .info-content h3 {
+    color: var(--gold-soft);
+    font-size: 18px;
+    margin: 16px 0 8px 0;
+    border-bottom: 1px solid var(--panel-edge);
+    padding-bottom: 6px;
+  }
+  .info-content h3:first-child {
+    margin-top: 0;
+  }
+  .info-content .event-item {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--gold);
+  }
+  .info-content .event-item .event-date {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .info-content .event-item .event-title {
+    font-weight: 700;
+    color: var(--gold-soft);
+  }
+  .info-content .event-item .event-desc {
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0.8;
+  }
+  .info-content .notice-item {
+    background: rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .info-content .notice-item .notice-date {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .info-content .version-info {
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 12px;
+    border-top: 1px solid var(--panel-edge);
+    padding-top: 10px;
   }
 
   /* ---------- 設定項目 ---------- */
@@ -820,7 +935,7 @@
   @media (max-width:480px){
     .hud{ margin-bottom:24px; }
     .word-stage{ padding:32px 16px; }
-    .shop-card, .settings-card, .achievement-card{ padding:20px; margin:10px; }
+    .shop-card, .settings-card, .achievement-card, .info-card{ padding:20px; margin:10px; }
     #achievement-toast { max-width: 260px; padding: 12px 16px; }
     #achievement-toast .toast-name { font-size: 16px; }
     .setting-group .sound-row {
@@ -848,6 +963,32 @@
     }
     .rainbow-overlay .rainbow-text {
       font-size: clamp(32px, 10vw, 48px);
+    }
+    .info-btn-wrapper {
+      top: 112px;
+      left: 14px;
+    }
+    .info-btn {
+      width: 82px;
+      font-size: 11px;
+      padding: 4px 12px;
+    }
+    .info-btn .badge {
+      width: 16px;
+      height: 16px;
+      font-size: 9px;
+      top: -5px;
+      right: -5px;
+    }
+    .hanko {
+      width: 78px;
+      height: 78px;
+    }
+    .hanko-score {
+      font-size: 20px;
+    }
+    .hanko-label {
+      font-size: 10px;
     }
   }
 </style>
@@ -895,6 +1036,14 @@
     <span class="hanko-sub" id="total-typed-display">入力:0字</span>
   </div>
 
+  <!-- 情報ボタン（最高記録の下） -->
+  <div class="info-btn-wrapper" id="info-btn-wrapper">
+    <button class="info-btn" id="info-open-btn">
+      📢 情報
+      <span class="badge" id="info-badge">!</span>
+    </button>
+  </div>
+
   <div class="top-nav" id="top-nav">
     <button id="achievement-open-btn" class="nav-btn achievement-btn">🏆 実績</button>
     <button id="shop-open-btn" class="nav-btn">🏪 ショップ</button>
@@ -925,6 +1074,17 @@
       <div class="shop-warning">💡 累計入力文字数が条件を満たせば購入可能（入力文字数は減りません）</div>
       <div id="shop-items-container"></div>
       <button id="shop-close-btn" class="shop-close-btn">閉じる</button>
+    </div>
+  </div>
+
+  <!-- Info Modal -->
+  <div id="info-overlay">
+    <div class="info-card">
+      <h2 class="info-title">📢 お知らせ & イベント情報</h2>
+      <div class="info-content" id="info-content">
+        <!-- JSで動的に生成 -->
+      </div>
+      <button id="info-close-btn" class="info-close-btn">閉じる</button>
     </div>
   </div>
 
@@ -1061,6 +1221,19 @@
 
   // ============ お知らせバージョン ============
   const ANNOUNCE_VERSION = "v1.0.0";
+
+  // ============ 情報コンテンツデータ ============
+  const INFO_DATA = {
+    events: [
+      { date: '2026年9月5日', title: '🎉 サイト公開！', desc: 'どんぐりタイピングがついに公開されました！' },
+    ],
+    notices: [
+      { date: '2026年9月5日', text: '🎉 どんぐりタイピングがGoogleに公開されました！' },
+      { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
+    ],
+    version: 'v1.1.0',
+    updateDate: '2026年9月7日'
+  };
 
   // ============ 単語データ ============
   const WORD_POOL = [
@@ -1220,7 +1393,6 @@
     'phantom': { name: '幻のどんぐり', desc: '神秘的な紫色の輝きを放つ幻のどんぐり', price: 0, priceType: 'none', effect: 'phantom', shape: 'phantom', fontColor: '#bb66dd' },
     'double': { name: 'ダブルどんぐり', desc: 'スコアが2倍になるどんぐり', price: 0, priceType: 'none', effect: 'double', shape: 'normal', fontColor: '#ffd700' },
     'beast': { name: '野獣先輩どんぐり', desc: 'やりますねぇ', price: 0, priceType: 'none', effect: 'beast', shape: 'beast', fontColor: '#ffffff' },
-    // ★ 新規追加：ふわふわ、トゲトゲ、星形
     'fluffy': { name: 'ふわふわどんぐり', desc: '綿毛のようにふわふわ', price: 30000, priceType: 'coin', effect: 'fluffy', shape: 'fluffy', fontColor: '#ffb6c1' },
     'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 35000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00' },
     'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700' },
@@ -1237,6 +1409,9 @@
     phantomAcornUnlocked: false, doubleAcornUnlocked: false,
     beastAcornUnlocked: false, beastBgUnlocked: false,
     announceVersion: '',
+    infoRead: false,
+    votedOption: null, // 投票した選択肢
+    voteCounts: { optionA: 0, optionB: 0 }, // 投票数
   };
 
   // --- デフォルト音声 ---
@@ -1277,7 +1452,8 @@
     const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
-      beastAcornUnlocked, beastBgUnlocked, announceVersion };
+      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoRead,
+      votedOption, voteCounts };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1294,7 +1470,8 @@
       codeVerified = false, superMode = false, normalMode = false,
       phantomAcornUnlocked = false, doubleAcornUnlocked = false,
       beastAcornUnlocked = false, beastBgUnlocked = false,
-      announceVersion = '';
+      announceVersion = '', infoRead = false,
+      votedOption = null, voteCounts = { optionA: 0, optionB: 0 };
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -1428,6 +1605,8 @@
   const menuScreen = document.getElementById('menu-screen');
   const gameScreen = document.getElementById('game-screen');
   const topNav = document.getElementById('top-nav');
+  const infoBtnWrapper = document.getElementById('info-btn-wrapper');
+  const infoBadge = document.getElementById('info-badge');
   const highscoreValueEl = document.getElementById('highscore-value');
   const totalTypedDisplayEl = document.getElementById('total-typed-display');
   const timerEl = document.getElementById('timer');
@@ -1446,6 +1625,8 @@
   const shopHighscoreEl = document.getElementById('shop-highscore');
   const shopTotalTypedEl = document.getElementById('shop-total-typed');
   const settingsOverlay = document.getElementById('settings-overlay');
+  const infoOverlay = document.getElementById('info-overlay');
+  const infoContent = document.getElementById('info-content');
   const settingDisplayBtn = document.getElementById('setting-display-btn');
   const resetDataBtn = document.getElementById('reset-data-btn');
   const hankoBadge = document.getElementById('hanko-badge');
@@ -1480,6 +1661,96 @@
   const MIN_ACORN_COUNT = 10;
   let fireworks = [], villageHouses = [];
   let starryYOffset = 0;
+
+  // ============ 情報バッジ制御 ============
+  function updateInfoBadge() {
+    if (!infoRead) {
+      infoBadge.classList.remove('hidden');
+    } else {
+      infoBadge.classList.add('hidden');
+    }
+  }
+
+  function markInfoAsRead() {
+    if (!infoRead) {
+      infoRead = true;
+      saveData();
+      updateInfoBadge();
+    }
+  }
+
+  // ============ 情報モーダル表示 ============
+  function renderInfoContent() {
+    let html = '';
+    
+    html += '<h3>🎪 イベント</h3>';
+    INFO_DATA.events.forEach(ev => {
+      html += `<div class="event-item">
+        <div class="event-date">${ev.date}</div>
+        <div class="event-title">${ev.title}</div>
+        <div class="event-desc">${ev.desc}</div>
+      </div>`;
+    });
+
+    html += '<h3>📰 お知らせ</h3>';
+    INFO_DATA.notices.forEach(notice => {
+      html += `<div class="notice-item">
+        <div class="notice-date">${notice.date}</div>
+        ${notice.text}
+      </div>`;
+    });
+
+    // ===== 投票セクション =====
+    html += '<h3>🗳️ 投票コーナー</h3>';
+    html += `<div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:14px;margin-bottom:6px;">`;
+    html += `<p style="margin:0 0 10px 0;font-weight:700;color:var(--gold-soft);">どんぐりタイピングに実装してほしい機能は？</p>`;
+    html += `<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
+    if (votedOption) {
+      html += `<span style="background:rgba(160,115,70,0.2);padding:6px 16px;border-radius:6px;font-size:13px;">✅ 投票済み: <strong>${votedOption === 'optionA' ? '🎮 ミニゲーム' : '🌐 ランキング'}</strong></span>`;
+    } else {
+      html += `<button class="vote-btn" data-option="optionA" style="background:var(--gold);border:none;color:var(--ink);padding:8px 20px;border-radius:6px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s;">🎮 ミニゲーム</button>`;
+      html += `<button class="vote-btn" data-option="optionB" style="background:var(--gold);border:none;color:var(--ink);padding:8px 20px;border-radius:6px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s;">🌐 ランキング</button>`;
+    }
+    html += `</div>`;
+    html += `<div style="margin-top:10px;font-size:12px;color:var(--muted);">📊 現在の投票数: <span id="vote-result-display">🎮 ${voteCounts.optionA}票 / 🌐 ${voteCounts.optionB}票</span></div>`;
+    html += `</div>`;
+
+    html += `<div class="version-info">📌 バージョン ${INFO_DATA.version}（${INFO_DATA.updateDate}更新）</div>`;
+
+    infoContent.innerHTML = html;
+
+    // 投票ボタンのイベント
+    infoContent.querySelectorAll('.vote-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (votedOption) return;
+        const option = btn.dataset.option;
+        votedOption = option;
+        if (option === 'optionA') voteCounts.optionA++;
+        else voteCounts.optionB++;
+        saveData();
+        renderInfoContent(); // 再描画
+        showPopup('🗳️ 投票ありがとうございます！');
+      });
+    });
+  }
+
+  // ============ 投票結果表示（コード9900） ============
+  function showVoteResult() {
+    const total = voteCounts.optionA + voteCounts.optionB;
+    if (total === 0) {
+      showPopup('📊 まだ投票はありません');
+      return;
+    }
+    const msg = `🎮 ミニゲーム: ${voteCounts.optionA}票　🌐 ランキング: ${voteCounts.optionB}票`;
+    showPopup('📊 ' + msg);
+  }
+
+  function openInfoModal() {
+    renderInfoContent();
+    infoOverlay.classList.add('active');
+    markInfoAsRead();
+  }
 
   // ============ 実績システム ============
   function checkAchievements() {
@@ -1806,7 +2077,6 @@
       'phantom': { cap: '#4a1a6a', nut: '#8a4aaa', glow: 'rgba(155,89,182,0.6)', particleColors: ['#8a4aaa','#bb66dd','#6a2a8a','#dd88ff'] },
       'double': { cap: '#654321', nut: '#a07346', glow: 'rgba(255,215,0,0.3)', particleColors: ['#654321','#a07346','#8B6B3D'] },
       'beast': { cap: '#8B6B3D', nut: '#1a2a4a', glow: 'rgba(255,255,255,0.4)', particleColors: ['#ffffff','#eeeeee','#dddddd'] },
-      // ★ 新規
       'fluffy': { cap: '#e8a0b0', nut: '#ffb6c1', glow: 'rgba(255,182,193,0.4)', particleColors: ['#ffb6c1','#ffc0cb','#ffd1dc'] },
       'spiky': { cap: '#8B5A00', nut: '#ff8c00', glow: 'rgba(255,140,0,0.4)', particleColors: ['#ff8c00','#ffa500','#ffb347'] },
       'star': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.4)', particleColors: ['#ffd700','#ffec8b','#fff8dc'] },
@@ -2129,21 +2399,21 @@
   function createSpecialParticles(x, y, skin) {
     const style = getAcornStyle(skin);
     const colors = style.particleColors;
-    const count = skin === 'phantom' ? 3 + Math.floor(Math.random() * 3) :
-                  (skin === 'beast' ? 4 + Math.floor(Math.random() * 4) : 8 + Math.floor(Math.random() * 12));
+    const count = skin === 'phantom' ? 2 + Math.floor(Math.random() * 2) :
+                  (skin === 'beast' ? 2 + Math.floor(Math.random() * 2) : 3 + Math.floor(Math.random() * 3));
     const particles = [];
     for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2, speed = 2 + Math.random() * 6;
+      const angle = Math.random() * Math.PI * 2, speed = 2 + Math.random() * 4;
       const color = colors[Math.floor(Math.random() * colors.length)];
       const type = skin === 'beast' ? 'white' : (Math.random() > 0.6 ? 'star' : (Math.random() > 0.5 ? 'circle' : 'sparkle'));
       particles.push({ x: x + (Math.random() - 0.5) * 10, y: y + (Math.random() - 0.5) * 10,
         vx: Math.cos(angle) * speed * (0.5 + Math.random() * 0.5), vy: Math.sin(angle) * speed * (0.5 + Math.random() * 0.5) - 2,
-        life: 1.0, decay: 0.008 + Math.random() * 0.015, size: 3 + Math.random() * 8,
+        life: 1.0, decay: 0.008 + Math.random() * 0.015, size: 3 + Math.random() * 6,
         color: skin === 'beast' ? '#ffffff' : color, type: type,
         rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1, hue: Math.random() * 360 });
     }
     if (skin === 'phantom') {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 1; i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
         particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
@@ -2152,7 +2422,7 @@
           rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
     } else if (skin === 'beast') {
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 3; i++) {
         const angle = Math.random() * Math.PI * 2, speed = 0.5 + Math.random() * 2;
         particles.push({ x: x + (Math.random() - 0.5) * 8, y: y + (Math.random() - 0.5) * 8,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2,
@@ -2162,7 +2432,7 @@
       }
       playBeastSound();
     } else if (skin === 'gold' || skin === 'cosmic') {
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 2; i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
         particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
@@ -2181,14 +2451,14 @@
       const currentX = a.x + Math.sin(a.wobble) * 3, currentY = a.y + 15, skin = a.skin;
       const style = getAcornStyle(skin), colors = style.particleColors;
       const capColor = skin === 'beast' ? '#8B6B3D' : (colors[0] || '#654321');
+      
       fragments.push({ x: currentX, y: currentY, vx: (Math.random() - 0.5) * 6, vy: -4 - Math.random() * 3,
         rot: Math.random() * Math.PI, vrot: (Math.random() - 0.5) * 0.2, type: 'cap', alpha: 1, color: capColor });
-      for(let i=0; i<3; i++) {
-        fragments.push({ x: currentX + (Math.random()-0.5)*8, y: currentY + 8,
-          vx: (Math.random()-0.5)*8, vy: -2 - Math.random()*5,
-          rot: Math.random() * Math.PI, vrot: (Math.random()-0.5)*0.3, type: 'nut', alpha: 1,
-          color: skin === 'beast' ? '#1a2a4a' : (colors[i % colors.length] || colors[0]) });
-      }
+      fragments.push({ x: currentX + (Math.random()-0.5)*8, y: currentY + 8,
+        vx: (Math.random()-0.5)*8, vy: -2 - Math.random()*5,
+        rot: Math.random() * Math.PI, vrot: (Math.random()-0.5)*0.3, type: 'nut', alpha: 1,
+        color: skin === 'beast' ? '#1a2a4a' : (colors[0] || '#a07346') });
+      
       const specials = createSpecialParticles(currentX, currentY, skin);
       specialParticles.push(...specials);
       if(acorns.length < MIN_ACORN_COUNT) spawnAcornTop();
@@ -2392,7 +2662,6 @@
       else if(i===w.typedLength) cls='ch-next';
       return '<span class="'+cls+'">'+ch+'</span>';
     }).join('');
-    // ★ フォントカラーを更新
     updateFontColor();
   }
 
@@ -2412,6 +2681,7 @@
   function updateUIVisibility() {
     const isGame = (state === 'waiting' || state === 'playing' || state === 'result');
     hankoBadge.classList.toggle('hidden-ui', isGame);
+    infoBtnWrapper.classList.toggle('hidden-ui', isGame);
     topNav.classList.toggle('hidden-ui', isGame);
   }
 
@@ -2460,6 +2730,7 @@
     if (inputHash === CORRECT_HASH_PHANTOM) return 'phantom';
     if (inputHash === CORRECT_HASH_DOUBLE) return 'double';
     if (inputHash === CORRECT_HASH_BEAST) return 'beast';
+    if (input === '9900') return 'vote_result';
     return false;
   }
   function hashPassword(pwd) {
@@ -2682,6 +2953,7 @@
     else if (result === 'phantom') { codeVerified = true; codeStatus.textContent = '🌀 幻のどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockPhantomAcorn(); saveData(); }
     else if (result === 'double') { codeVerified = true; codeStatus.textContent = '🔮 ダブルどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockDoubleAcorn(); saveData(); }
     else if (result === 'beast') { codeVerified = true; codeStatus.textContent = '🐻 野獣先輩どんぐり＆部屋を解き放ちました！'; codeStatus.className = 'code-status success'; unlockBeastAcorn(); unlockBeastBg(); saveData(); }
+    else if (result === 'vote_result') { showVoteResult(); codeStatus.textContent = '📊 投票結果を表示しました'; codeStatus.className = 'code-status success'; }
     else { codeStatus.textContent = '❌ 認証失敗！ アクセス拒否'; codeStatus.className = 'code-status error'; console.warn('コード認証失敗:', input); }
     codeInput.value = '';
   }
@@ -2697,6 +2969,10 @@
   announceDismiss.addEventListener('click', () => { announceVersion = '1.0'; saveData(); hideAnnounce(); });
 
   // ============ イベントリスナー ============
+  document.getElementById('info-open-btn').addEventListener('click', (e) => { e.stopPropagation(); openInfoModal(); });
+  document.getElementById('info-close-btn').addEventListener('click', () => { infoOverlay.classList.remove('active'); });
+  infoOverlay.addEventListener('click', (e) => { if(e.target === infoOverlay) infoOverlay.classList.remove('active'); });
+
   document.getElementById('achievement-open-btn').addEventListener('click', () => { updateAchievementUI(); achievementOverlay.classList.add('active'); });
   document.getElementById('achievement-close-btn').addEventListener('click', () => { achievementOverlay.classList.remove('active'); });
   achievementOverlay.addEventListener('click', (e) => { if(e.target === achievementOverlay) achievementOverlay.classList.remove('active'); });
@@ -2749,6 +3025,9 @@
       phantomAcornUnlocked=d.phantomAcornUnlocked || false; doubleAcornUnlocked=d.doubleAcornUnlocked || false;
       beastAcornUnlocked=d.beastAcornUnlocked || false; beastBgUnlocked=d.beastBgUnlocked || false;
       announceVersion = d.announceVersion || '';
+      infoRead = d.infoRead || false;
+      votedOption = d.votedOption || null;
+      voteCounts = d.voteCounts || { optionA: 0, optionB: 0 };
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -2756,15 +3035,15 @@
       soundAudioEls = { typed: null, start: null, result: null, bgm: null };
       soundUrls = { typed: '', start: '', result: '', bgm: '' };
       for (const type of ['typed','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
-      stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor();
+      stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor(); updateInfoBadge();
     }
   });
 
   hankoBadge.addEventListener('click', () => { updateShopUI(); shopOverlay.classList.add('active'); });
 
   document.addEventListener('keydown', (e) => {
-    if(shopOverlay.classList.contains('active') || settingsOverlay.classList.contains('active') || achievementOverlay.classList.contains('active')) {
-      if(e.key === 'Escape') { e.preventDefault(); shopOverlay.classList.remove('active'); settingsOverlay.classList.remove('active'); achievementOverlay.classList.remove('active'); }
+    if(shopOverlay.classList.contains('active') || settingsOverlay.classList.contains('active') || achievementOverlay.classList.contains('active') || infoOverlay.classList.contains('active')) {
+      if(e.key === 'Escape') { e.preventDefault(); shopOverlay.classList.remove('active'); settingsOverlay.classList.remove('active'); achievementOverlay.classList.remove('active'); infoOverlay.classList.remove('active'); }
       return;
     }
     if(state === 'menu') { if(e.code === 'Space') { e.preventDefault(); initGame(); } return; }
@@ -2812,6 +3091,9 @@
     phantomAcornUnlocked = data.phantomAcornUnlocked || false; doubleAcornUnlocked = data.doubleAcornUnlocked || false;
     beastAcornUnlocked = data.beastAcornUnlocked || false; beastBgUnlocked = data.beastBgUnlocked || false;
     announceVersion = data.announceVersion || '';
+    infoRead = data.infoRead || false;
+    votedOption = data.votedOption || null;
+    voteCounts = data.voteCounts || { optionA: 0, optionB: 0 };
 
     highscoreValueEl.textContent = highscore;
     updateTotalTypedDisplay();
@@ -2822,11 +3104,11 @@
     updatePhantomFont();
     updateShopUI();
     updateAnnounceVisibility();
+    updateInfoBadge();
     initAudio();
     for (const type of ['typed','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
     setTimeout(async () => { await restoreSavedSounds(); }, 500);
     checkAchievements();
-    // ★ フォントカラーを初期適用
     updateFontColor();
   }
 
