@@ -572,6 +572,39 @@
     color: var(--muted);
     opacity: 0.5;
   }
+  .setting-group .sound-row input[type="range"] {
+    flex: 1;
+    min-width: 120px;
+    accent-color: var(--gold);
+    background: var(--panel-edge);
+    height: 4px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .setting-group .sound-row input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: 2px solid var(--panel);
+  }
+  .setting-group .sound-row input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: 2px solid var(--panel);
+  }
+  .setting-group .sound-row .range-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-soft);
+    min-width: 28px;
+    text-align: center;
+  }
   .setting-group .sound-exec-btn {
     padding: 6px 16px;
     border-radius: 6px;
@@ -733,8 +766,46 @@
     25%{ transform:translateX(-6px); }
     75%{ transform:translateX(6px); }
   }
-  .kana-display{ font-size:clamp(30px,6vw,44px); font-weight:700; letter-spacing:0.06em; }
-  .romaji-display{ font-family:'Zen Maru Gothic', sans-serif; font-size:clamp(18px,4vw,24px); font-weight:700; letter-spacing:0.04em; }
+
+  /* --- 新しいレイアウト --- */
+  .word-display-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 4px;
+  }
+  .kana-small {
+    font-size: clamp(14px, 2.5vw, 20px);
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    min-height: 1.8em;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  .kana-small.hidden {
+    opacity: 0;
+    min-height: 0.5em;
+  }
+  .kanji-display {
+    font-size: clamp(32px, 6vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--gold-soft);
+    min-height: 1.4em;
+  }
+  .romaji-display {
+    font-family:'Zen Maru Gothic', sans-serif;
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    min-height: 1.6em;
+  }
+  .romaji-display.hidden {
+    opacity: 0;
+    min-height: 0.5em;
+  }
   .ch-done{ color:var(--jade); }
   .ch-next{ color:var(--paper); border-bottom:2px solid var(--gold); }
   .ch-pending{ color:var(--muted); }
@@ -990,6 +1061,15 @@
     .hanko-label {
       font-size: 10px;
     }
+    .kana-small {
+      font-size: 12px !important;
+    }
+    .kanji-display {
+      font-size: clamp(26px, 5vw, 36px) !important;
+    }
+    .romaji-display {
+      font-size: clamp(14px, 3vw, 20px) !important;
+    }
   }
 </style>
 <base target="_blank">
@@ -1093,6 +1173,30 @@
     <div class="settings-card">
       <h2 class="settings-title">⚙️ 設定</h2>
       
+      <!-- ====== ★ どんぐりの破片量スライダー ====== -->
+      <div class="setting-group">
+        <label>💫 どんぐりの破片量</label>
+        <div class="sound-row">
+          <input type="range" id="particle-slider" min="0" max="20" value="5" step="1">
+          <span class="range-value" id="particle-count-display">5</span>
+        </div>
+        <div class="sound-status" id="status-particle">破片の数を調整します（0で非表示）</div>
+      </div>
+
+      <!-- ====== ★ 表示設定 ====== -->
+      <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
+        <label>📖 表示設定</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
+          <button id="toggle-romaji-btn" class="setting-toggle" style="flex:1;min-width:80px;padding:6px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;transition:all 0.2s;">
+            ローマ字: 表示
+          </button>
+          <button id="toggle-kana-small-btn" class="setting-toggle" style="flex:1;min-width:80px;padding:6px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;transition:all 0.2s;">
+            ひらがな: 表示
+          </button>
+        </div>
+        <div class="sound-status" id="status-display">ローマ字とひらがなの表示/非表示を切り替え</div>
+      </div>
+
       <div class="setting-group">
         <label>🎵 タイプ音（正解時）</label>
         <div class="sound-row">
@@ -1206,8 +1310,11 @@
     </div>
     <div class="word-stage" id="word-stage">
       <div class="popup" id="popup"></div>
-      <div class="kana-display" id="kana-display"></div>
-      <div class="romaji-display" id="romaji-display"></div>
+      <div class="word-display-area">
+        <div class="kana-small" id="kana-small"></div>
+        <div class="kanji-display" id="kanji-display"></div>
+        <div class="romaji-display" id="romaji-display"></div>
+      </div>
     </div>
     <p class="esc-hint">Esc で中断</p>
   </section>
@@ -1243,9 +1350,8 @@
       { date: '2026年9月5日', text: '🎉 どんぐりタイピングがGoogleに公開されました！' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
-    version: 'v1.1.2',
+    version: 'v1.2.0',
     updateDate: '2026年9月7日',
-    // ===== お知らせ詳細リンク =====
     detailLinks: [
       { title: 'どんぐりや背景の取引実装した方がいいと思いますか？', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfMD6Ez3q3nsBIBMWbLzk9SRBucBP9VccpyO8UnYAjl-EaIgg/viewform?usp=publish-editor', desc: '投票終了は9月12日（土曜日）まで' },
     ]
@@ -1373,8 +1479,6 @@
     { kana: "にほんこくけんぽう", kanji: "日本国憲法" },{ kana: "べんきょうちゅう", kanji: "勉強中" },{ kana: "でんわばんごう", kanji: "電話番号" },{ kana: "さぼてんのはな", kanji: "サボテンの花" },
     { kana: "てれびのりもこん", kanji: "テレビのリモコン" },{ kana: "かぼちゃのばしゃ", kanji: "かぼちゃの馬車" },{ kana: "けんとうをいのる", kanji: "健闘を祈る" },
     { kana: "ひとのきもちとかないんか", kanji: "人の気持ちとかないんか" },{ kana: "ぽっぷたいぴんぐ", kanji: "ポップタイピング" },{ kana: "ちゅうごくたいしかん", kanji: "中国大使館" },
-    { kana: "きみにじゅうよじかんてれびでれるよ", kanji: "君二十四時間テレビ出れるよ" }
-    
   ];
 
   // ============ 実績定義 ============
@@ -1447,6 +1551,9 @@
     beastAcornUnlocked: false, beastBgUnlocked: false,
     announceVersion: '',
     infoRead: false,
+    particleCount: 5,
+    showRomaji: true,
+    showKanaSmall: true,
   };
 
   // --- デフォルト音声 ---
@@ -1492,7 +1599,8 @@
     const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
-      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoRead };
+      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoRead, particleCount,
+      showRomaji, showKanaSmall };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1509,7 +1617,10 @@
       codeVerified = false, superMode = false, normalMode = false,
       phantomAcornUnlocked = false, doubleAcornUnlocked = false,
       beastAcornUnlocked = false, beastBgUnlocked = false,
-      announceVersion = '', infoRead = false;
+      announceVersion = '', infoRead = false,
+      particleCount = 5,
+      showRomaji = true,
+      showKanaSmall = true;
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -1593,7 +1704,7 @@
   function playStartSound() { const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
   function playResultSound() { const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
 
-  // --- 音声設定（プレビュー再生なし） ---
+  // --- 音声設定 ---
   async function applySoundSetting(type, url) {
     const statusEl = document.getElementById('status-' + type);
     statusEl.textContent = '⏳ 読み込み中...';
@@ -1613,19 +1724,14 @@
           saveData();
           statusEl.textContent = '✅ 音声を設定しました（実際の使用時に再生されます）';
           statusEl.className = 'sound-status success';
-          // BGMだけは設定後に即座にループ開始（ゲーム中に使われるため）
-          if (type === 'bgm') {
-            // ゲーム中でなければ再生しない（メニューでは再生しない）
-            if (state === 'waiting' || state === 'playing') {
-              playBgmLoop();
-            }
+          if (type === 'bgm' && (state === 'waiting' || state === 'playing')) {
+            playBgmLoop();
           }
         } else {
           statusEl.textContent = '❌ 音声の読み込みに失敗しました';
           statusEl.className = 'sound-status error';
         }
       } else {
-        // URLが空の場合はデフォルトに戻す
         if (type === 'typed') soundTyped = '';
         else if (type === 'start') soundStart = '';
         else if (type === 'result') soundResult = '';
@@ -1661,7 +1767,8 @@
   const hudTimerEl = document.getElementById('hud-timer');
   const scoreValueEl = document.getElementById('score-value');
   const multiplierValueEl = document.getElementById('multiplier-value');
-  const kanaDisplayEl = document.getElementById('kana-display');
+  const kanaSmallEl = document.getElementById('kana-small');
+  const kanjiDisplayEl = document.getElementById('kanji-display');
   const romajiDisplayEl = document.getElementById('romaji-display');
   const wordStageEl = document.getElementById('word-stage');
   const popupEl = document.getElementById('popup');
@@ -1699,6 +1806,10 @@
   const soundBgmInput = document.getElementById('sound-bgm');
   const codeInput = document.getElementById('code-input');
   const codeStatus = document.getElementById('code-status');
+  const particleSlider = document.getElementById('particle-slider');
+  const particleCountDisplay = document.getElementById('particle-count-display');
+  const toggleRomajiBtn = document.getElementById('toggle-romaji-btn');
+  const toggleKanaSmallBtn = document.getElementById('toggle-kana-small-btn');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -1749,7 +1860,6 @@
       </div>`;
     });
 
-    // ===== 詳細リンクセクション（押すと詳細ページへ） =====
     html += '<h3>投票</h3>';
     html += `<div style="display:flex;flex-direction:column;gap:8px;margin:4px 0 10px 0;">`;
     INFO_DATA.detailLinks.forEach(link => {
@@ -1860,25 +1970,55 @@
     const skin = ACORN_SKINS[equippedAcorn];
     const fontColor = skin ? skin.fontColor : '#d2b48c';
     
-    kanaDisplayEl.style.color = fontColor;
+    kanjiDisplayEl.style.color = fontColor;
     scoreValueEl.style.color = fontColor;
     document.querySelector('.title').style.color = fontColor;
     modalScoreEl.style.color = fontColor;
     document.querySelector('.hanko-score').style.color = fontColor;
     
     if (equippedAcorn === 'phantom') {
-      kanaDisplayEl.style.textShadow = '0 0 30px rgba(155,89,182,0.6), 0 0 60px rgba(155,89,182,0.3)';
+      kanjiDisplayEl.style.textShadow = '0 0 30px rgba(155,89,182,0.6), 0 0 60px rgba(155,89,182,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 30px rgba(155,89,182,0.4), 0 2px 8px rgba(0,0,0,0.5)';
     } else if (equippedAcorn === 'gold') {
-      kanaDisplayEl.style.textShadow = '0 0 20px rgba(255,215,0,0.3)';
+      kanjiDisplayEl.style.textShadow = '0 0 20px rgba(255,215,0,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,215,0,0.2), 0 2px 8px rgba(0,0,0,0.5)';
     } else if (equippedAcorn === 'rainbow') {
-      kanaDisplayEl.style.textShadow = '0 0 20px rgba(255,100,255,0.3)';
+      kanjiDisplayEl.style.textShadow = '0 0 20px rgba(255,100,255,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,100,255,0.2), 0 2px 8px rgba(0,0,0,0.5)';
     } else {
-      kanaDisplayEl.style.textShadow = 'none';
+      kanjiDisplayEl.style.textShadow = 'none';
       document.querySelector('.title').style.textShadow = '0 2px 8px rgba(0,0,0,0.5)';
     }
+  }
+
+  // ============ 表示設定 ============
+  function updateDisplaySettings() {
+    // ローマ字の表示/非表示
+    if (showRomaji) {
+      romajiDisplayEl.classList.remove('hidden');
+      toggleRomajiBtn.textContent = 'ローマ字: 表示';
+      toggleRomajiBtn.style.borderColor = 'var(--jade)';
+      toggleRomajiBtn.style.color = 'var(--jade)';
+    } else {
+      romajiDisplayEl.classList.add('hidden');
+      toggleRomajiBtn.textContent = 'ローマ字: 非表示';
+      toggleRomajiBtn.style.borderColor = 'var(--vermillion)';
+      toggleRomajiBtn.style.color = 'var(--vermillion)';
+    }
+    // ひらがな（小）の表示/非表示
+    if (showKanaSmall) {
+      kanaSmallEl.classList.remove('hidden');
+      toggleKanaSmallBtn.textContent = 'ひらがな: 表示';
+      toggleKanaSmallBtn.style.borderColor = 'var(--jade)';
+      toggleKanaSmallBtn.style.color = 'var(--jade)';
+    } else {
+      kanaSmallEl.classList.add('hidden');
+      toggleKanaSmallBtn.textContent = 'ひらがな: 非表示';
+      toggleKanaSmallBtn.style.borderColor = 'var(--vermillion)';
+      toggleKanaSmallBtn.style.color = 'var(--vermillion)';
+    }
+    document.getElementById('status-display').textContent = 
+      'ローマ字: ' + (showRomaji ? '表示' : '非表示') + ' / ひらがな: ' + (showKanaSmall ? '表示' : '非表示');
   }
 
   // ============ 背景描画システム ============
@@ -2281,7 +2421,6 @@
     ctx.translate(currentX, currentY);
     ctx.scale(a.scale * a.variation, a.scale * a.variation);
 
-    // 特殊スキン（phantom, rainbow, beast）は既存の描画を維持
     if (a.skin === 'phantom') {
       a.hue = (a.hue + 0.5) % 360; const hue = (a.hue + 240) % 360;
       ctx.shadowColor = `hsl(${hue}, 80%, 60%)`; ctx.shadowBlur = 40;
@@ -2376,12 +2515,10 @@
       ctx.restore(); return;
     }
 
-    // ★ 形状に応じて描画を分岐
     const specialShapes = ['spiky', 'bubble', 'fluffy', 'crystal', 'star', 'ice', 'dark', 'light', 'cosmic'];
     if (specialShapes.includes(shape)) {
       drawAcornShape(ctx, a, style, 0, 0, 1);
     } else {
-      // 通常描画
       if (style.glow) { ctx.shadowColor = style.glow; ctx.shadowBlur = 20; }
       ctx.fillStyle = style.nut;
       ctx.beginPath(); ctx.ellipse(0, 10, 9, 11, 0, 0, Math.PI * 2); ctx.fill();
@@ -2417,12 +2554,20 @@
     ctx.restore();
   }
 
-  // ============ パーティクル・エフェクト ============
+  // ============ パーティクル・エフェクト（particleCount対応 + 透明度持続時間延長） ============
   function createSpecialParticles(x, y, skin) {
     const style = getAcornStyle(skin);
     const colors = style.particleColors;
-    const count = skin === 'phantom' ? 2 + Math.floor(Math.random() * 2) :
-                  (skin === 'beast' ? 2 + Math.floor(Math.random() * 2) : 3 + Math.floor(Math.random() * 3));
+    let baseCount = particleCount;
+    let multiplier = 1;
+    if (skin === 'phantom') multiplier = 0.4;
+    else if (skin === 'beast') multiplier = 0.4;
+    else if (skin === 'gold' || skin === 'cosmic') multiplier = 0.6;
+    else multiplier = 0.6;
+    
+    const count = Math.max(0, Math.floor(baseCount * multiplier) + Math.floor(Math.random() * 2));
+    if (count === 0) return [];
+    
     const particles = [];
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2, speed = 2 + Math.random() * 4;
@@ -2430,35 +2575,37 @@
       const type = skin === 'beast' ? 'white' : (Math.random() > 0.6 ? 'star' : (Math.random() > 0.5 ? 'circle' : 'sparkle'));
       particles.push({ x: x + (Math.random() - 0.5) * 10, y: y + (Math.random() - 0.5) * 10,
         vx: Math.cos(angle) * speed * (0.5 + Math.random() * 0.5), vy: Math.sin(angle) * speed * (0.5 + Math.random() * 0.5) - 2,
-        life: 1.0, decay: 0.008 + Math.random() * 0.015, size: 3 + Math.random() * 6,
+        life: 1.0, 
+        decay: 0.003 + Math.random() * 0.006, 
+        size: 3 + Math.random() * 6,
         color: skin === 'beast' ? '#ffffff' : color, type: type,
         rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1, hue: Math.random() * 360 });
     }
     if (skin === 'phantom') {
-      for (let i = 0; i < 1; i++) {
+      for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.2)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
         particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
-          life: 1.0, decay: 0.005 + Math.random() * 0.01, size: 2 + Math.random() * 4,
+          life: 1.0, decay: 0.003 + Math.random() * 0.005, size: 2 + Math.random() * 4,
           color: `hsl(280, 100%, 70%)`, type: 'glow',
           rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
     } else if (skin === 'beast') {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.6)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 0.5 + Math.random() * 2;
         particles.push({ x: x + (Math.random() - 0.5) * 8, y: y + (Math.random() - 0.5) * 8,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2,
-          life: 1.0, decay: 0.01 + Math.random() * 0.02, size: 1 + Math.random() * 3,
+          life: 1.0, decay: 0.004 + Math.random() * 0.008, size: 1 + Math.random() * 3,
           color: `rgba(255,255,255,${0.5 + Math.random() * 0.5})`, type: 'glow',
           rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: 0 });
       }
       playBeastSound();
     } else if (skin === 'gold' || skin === 'cosmic') {
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.4)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
         particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
-          life: 1.0, decay: 0.005 + Math.random() * 0.01, size: 2 + Math.random() * 4,
+          life: 1.0, decay: 0.003 + Math.random() * 0.006, size: 2 + Math.random() * 4,
           color: `hsl(${Math.random() * 360}, 100%, 70%)`, type: 'glow',
           rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
@@ -2492,7 +2639,7 @@
     if(state === 'waiting' || state === 'playing') { acorns.forEach(a => drawAcorn(ctx, a)); }
     for(let i=fragments.length-1; i>=0; i--) {
       const f = fragments[i];
-      f.x += f.vx; f.y += f.vy; f.vy += 0.4; f.rot += f.vrot; f.alpha -= 0.015;
+      f.x += f.vx; f.y += f.vy; f.vy += 0.4; f.rot += f.vrot; f.alpha -= 0.012;
       if(f.alpha <= 0 || f.y > acornCanvas.height + 50) { fragments.splice(i, 1); continue; }
       ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot); ctx.globalAlpha = Math.max(0, f.alpha);
       ctx.fillStyle = f.color || '#654321';
@@ -2502,7 +2649,7 @@
     }
     for(let i=specialParticles.length-1; i>=0; i--) {
       const p = specialParticles[i];
-      p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life -= p.decay; p.rot += p.rotSpeed;
+      p.x += p.vx; p.y += p.vy; p.vy += 0.06; p.life -= p.decay; p.rot += p.rotSpeed;
       if(p.life <= 0 || p.y > acornCanvas.height + 50) { specialParticles.splice(i, 1); continue; }
       ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = Math.max(0, p.life);
       if (p.type === 'star') {
@@ -2632,7 +2779,7 @@
   function createWordItem(wordObj) {
     const units = parseKanaToUnits(wordObj.kana);
     const unitChoices = units.map((u) => { if (u.custom) return u.custom; return getRomajiChoices(u.chars, u.isLast || false); });
-    return { kana: wordObj.kana, display: useKanji ? wordObj.kanji : wordObj.kana,
+    return { kana: wordObj.kana, display: wordObj.kanji,
       unitChoices, typedLength: 0, activePaths: null, currentIndex: 0,
       typedKeys: "", forcedRomaji: null, isSentence: wordObj.isSentence || false,
       id: wordObj.kana + (wordObj.isSentence ? '_s' : '') };
@@ -2670,7 +2817,14 @@
   function renderWord() {
     const w=queue[qIndex];
     if (!w) { queue = buildQueue(TARGET_LEN, isSentenceMode); qIndex = 0; renderWord(); return; }
-    kanaDisplayEl.textContent = w.display;
+    
+    // 上部：ひらがな（小）
+    kanaSmallEl.textContent = w.kana;
+    
+    // 中央：漢字（またはひらがな表示切替）
+    kanjiDisplayEl.textContent = useKanji ? w.display : w.kana;
+    
+    // 下部：ローマ字
     if(!w.activePaths) { w.activePaths=generateAllCombinations(w.unitChoices); w.currentIndex=0; w.typedKeys=""; }
     let displayStr = w.forcedRomaji;
     if(!displayStr) {
@@ -2684,6 +2838,7 @@
       else if(i===w.typedLength) cls='ch-next';
       return '<span class="'+cls+'">'+ch+'</span>';
     }).join('');
+    
     updateFontColor();
   }
 
@@ -2770,7 +2925,6 @@
 
   function initGame() {
     state='waiting'; isSentenceMode = false; pendingSentenceMode = false; resetUsedWords();
-    // BGMはゲーム開始時に再生（メニューでは再生しない）
     if (soundBuffers.bgm || soundUrls.bgm) { playBgmLoop(); }
     acorns=[]; specialParticles=[]; fragments=[];
     for(let i=0;i<MIN_ACORN_COUNT+5;i++) spawnAcornTop();
@@ -2781,6 +2935,7 @@
     menuScreen.classList.add('hidden'); gameScreen.classList.remove('hidden');
     resultOverlay.classList.remove('active');
     updateUIVisibility(); renderWord(); renderHud();
+    updateDisplaySettings();
   }
 
   function startTimer() {
@@ -2851,7 +3006,6 @@
       }
       renderWord(); renderHud();
     } else {
-      // タイプミス時：ミス音を再生してシェイク
       playMissSound();
       wordStageEl.classList.remove('shake');
       void wordStageEl.offsetWidth;
@@ -2961,6 +3115,12 @@
       if (url) { statusEl.textContent = '📁 外部ファイル設定済み（実際の使用時に再生）'; statusEl.className = 'sound-status success'; }
       else { statusEl.textContent = '🎵 デフォルト音声を使用中'; statusEl.className = 'sound-status'; }
     });
+    particleSlider.value = particleCount;
+    particleCountDisplay.textContent = particleCount;
+    document.getElementById('status-particle').textContent = '破片の数を調整します（0で非表示）';
+    document.getElementById('status-particle').className = 'sound-status';
+    // 表示設定の状態を反映
+    updateDisplaySettings();
   }
 
   function executeCodeAuth() {
@@ -3037,7 +3197,28 @@
   document.getElementById('code-exec-btn').addEventListener('click', (e) => { e.stopPropagation(); executeCodeAuth(); });
   codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); executeCodeAuth(); } });
 
-  settingDisplayBtn.addEventListener('click', () => { useKanji = !useKanji; settingDisplayBtn.textContent = useKanji ? "漢字" : "ひらがな"; saveData(); });
+  // ★ particleCount スライダーイベント
+  particleSlider.addEventListener('input', () => {
+    particleCount = parseInt(particleSlider.value);
+    particleCountDisplay.textContent = particleCount;
+    saveData();
+    document.getElementById('status-particle').textContent = '破片量: ' + particleCount + '（即時反映）';
+    document.getElementById('status-particle').className = 'sound-status success';
+  });
+
+  // ★ 表示設定トグルボタン
+  toggleRomajiBtn.addEventListener('click', () => {
+    showRomaji = !showRomaji;
+    saveData();
+    updateDisplaySettings();
+  });
+  toggleKanaSmallBtn.addEventListener('click', () => {
+    showKanaSmall = !showKanaSmall;
+    saveData();
+    updateDisplaySettings();
+  });
+
+  settingDisplayBtn.addEventListener('click', () => { useKanji = !useKanji; settingDisplayBtn.textContent = useKanji ? "漢字" : "ひらがな"; saveData(); renderWord(); });
   resetDataBtn.addEventListener('click', () => {
     if(confirm('すべてのデータを削除しますか？')) {
       localStorage.removeItem('donguri_data');
@@ -3052,6 +3233,9 @@
       beastAcornUnlocked=d.beastAcornUnlocked || false; beastBgUnlocked=d.beastBgUnlocked || false;
       announceVersion = d.announceVersion || '';
       infoRead = d.infoRead || false;
+      particleCount = d.particleCount || 5;
+      showRomaji = d.showRomaji !== undefined ? d.showRomaji : true;
+      showKanaSmall = d.showKanaSmall !== undefined ? d.showKanaSmall : true;
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -3060,6 +3244,7 @@
       soundUrls = { typed: '', start: '', result: '', bgm: '', miss: '' };
       for (const type of ['typed','miss','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
       stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor(); updateInfoBadge();
+      updateDisplaySettings();
     }
   });
 
@@ -3084,7 +3269,7 @@
     }
   });
 
-  // ============ 音声復元 ============
+  // ============ 音声復元（ページ更新時も前回の設定を読み込む） ============
   async function restoreSavedSounds() {
     const types = ['typed','miss','start','result','bgm'];
     for (const type of types) {
@@ -3093,21 +3278,27 @@
         const statusEl = document.getElementById('status-' + type);
         statusEl.textContent = '⏳ 復元中...'; statusEl.className = 'sound-status';
         try {
+          if (!audioCtx) initAudio();
           const buffer = await loadSound(url);
-          if (buffer) { soundBuffers[type] = buffer; soundUrls[type] = url;
-            statusEl.textContent = '✅ 保存済み音声を復元しました（実際の使用時に再生）'; statusEl.className = 'sound-status success';
-            // BGMはゲーム中のみ再生（メニューでは再生しない）
-            if (type === 'bgm' && (state === 'waiting' || state === 'playing')) {
-              playBgmLoop();
-            }
+          if (buffer) { 
+            soundBuffers[type] = buffer; 
+            soundUrls[type] = url;
+            statusEl.textContent = '✅ 保存済み音声を復元しました（再生準備完了）';
+            statusEl.className = 'sound-status success';
           } else {
             statusEl.textContent = '⚠️ 音声復元に失敗（フォールバック）';
             statusEl.className = 'sound-status error';
-            // デフォルト音声を設定
             const defaultBuffer = generateDefaultSound(type);
             if (defaultBuffer) { soundBuffers[type] = defaultBuffer; }
           }
-        } catch(e) { console.warn('音声復元エラー:', type, e); }
+        } catch(e) { 
+          console.warn('音声復元エラー:', type, e);
+          const defaultBuffer = generateDefaultSound(type);
+          if (defaultBuffer) { soundBuffers[type] = defaultBuffer; }
+        }
+      } else {
+        const defaultBuffer = generateDefaultSound(type);
+        if (defaultBuffer) { soundBuffers[type] = defaultBuffer; }
       }
     }
   }
@@ -3126,6 +3317,15 @@
     beastAcornUnlocked = data.beastAcornUnlocked || false; beastBgUnlocked = data.beastBgUnlocked || false;
     announceVersion = data.announceVersion || '';
     infoRead = data.infoRead || false;
+    particleCount = data.particleCount || 5;
+    showRomaji = data.showRomaji !== undefined ? data.showRomaji : true;
+    showKanaSmall = data.showKanaSmall !== undefined ? data.showKanaSmall : true;
+
+    soundTypedInput.value = soundTyped;
+    soundMissInput.value = soundMiss;
+    soundStartInput.value = soundStart;
+    soundResultInput.value = soundResult;
+    soundBgmInput.value = soundBgm;
 
     highscoreValueEl.textContent = highscore;
     updateTotalTypedDisplay();
@@ -3138,14 +3338,21 @@
     updateAnnounceVisibility();
     updateInfoBadge();
     initAudio();
-    // デフォルト音声をプリロード（メニューでは再生しない）
+    
     for (const type of ['typed','miss','start','result','bgm']) { 
       const buf = generateDefaultSound(type); 
       if (buf) soundBuffers[type] = buf; 
     }
-    setTimeout(async () => { await restoreSavedSounds(); }, 500);
+    
+    setTimeout(async () => { 
+      await restoreSavedSounds(); 
+    }, 500);
+    
     checkAchievements();
     updateFontColor();
+    particleSlider.value = particleCount;
+    particleCountDisplay.textContent = particleCount;
+    updateDisplaySettings();
   }
 
   init();
