@@ -28,6 +28,8 @@
     --phantom:#9b59b6;
     --phantom-glow:#8e44ad;
     --coin-gold:#ffd700;
+    --online-blue:#4a9eff;
+    --online-green:#4ae68a;
   }
   *{box-sizing:border-box;}
   html,body{
@@ -105,6 +107,9 @@
     left: 20px;
     z-index: 50;
     transition: opacity 0.3s ease, transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
   .info-btn-wrapper.hidden-ui {
     opacity: 0;
@@ -155,6 +160,26 @@
     pointer-events: none;
   }
 
+  /* ---------- オンライン対戦ボタン ---------- */
+  .online-battle-btn {
+    background: var(--panel);
+    border: 1px solid var(--online-blue);
+    color: var(--online-blue);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    width: 94px;
+    text-align: center;
+  }
+  .online-battle-btn:hover {
+    background: var(--online-blue);
+    color: var(--ink);
+    border-color: var(--online-blue);
+  }
+
   /* ---------- Top Navigation ---------- */
   .top-nav{
     position:fixed; top:20px; right:20px;
@@ -189,6 +214,14 @@
     background: var(--achievement-gold);
     color: var(--ink);
   }
+  .nav-btn.online-btn {
+    border-color: var(--online-blue);
+    color: var(--online-blue);
+  }
+  .nav-btn.online-btn:hover {
+    background: var(--online-blue);
+    color: var(--ink);
+  }
 
   /* ---------- Achievement Toast ---------- */
   #achievement-toast {
@@ -220,6 +253,87 @@
     font-size: 13px;
     color: var(--text);
     opacity: 0.8;
+  }
+
+  /* ---------- 挑戦状フレーム（右上） ---------- */
+  #challenge-frame {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: var(--panel);
+    border: 2px solid var(--online-blue);
+    border-radius: 16px;
+    padding: 20px 28px;
+    z-index: 350;
+    max-width: 380px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+  }
+  #challenge-frame.show {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #challenge-frame .challenge-title {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  #challenge-frame .challenge-from {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--online-blue);
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  #challenge-frame .challenge-message {
+    font-size: 14px;
+    color: var(--text);
+    opacity: 0.8;
+    margin-bottom: 14px;
+  }
+  #challenge-frame .challenge-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  #challenge-frame .challenge-buttons button {
+    padding: 8px 24px;
+    border-radius: 8px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+  #challenge-frame .challenge-buttons .accept-btn {
+    background: var(--online-green);
+    color: var(--ink);
+    border-color: var(--online-green);
+  }
+  #challenge-frame .challenge-buttons .accept-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(74,230,138,0.3);
+  }
+  #challenge-frame .challenge-buttons .ignore-btn {
+    background: transparent;
+    color: var(--muted);
+    border-color: var(--muted);
+  }
+  #challenge-frame .challenge-buttons .ignore-btn:hover {
+    border-color: var(--vermillion);
+    color: var(--vermillion);
+  }
+  #challenge-frame .challenge-timer {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 10px;
+    text-align: center;
   }
 
   /* ---------- Achievement Modal ---------- */
@@ -345,7 +459,7 @@
   }
 
   /* ---------- Shop/Setting Modal Overlay ---------- */
-  #shop-overlay, #settings-overlay, #info-overlay {
+  #shop-overlay, #settings-overlay, #info-overlay, #online-overlay {
     position: fixed; inset: 0;
     background: rgba(20, 24, 18, 0.92);
     backdrop-filter: blur(8px);
@@ -354,10 +468,10 @@
     opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
   }
-  #shop-overlay.active, #settings-overlay.active, #info-overlay.active {
+  #shop-overlay.active, #settings-overlay.active, #info-overlay.active, #online-overlay.active {
     opacity: 1; pointer-events: auto;
   }
-  .shop-card, .settings-card, .info-card {
+  .shop-card, .settings-card, .info-card, .online-card {
     background: var(--panel);
     border: 1px solid var(--panel-edge);
     border-radius: 16px;
@@ -374,10 +488,11 @@
   }
   #shop-overlay.active .shop-card,
   #settings-overlay.active .settings-card,
-  #info-overlay.active .info-card {
+  #info-overlay.active .info-card,
+  #online-overlay.active .online-card {
     transform: translateY(0);
   }
-  .shop-title, .settings-title, .info-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 4px 0; letter-spacing: 0.05em; }
+  .shop-title, .settings-title, .info-title, .online-title { font-size: 22px; font-weight: 700; color: var(--text); margin: 0 0 4px 0; letter-spacing: 0.05em; }
   .shop-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
   .shop-currency {
     display: flex; flex-wrap: wrap;
@@ -430,7 +545,7 @@
   .shop-item-btn.equip-btn{ background:var(--jade); }
   .shop-item-btn.owned-btn{ background:var(--muted); }
 
-  .shop-close-btn, .settings-close-btn, .info-close-btn {
+  .shop-close-btn, .settings-close-btn, .info-close-btn, .online-close-btn {
     background: transparent;
     border: 1px solid var(--muted);
     color: var(--muted);
@@ -443,7 +558,7 @@
     margin-top: 16px;
     align-self:center;
   }
-  .shop-close-btn:hover, .settings-close-btn:hover, .info-close-btn:hover {
+  .shop-close-btn:hover, .settings-close-btn:hover, .info-close-btn:hover, .online-close-btn:hover {
     border-color: var(--text);
     color: var(--text);
   }
@@ -503,6 +618,97 @@
     margin-top: 12px;
     border-top: 1px solid var(--panel-edge);
     padding-top: 10px;
+  }
+
+  /* ---------- オンラインモーダル ---------- */
+  .online-card .player-code-display {
+    background: rgba(0,0,0,0.3);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--online-blue);
+    text-align: center;
+    letter-spacing: 2px;
+    font-family: monospace;
+    margin: 8px 0 16px 0;
+    border: 1px solid var(--panel-edge);
+    user-select: all;
+    cursor: pointer;
+  }
+  .online-card .player-code-display:hover {
+    background: rgba(74,158,255,0.1);
+    border-color: var(--online-blue);
+  }
+  .online-card .match-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .online-card .match-options button {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid var(--panel-edge);
+    background: var(--panel);
+    color: var(--text);
+  }
+  .online-card .match-options button:hover {
+    border-color: var(--online-blue);
+    background: rgba(74,158,255,0.1);
+    transform: scale(1.02);
+  }
+  .online-card .match-options button.specific-btn {
+    border-color: var(--online-green);
+    color: var(--online-green);
+  }
+  .online-card .match-options button.specific-btn:hover {
+    background: var(--online-green);
+    color: var(--ink);
+  }
+  .online-card .specific-input-area {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .online-card .specific-input-area input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--panel-edge);
+    background: var(--ink);
+    color: var(--text);
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-family: monospace;
+    min-width: 180px;
+  }
+  .online-card .specific-input-area input:focus {
+    outline: none;
+    border-color: var(--online-blue);
+  }
+  .online-card .specific-input-area button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--online-blue);
+    background: transparent;
+    color: var(--online-blue);
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .online-card .specific-input-area button:hover {
+    background: var(--online-blue);
+    color: var(--ink);
   }
 
   /* ---------- 設定項目 ---------- */
@@ -767,7 +973,6 @@
     75%{ transform:translateX(6px); }
   }
 
-  /* --- 新しいレイアウト --- */
   .word-display-area {
     display: flex;
     flex-direction: column;
@@ -1006,7 +1211,7 @@
   @media (max-width:480px){
     .hud{ margin-bottom:24px; }
     .word-stage{ padding:32px 16px; }
-    .shop-card, .settings-card, .achievement-card, .info-card{ padding:20px; margin:10px; }
+    .shop-card, .settings-card, .achievement-card, .info-card, .online-card{ padding:20px; margin:10px; }
     #achievement-toast { max-width: 260px; padding: 12px 16px; }
     #achievement-toast .toast-name { font-size: 16px; }
     .setting-group .sound-row {
@@ -1051,6 +1256,11 @@
       top: -5px;
       right: -5px;
     }
+    .online-battle-btn {
+      width: 82px;
+      font-size: 11px;
+      padding: 4px 12px;
+    }
     .hanko {
       width: 78px;
       height: 78px;
@@ -1069,6 +1279,19 @@
     }
     .romaji-display {
       font-size: clamp(14px, 3vw, 20px) !important;
+    }
+    #challenge-frame {
+      top: 70px;
+      right: 10px;
+      max-width: 300px;
+      padding: 16px 20px;
+    }
+    #challenge-frame .challenge-from {
+      font-size: 15px;
+    }
+    .online-card .player-code-display {
+      font-size: 16px;
+      padding: 10px 14px;
     }
   }
 </style>
@@ -1110,6 +1333,18 @@
     <div class="toast-desc" id="toast-desc">説明</div>
   </div>
 
+  <!-- 挑戦状フレーム -->
+  <div id="challenge-frame">
+    <div class="challenge-title">⚔️ 挑戦状</div>
+    <div class="challenge-from" id="challenge-from">----</div>
+    <div class="challenge-message">のプレイヤーがあなたに挑戦状を突きつけています。</div>
+    <div class="challenge-buttons">
+      <button class="accept-btn" id="challenge-accept">⚔️ 挑む</button>
+      <button class="ignore-btn" id="challenge-ignore">👋 無視</button>
+    </div>
+    <div class="challenge-timer" id="challenge-timer">⏱ 残り 5秒</div>
+  </div>
+
   <div class="hanko" id="hanko-badge" title="クリックでカスタマイズ">
     <span class="hanko-label">最高記録</span>
     <span class="hanko-score" id="highscore-value">0</span>
@@ -1121,6 +1356,9 @@
     <button class="info-btn" id="info-open-btn">
       📢 情報
       <span class="badge" id="info-badge">!</span>
+    </button>
+    <button class="online-battle-btn" id="online-open-btn">
+      ⚔️ 対戦
     </button>
   </div>
 
@@ -1168,12 +1406,43 @@
     </div>
   </div>
 
+  <!-- Online Battle Modal -->
+  <div id="online-overlay">
+    <div class="online-card">
+      <h2 class="online-title">⚔️ オンライン対戦</h2>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">あなたのプレイヤーコード</div>
+      <div class="player-code-display" id="player-code-display" title="クリックでコピー">----</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">※ このコードで他のプレイヤーから挑戦を受けられます</div>
+      
+      <div class="match-options">
+        <button class="specific-btn" id="specific-match-btn">🎯 特定のプレイヤーと対戦</button>
+      </div>
+      
+      <div id="specific-match-area" style="display:none;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">対戦相手のプレイヤーコードを入力</div>
+        <div class="specific-input-area">
+          <input type="text" id="target-player-code" placeholder="例: a1b2c3d4e5f6" maxlength="12" style="font-family:monospace;letter-spacing:2px;">
+          <button id="send-challenge-btn">📨 挑戦状を送る</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px;" id="challenge-status"></div>
+      </div>
+
+      <div style="margin-top:16px;border-top:1px solid var(--panel-edge);padding-top:12px;width:100%;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">📨 受信した挑戦状</div>
+        <div id="received-challenges-list" style="font-size:14px;color:var(--text);min-height:30px;max-height:120px;overflow-y:auto;">
+          <span style="color:var(--muted);font-size:13px;">挑戦状はありません</span>
+        </div>
+      </div>
+
+      <button id="online-close-btn" class="online-close-btn">閉じる</button>
+    </div>
+  </div>
+
   <!-- Settings Modal -->
   <div id="settings-overlay">
     <div class="settings-card">
       <h2 class="settings-title">⚙️ 設定</h2>
       
-      <!-- ====== ★ どんぐりの破片量スライダー ====== -->
       <div class="setting-group">
         <label>💫 どんぐりの破片量</label>
         <div class="sound-row">
@@ -1183,7 +1452,6 @@
         <div class="sound-status" id="status-particle">破片の数を調整します（0で非表示）</div>
       </div>
 
-      <!-- ====== ★ 表示設定 ====== -->
       <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
         <label>📖 表示設定</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
@@ -1257,7 +1525,6 @@
         <div class="sound-status" id="status-bgm"></div>
       </div>
 
-      <!-- コード入力エリア -->
       <div class="code-area">
         <label>🔐 コード入力（超厳重）</label>
         <div class="code-row">
@@ -1338,8 +1605,9 @@
 (function(){
   "use strict";
 
-  // ============ お知らせバージョン ====================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
-  const ANNOUNCE_VERSION = "v1.2.2";
+  // ============ バージョン情報 ============
+  const ANNOUNCE_VERSION = "v1.2.1";
+  const INFO_BADGE_VERSION = "v1.2.0";
 
   // ============ 情報コンテンツデータ ============
   const INFO_DATA = {
@@ -1349,9 +1617,10 @@
     notices: [
       { date: '2026年9月5日', text: '🎉 どんぐりタイピングがGoogleに公開されました！' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
-      { date: '2026年9月5日', text: '設定にひらがな追加（漢字の読み）されました！' },
+      { date: '2026年9月6日', text: '設定にひらがな追加（漢字の読み）されました！' },
+      { date: '2026年9月7日', text: '対戦ゲームを追加しました！まだテスト中です。' },
     ],
-    version: 'v1.2.2',
+    version: INFO_BADGE_VERSION,
     updateDate: '2026年9月7日',
     detailLinks: [
       { title: 'どんぐりや背景の取引実装した方がいいと思いますか？', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfMD6Ez3q3nsBIBMWbLzk9SRBucBP9VccpyO8UnYAjl-EaIgg/viewform?usp=publish-editor', desc: '投票終了は9月12日（土曜日）まで' },
@@ -1426,7 +1695,6 @@
     { kana: "まねきねこ", kanji: "招き猫" },{ kana: "ちょこれーと", kanji: "チョコレート" },{ kana: "どんでんがえし", kanji: "どんでん返し" },
   ];
 
-  // ============ 文章データ ============
   const SENTENCE_POOL = [
     { kana: "ちりもつもればやまとなる", kanji: "塵も積もれば山となる" },
     { kana: "いちごいちえ", kanji: "一期一会" }, { kana: "にわのあらし", kanji: "庭の嵐" },
@@ -1520,7 +1788,7 @@
     'beast_room': { name: '野獣先輩の部屋', desc: '24歳学生...？', price: 0, priceType: 'none' },
   };
 
-  // ============ ★ どんぐりスキン（形状＆フォントカラー付き） ============
+  // ============ どんぐりスキン ============
   const ACORN_SKINS = {
     'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none', shape: 'normal', fontColor: '#d2b48c' },
     'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 500, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#6aaa4a' },
@@ -1552,13 +1820,20 @@
     phantomAcornUnlocked: false, doubleAcornUnlocked: false,
     beastAcornUnlocked: false, beastBgUnlocked: false,
     announceVersion: '',
+    infoBadgeVersion: '',
     infoRead: false,
     particleCount: 5,
     showRomaji: true,
     showKanaSmall: true,
+    // オンライン機能用
+    playerCode: '',
+    sentChallenges: [],
+    receivedChallenges: [],
+    ignoredChallenges: [],
+    challengeCooldown: 0,
   };
 
-  // --- デフォルト音声 ---
+  // --- デフォルト音声生成 ---
   function generateDefaultSound(type) {
     if (!audioCtx) return null;
     try {
@@ -1601,8 +1876,9 @@
     const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
-      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoRead, particleCount,
-      showRomaji, showKanaSmall };
+      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoBadgeVersion, infoRead, particleCount,
+      showRomaji, showKanaSmall,
+      playerCode, sentChallenges, receivedChallenges, ignoredChallenges, challengeCooldown };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1619,10 +1895,20 @@
       codeVerified = false, superMode = false, normalMode = false,
       phantomAcornUnlocked = false, doubleAcornUnlocked = false,
       beastAcornUnlocked = false, beastBgUnlocked = false,
-      announceVersion = '', infoRead = false,
+      announceVersion = '', infoBadgeVersion = '', infoRead = false,
       particleCount = 5,
       showRomaji = true,
       showKanaSmall = true;
+
+  // --- オンライン状態 ---
+  let playerCode = '';
+  let sentChallenges = [];
+  let receivedChallenges = [];
+  let ignoredChallenges = [];
+  let challengeCooldown = 0;
+  let challengeTimer = null;
+  let challengeTimeout = null;
+  let challengeFrameVisible = false;
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -1724,7 +2010,7 @@
           else if (type === 'bgm') soundBgm = url.trim();
           else if (type === 'miss') soundMiss = url.trim();
           saveData();
-          statusEl.textContent = '✅ 音声を設定しました（実際の使用時に再生されます）';
+          statusEl.textContent = '✅ 音声を設定しました';
           statusEl.className = 'sound-status success';
           if (type === 'bgm' && (state === 'waiting' || state === 'playing')) {
             playBgmLoop();
@@ -1757,6 +2043,270 @@
     }
   }
 
+  // --- プレイヤーコード生成（12桁・小文字+数字・絶対に被らない） ---
+  function generatePlayerCode() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    for (let i = 0; i < 12; i++) {
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return code;
+  }
+
+  // --- コードが被らないように生成 ---
+  function ensureUniquePlayerCode() {
+    if (playerCode && playerCode.length === 12) {
+      // 既存のコードを使用
+      return playerCode;
+    }
+    let newCode = generatePlayerCode();
+    // 他プレイヤーと被る可能性は極めて低いが、一応チェック（現実的にはローカルストレージ内のみ）
+    const allCodes = getAllPlayerCodes();
+    while (allCodes.includes(newCode) && allCodes.length < 1000) {
+      newCode = generatePlayerCode();
+    }
+    return newCode;
+  }
+
+  function getAllPlayerCodes() {
+    // ローカルストレージから全プレイヤーコードを収集（実際は全ユーザーのデータは見えないので、自分自身のデータのみ）
+    // 擬似的に、自分自身のコードと送信履歴・受信履歴に含まれるコードを収集
+    const codes = new Set();
+    if (playerCode) codes.add(playerCode);
+    sentChallenges.forEach(c => codes.add(c.targetCode));
+    receivedChallenges.forEach(c => codes.add(c.fromCode));
+    ignoredChallenges.forEach(c => codes.add(c.fromCode));
+    return Array.from(codes);
+  }
+
+  // --- 挑戦状システム ---
+  function sendChallenge(targetCode) {
+    if (targetCode === playerCode) {
+      document.getElementById('challenge-status').textContent = '❌ 自分自身に挑戦状は送れません';
+      document.getElementById('challenge-status').style.color = 'var(--vermillion)';
+      return;
+    }
+    if (targetCode.length !== 12 || !/^[a-z0-9]{12}$/.test(targetCode)) {
+      document.getElementById('challenge-status').textContent = '❌ 無効なプレイヤーコードです（12桁の英小文字+数字）';
+      document.getElementById('challenge-status').style.color = 'var(--vermillion)';
+      return;
+    }
+    
+    // クールダウン確認（5秒）
+    if (challengeCooldown > Date.now()) {
+      const remaining = Math.ceil((challengeCooldown - Date.now()) / 1000);
+      document.getElementById('challenge-status').textContent = `⏱ クールダウン中（残り ${remaining}秒）`;
+      document.getElementById('challenge-status').style.color = 'var(--muted)';
+      return;
+    }
+
+    // 既に送信済みかチェック（5分以内）
+    const recent = sentChallenges.filter(c => c.targetCode === targetCode && (Date.now() - c.timestamp < 300000));
+    if (recent.length > 0) {
+      document.getElementById('challenge-status').textContent = '⏳ 既に挑戦状を送信しています（5分間は再送信できません）';
+      document.getElementById('challenge-status').style.color = 'var(--muted)';
+      return;
+    }
+
+    // 挑戦状送信
+    const challenge = {
+      fromCode: playerCode,
+      targetCode: targetCode,
+      timestamp: Date.now(),
+      message: '挑戦状を送りました！'
+    };
+    sentChallenges.push(challenge);
+    challengeCooldown = Date.now() + 5000; // 5秒クールダウン
+    saveData();
+    
+    document.getElementById('challenge-status').textContent = `✅ 挑戦状を送信しました！（${targetCode}）`;
+    document.getElementById('challenge-status').style.color = 'var(--jade)';
+    
+    // 擬似的に「受信」として相手側に届いたことにする（実際は送信先が自分自身の場合のみ動作）
+    // 自分自身に送った場合の即時受信処理は削除
+    
+    // 擬似：他のプレイヤーからの挑戦状として受信（実際はサーバーが必要）
+    // デモ用：ランダムに相手からの挑戦状を受信する（実際の対戦機能の代わり）
+    // ただし、自分自身からは来ないようにする
+    simulateReceivedChallenge();
+    
+    updateReceivedChallengesUI();
+  }
+
+  // 擬似的に他のプレイヤーから挑戦状を受信（デモ用）
+  function simulateReceivedChallenge() {
+    // 絶対に自分自身のコード以外から来たことにする
+    let fromCode = generatePlayerCode();
+    while (fromCode === playerCode) {
+      fromCode = generatePlayerCode();
+    }
+    receiveChallenge(fromCode, playerCode);
+  }
+
+  // 挑戦状を受信（表示）
+  function receiveChallenge(fromCode, targetCode) {
+    // 既に無視したものかチェック
+    const ignored = ignoredChallenges.some(c => c.fromCode === fromCode && (Date.now() - c.timestamp < 300000));
+    if (ignored) return;
+    
+    // 既に受信済みかチェック
+    const existing = receivedChallenges.some(c => c.fromCode === fromCode && (Date.now() - c.timestamp < 300000));
+    if (existing) return;
+
+    const challenge = {
+      fromCode: fromCode,
+      targetCode: targetCode || playerCode,
+      timestamp: Date.now(),
+      message: '挑戦状が届きました！'
+    };
+    receivedChallenges.push(challenge);
+    saveData();
+    updateReceivedChallengesUI();
+    
+    // 挑戦状フレームを表示
+    showChallengeFrame(fromCode);
+  }
+
+  // 挑戦状フレーム表示
+  function showChallengeFrame(fromCode) {
+    if (challengeFrameVisible) {
+      // 既に表示されている場合は更新
+      document.getElementById('challenge-from').textContent = fromCode;
+      document.getElementById('challenge-timer').textContent = '⏱ 残り 5秒';
+      return;
+    }
+    
+    challengeFrameVisible = true;
+    document.getElementById('challenge-from').textContent = fromCode;
+    document.getElementById('challenge-timer').textContent = '⏱ 残り 5秒';
+    document.getElementById('challenge-frame').classList.add('show');
+    
+    // タイマー（5秒カウントダウン）
+    let seconds = 5;
+    if (challengeTimer) clearInterval(challengeTimer);
+    if (challengeTimeout) clearTimeout(challengeTimeout);
+    
+    challengeTimer = setInterval(() => {
+      seconds--;
+      document.getElementById('challenge-timer').textContent = `⏱ 残り ${seconds}秒`;
+      if (seconds <= 0) {
+        clearInterval(challengeTimer);
+        challengeTimer = null;
+        // 自動的に無視（閉じる）
+        ignoreChallenge(fromCode);
+      }
+    }, 1000);
+    
+    challengeTimeout = setTimeout(() => {
+      // 5秒経過で自動無視
+      if (challengeFrameVisible) {
+        ignoreChallenge(fromCode);
+      }
+    }, 5000);
+  }
+
+  // 挑戦を受ける
+  function acceptChallenge(fromCode) {
+    if (challengeTimer) { clearInterval(challengeTimer); challengeTimer = null; }
+    if (challengeTimeout) { clearTimeout(challengeTimeout); challengeTimeout = null; }
+    challengeFrameVisible = false;
+    document.getElementById('challenge-frame').classList.remove('show');
+    
+    // 受信履歴から削除
+    const index = receivedChallenges.findIndex(c => c.fromCode === fromCode);
+    if (index !== -1) {
+      receivedChallenges.splice(index, 1);
+      saveData();
+      updateReceivedChallengesUI();
+    }
+    
+    // 対戦開始（擬似的）
+    showPopup('⚔️ 対戦開始！ ' + fromCode + ' との戦い！');
+    // ゲーム開始
+    initGame();
+  }
+
+  // 挑戦を無視
+  function ignoreChallenge(fromCode) {
+    if (challengeTimer) { clearInterval(challengeTimer); challengeTimer = null; }
+    if (challengeTimeout) { clearTimeout(challengeTimeout); challengeTimeout = null; }
+    challengeFrameVisible = false;
+    document.getElementById('challenge-frame').classList.remove('show');
+    
+    // 無視リストに追加
+    const ignored = {
+      fromCode: fromCode,
+      timestamp: Date.now()
+    };
+    ignoredChallenges.push(ignored);
+    
+    // 受信履歴から削除
+    const index = receivedChallenges.findIndex(c => c.fromCode === fromCode);
+    if (index !== -1) {
+      receivedChallenges.splice(index, 1);
+      saveData();
+      updateReceivedChallengesUI();
+    }
+    
+    // 情報に「〇〇分前に挑戦状が来ました」と表示
+    const now = new Date();
+    const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    const notice = {
+      date: timeStr,
+      text: `⚔️ ${fromCode} のプレイヤーがあなたに挑戦状を送りました（無視しました）`
+    };
+    INFO_DATA.notices.push(notice);
+    saveData();
+    
+    showPopup('👋 挑戦を無視しました');
+  }
+
+  // 受信した挑戦状のUI更新
+  function updateReceivedChallengesUI() {
+    const container = document.getElementById('received-challenges-list');
+    if (receivedChallenges.length === 0) {
+      container.innerHTML = '<span style="color:var(--muted);font-size:13px;">挑戦状はありません</span>';
+      return;
+    }
+    let html = '';
+    // 最新のものから表示（最大5件）
+    const recent = receivedChallenges.slice(-5).reverse();
+    recent.forEach(c => {
+      const timeAgo = Math.floor((Date.now() - c.timestamp) / 60000);
+      const timeStr = timeAgo < 1 ? 'たった今' : `${timeAgo}分前`;
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--panel-edge);">
+        <span style="font-size:13px;color:var(--text);">⚔️ <span style="color:var(--online-blue);font-family:monospace;">${c.fromCode}</span> <span style="color:var(--muted);font-size:11px;">(${timeStr})</span></span>
+        <div style="display:flex;gap:6px;">
+          <button onclick="window.acceptChallengeFromUI('${c.fromCode}')" style="background:var(--online-green);border:none;color:var(--ink);padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;">挑む</button>
+          <button onclick="window.ignoreChallengeFromUI('${c.fromCode}')" style="background:transparent;border:1px solid var(--muted);color:var(--muted);padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;">無視</button>
+        </div>
+      </div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  // グローバルに公開（onclick用）
+  window.acceptChallengeFromUI = function(code) {
+    acceptChallenge(code);
+  };
+  window.ignoreChallengeFromUI = function(code) {
+    ignoreChallenge(code);
+  };
+
+  // 挑戦状フレームのボタンイベント
+  document.getElementById('challenge-accept').addEventListener('click', () => {
+    const fromCode = document.getElementById('challenge-from').textContent;
+    if (fromCode && fromCode !== '----') {
+      acceptChallenge(fromCode);
+    }
+  });
+  document.getElementById('challenge-ignore').addEventListener('click', () => {
+    const fromCode = document.getElementById('challenge-from').textContent;
+    if (fromCode && fromCode !== '----') {
+      ignoreChallenge(fromCode);
+    }
+  });
+
   // --- DOM参照 ---
   const menuScreen = document.getElementById('menu-screen');
   const gameScreen = document.getElementById('game-screen');
@@ -1784,6 +2334,8 @@
   const settingsOverlay = document.getElementById('settings-overlay');
   const infoOverlay = document.getElementById('info-overlay');
   const infoContent = document.getElementById('info-content');
+  const onlineOverlay = document.getElementById('online-overlay');
+  const playerCodeDisplay = document.getElementById('player-code-display');
   const settingDisplayBtn = document.getElementById('setting-display-btn');
   const resetDataBtn = document.getElementById('reset-data-btn');
   const hankoBadge = document.getElementById('hanko-badge');
@@ -1826,7 +2378,11 @@
 
   // ============ 情報バッジ制御 ============
   function updateInfoBadge() {
-    if (!infoRead) {
+    if (infoBadgeVersion !== INFO_BADGE_VERSION) {
+      infoBadge.classList.remove('hidden');
+      infoRead = false;
+      saveData();
+    } else if (!infoRead) {
       infoBadge.classList.remove('hidden');
     } else {
       infoBadge.classList.add('hidden');
@@ -1836,12 +2392,41 @@
   function markInfoAsRead() {
     if (!infoRead) {
       infoRead = true;
+      infoBadgeVersion = INFO_BADGE_VERSION;
       saveData();
       updateInfoBadge();
     }
   }
 
-  // ============ 情報モーダル表示 ============
+  // ============ お知らせフレーム制御 ============
+  function updateAnnounceVisibility() {
+    if (announceVersion !== ANNOUNCE_VERSION) {
+      showAnnounce();
+    } else {
+      hideAnnounce();
+    }
+  }
+
+  function showAnnounce() { 
+    announceFrame.classList.remove('hidden'); 
+    announceOverlay.classList.remove('hidden'); 
+  }
+  function hideAnnounce() { 
+    announceFrame.classList.add('hidden'); 
+    announceOverlay.classList.add('hidden'); 
+  }
+
+  announceDismiss.addEventListener('click', () => { 
+    announceVersion = ANNOUNCE_VERSION;
+    saveData(); 
+    hideAnnounce();
+  });
+
+  announceClose.addEventListener('click', () => { 
+    hideAnnounce(); 
+  });
+
+  // ============ 情報モーダル ============
   function renderInfoContent() {
     let html = '';
     
@@ -1967,7 +2552,7 @@
     else { document.body.classList.remove('phantom-font'); }
   }
 
-  // ============ ★ フォントカラー適用関数 ============
+  // ============ フォントカラー適用 ============
   function updateFontColor() {
     const skin = ACORN_SKINS[equippedAcorn];
     const fontColor = skin ? skin.fontColor : '#d2b48c';
@@ -1995,7 +2580,6 @@
 
   // ============ 表示設定 ============
   function updateDisplaySettings() {
-    // ローマ字の表示/非表示
     if (showRomaji) {
       romajiDisplayEl.classList.remove('hidden');
       toggleRomajiBtn.textContent = 'ローマ字: 表示';
@@ -2007,7 +2591,6 @@
       toggleRomajiBtn.style.borderColor = 'var(--vermillion)';
       toggleRomajiBtn.style.color = 'var(--vermillion)';
     }
-    // ひらがな（小）の表示/非表示
     if (showKanaSmall) {
       kanaSmallEl.classList.remove('hidden');
       toggleKanaSmallBtn.textContent = 'ひらがな: 表示';
@@ -2023,7 +2606,7 @@
       'ローマ字: ' + (showRomaji ? '表示' : '非表示') + ' / ひらがな: ' + (showKanaSmall ? '表示' : '非表示');
   }
 
-  // ============ 背景描画システム ============
+  // ============ 背景描画システム（簡略版） ============
   function initForest() {
     forestCanvas.width = window.innerWidth; forestCanvas.height = window.innerHeight;
     trees = []; villageHouses = []; fireworks = [];
@@ -2075,7 +2658,6 @@
       case 'everest': colors = ['#0a1a3a','#1a3a6a','#3a7aaa']; break;
       case 'sakura': colors = ['#1a0a1a','#3a1a2a','#5a2a3a']; break;
       case 'aurora': colors = ['#0a0a1a','#1a0a3a','#0a2a3a']; break;
-      case 'nightcity': colors = ['#0a0a14','#1a0a28','#2a0a3a']; break;
       case 'waterfall': colors = ['#0a1a0a','#1a3a1a','#2a5a2a']; break;
       case 'desert': colors = ['#1a0a0a','#3a2a0a','#5a3a0a']; break;
       case 'starry': colors = ['#050510','#0a0a25','#0a0a3a']; break;
@@ -2112,22 +2694,6 @@
           });
         }
       });
-      for (let i = 0; i < 8; i++) {
-        const x = 30 + i * (forestCanvas.width - 60) / 7, y = forestCanvas.height * 0.6 + Math.sin(i * 1.2) * 20;
-        fCtx.save(); const glow = 0.6 + Math.sin(Date.now() / 500 + i) * 0.2;
-        fCtx.shadowColor = `rgba(255, 150, 50, ${glow * 0.5})`; fCtx.shadowBlur = 30;
-        fCtx.fillStyle = `rgba(255, 100, 50, ${glow * 0.7})`;
-        fCtx.beginPath(); fCtx.ellipse(x, y, 12, 18, 0, 0, Math.PI * 2); fCtx.fill();
-        fCtx.fillStyle = `rgba(255, 200, 100, ${glow * 0.3})`;
-        fCtx.beginPath(); fCtx.ellipse(x, y, 6, 10, 0, 0, Math.PI * 2); fCtx.fill();
-        fCtx.restore();
-      }
-      for (let i = 0; i < 5; i++) {
-        const x = 80 + i * (forestCanvas.width - 160) / 4, y = forestCanvas.height * 0.72;
-        fCtx.fillStyle = '#5a3a2a'; fCtx.fillRect(x, y, 50, 30);
-        fCtx.fillStyle = '#8a5a3a'; fCtx.fillRect(x + 5, y - 15, 40, 15);
-        fCtx.fillStyle = '#ffcc66'; fCtx.fillRect(x + 10, y - 10, 8, 10); fCtx.fillRect(x + 30, y - 10, 8, 10);
-      }
     }
 
     if (equippedBg === 'republic') {
@@ -2140,10 +2706,6 @@
         fCtx.closePath(); fCtx.fill();
         if (house.hasChimney) {
           fCtx.fillStyle = '#6b4a2a'; fCtx.fillRect(house.x + house.w/4, house.y - house.h - house.w * 0.3, 8, 15);
-          if (Math.random() > 0.7) {
-            fCtx.fillStyle = 'rgba(200,200,200,0.1)';
-            fCtx.beginPath(); fCtx.arc(house.x + house.w/4 + 4, house.y - house.h - house.w * 0.3 - 10, 10 + Math.random() * 8, 0, Math.PI * 2); fCtx.fill();
-          }
         }
         fCtx.shadowBlur = 0; fCtx.fillStyle = '#ffdd88';
         fCtx.fillRect(house.x - house.w/4 - 4, house.y - house.h * 0.6, 8, 10);
@@ -2156,15 +2718,8 @@
       fCtx.quadraticCurveTo(forestCanvas.width * 0.3, forestCanvas.height * 0.7, forestCanvas.width * 0.5, forestCanvas.height * 0.75);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.7, forestCanvas.height * 0.8, forestCanvas.width, forestCanvas.height * 0.7);
       fCtx.lineTo(forestCanvas.width, forestCanvas.height); fCtx.lineTo(0, forestCanvas.height); fCtx.closePath(); fCtx.fill(); fCtx.restore();
-      fCtx.save(); fCtx.fillStyle = '#2a5a2a'; fCtx.fillRect(forestCanvas.width * 0.7, forestCanvas.height * 0.4, 4, 40);
-      fCtx.fillStyle = '#ffd700'; fCtx.font = '20px sans-serif'; fCtx.fillText('🌰', forestCanvas.width * 0.7 - 15, forestCanvas.height * 0.4 - 5); fCtx.restore();
       fCtx.save(); fCtx.fillStyle = 'rgba(255,255,255,0.15)'; fCtx.font = 'bold 28px "Zen Maru Gothic", sans-serif'; fCtx.textAlign = 'center';
       fCtx.fillText('どんぐり共和国', forestCanvas.width * 0.5, 60); fCtx.restore();
-      for (let i = 0; i < 5; i++) {
-        const x = ((i * 200 + Date.now() * 0.01) % (forestCanvas.width + 100)) - 50, y = 30 + i * 30 % 80;
-        fCtx.save(); fCtx.globalAlpha = 0.3; fCtx.fillStyle = 'white';
-        fCtx.beginPath(); fCtx.arc(x, y, 40, 0, Math.PI * 2); fCtx.arc(x + 40, y - 10, 35, 0, Math.PI * 2); fCtx.arc(x + 70, y, 30, 0, Math.PI * 2); fCtx.fill(); fCtx.restore();
-      }
     }
 
     const treeOpacity = equippedBg === 'republic' ? 0.5 : 1.0;
@@ -2224,7 +2779,7 @@
     requestAnimationFrame(drawForest);
   }
 
-  // ============ ★ どんぐり形状描画（拡張） ============
+  // ============ どんぐり形状描画（簡略版） ============
   function getAcornStyle(skin) {
     const styles = {
       'default': { cap: '#654321', nut: '#a07346', glow: null, particleColors: ['#654321','#a07346','#8B6B3D'] },
@@ -2264,165 +2819,13 @@
       variation: 0.8 + Math.random() * 0.4 });
   }
 
-  // ★ 形状別描画関数
-  function drawAcornShape(ctx, a, style, x, y, scale) {
-    const shape = a.shape || 'normal';
-    const size = 10 * scale;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.scale(scale, scale);
-
-    switch(shape) {
-      case 'spiky':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = style.glow || 'rgba(255,140,0,0.3)'; ctx.shadowBlur = 15;
-        ctx.beginPath();
-        for (let i = 0; i < 16; i++) {
-          const angle = (i / 16) * Math.PI * 2 - Math.PI / 2;
-          const r = i % 2 === 0 ? size * 1.2 : size * 0.6;
-          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 2);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 2);
-        }
-        ctx.closePath(); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
-        ctx.beginPath(); ctx.arc(0, -4, size * 0.9, Math.PI * 1.1, Math.PI * 1.9); ctx.fill();
-        break;
-
-      case 'bubble':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = style.glow || 'rgba(74,170,106,0.3)'; ctx.shadowBlur = 20;
-        ctx.beginPath(); ctx.arc(0, 4, size, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
-        ctx.beginPath(); ctx.arc(0, -2, size * 0.7, Math.PI, Math.PI * 2); ctx.fill();
-        for (let i = 0; i < 5; i++) {
-          const angle = a.bubblePhase + i * 1.26, dist = size * 0.6 + Math.sin(a.bubblePhase * 0.5 + i) * 3;
-          ctx.fillStyle = `rgba(200,255,230,${0.15 + Math.sin(a.bubblePhase + i) * 0.1})`;
-          ctx.beginPath(); ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.6 + 4, 4 + Math.sin(a.bubblePhase + i * 1.5) * 2, 0, Math.PI * 2); ctx.fill();
-        }
-        break;
-
-      case 'fluffy':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = 'rgba(255,182,193,0.3)'; ctx.shadowBlur = 25;
-        ctx.beginPath(); ctx.arc(0, 4, size * 0.9, 0, Math.PI * 2); ctx.fill();
-        for (let i = 0; i < 12; i++) {
-          const angle = a.bubblePhase + i * 0.52, dist = size * 0.9 + Math.sin(a.bubblePhase * 0.3 + i * 0.7) * 4;
-          const r = 3 + Math.sin(a.bubblePhase * 0.5 + i * 1.1) * 2;
-          ctx.fillStyle = `rgba(255,200,210,${0.2 + Math.sin(a.bubblePhase + i * 0.8) * 0.15})`;
-          ctx.beginPath(); ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.6 + 4, r, 0, Math.PI * 2); ctx.fill();
-        }
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
-        ctx.beginPath(); ctx.arc(0, -2, size * 0.6, Math.PI, Math.PI * 2); ctx.fill();
-        break;
-
-      case 'crystal':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = style.glow || 'rgba(138,196,208,0.4)'; ctx.shadowBlur = 20;
-        ctx.beginPath();
-        for (let i = 0; i < 6; i++) {
-          const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
-          const r = size * (i % 2 === 0 ? 1.0 : 0.8);
-          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-        }
-        ctx.closePath(); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
-        ctx.beginPath(); ctx.moveTo(-size * 0.7, -2); ctx.lineTo(0, -size * 0.7); ctx.lineTo(size * 0.7, -2); ctx.closePath(); ctx.fill();
-        break;
-
-      case 'star':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = 'rgba(255,215,0,0.4)'; ctx.shadowBlur = 20;
-        ctx.beginPath();
-        for (let i = 0; i < 10; i++) {
-          const angle = (i / 10) * Math.PI * 2 - Math.PI / 2;
-          const r = i % 2 === 0 ? size * 1.1 : size * 0.5;
-          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-        }
-        ctx.closePath(); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
-        ctx.beginPath(); ctx.arc(0, -2, size * 0.5, Math.PI, Math.PI * 2); ctx.fill();
-        break;
-
-      case 'ice':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = style.glow || 'rgba(138,196,224,0.4)'; ctx.shadowBlur = 25;
-        ctx.beginPath();
-        for (let i = 0; i < 8; i++) {
-          const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
-          const r = size * (0.7 + Math.sin(i * 0.7) * 0.3);
-          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-        }
-        ctx.closePath(); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
-        ctx.beginPath(); ctx.arc(0, -2, size * 0.6, Math.PI, Math.PI * 2); ctx.fill();
-        break;
-
-      case 'dark':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = 'rgba(106,42,138,0.5)'; ctx.shadowBlur = 30;
-        ctx.beginPath();
-        for (let i = 0; i < 12; i++) {
-          const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
-          const r = size * (0.6 + Math.sin(angle * 2 + a.bubblePhase) * 0.4);
-          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-        }
-        ctx.closePath(); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
-        ctx.beginPath(); ctx.arc(0, -2, size * 0.5, Math.PI, Math.PI * 2); ctx.fill();
-        break;
-
-      case 'light':
-        const grad = ctx.createRadialGradient(0, 4, 0, 0, 4, size);
-        grad.addColorStop(0, '#ffffff'); grad.addColorStop(0.5, style.nut); grad.addColorStop(1, style.nut);
-        ctx.fillStyle = grad;
-        ctx.shadowColor = 'rgba(255,255,255,0.5)'; ctx.shadowBlur = 35;
-        ctx.beginPath(); ctx.arc(0, 4, size, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 15;
-        ctx.beginPath(); ctx.arc(0, -2, size * 0.5, Math.PI, Math.PI * 2); ctx.fill();
-        break;
-
-      case 'cosmic':
-        ctx.fillStyle = style.nut;
-        ctx.shadowColor = 'rgba(74,26,106,0.5)'; ctx.shadowBlur = 30;
-        ctx.beginPath();
-        for (let i = 0; i < 16; i++) {
-          const angle = (i / 16) * Math.PI * 2 - Math.PI / 2;
-          const r = size * (0.5 + Math.sin(angle * 2 + a.bubblePhase * 0.5) * 0.5);
-          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
-        }
-        ctx.closePath(); ctx.fill();
-        ctx.fillStyle = style.cap; ctx.shadowBlur = 15;
-        ctx.beginPath(); ctx.arc(0, -2, size * 0.4, Math.PI, Math.PI * 2); ctx.fill();
-        break;
-
-      default:
-        ctx.fillStyle = style.nut;
-        if (style.glow) { ctx.shadowColor = style.glow; ctx.shadowBlur = 15; }
-        ctx.beginPath(); ctx.ellipse(0, 5, size * 0.9, size * 1.1, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = style.cap;
-        ctx.beginPath(); ctx.arc(0, -1, size * 0.8, Math.PI, Math.PI * 2); ctx.fill();
-        break;
-    }
-    ctx.restore();
-  }
-
   function drawAcorn(ctx, a) {
-    const skin = ACORN_SKINS[a.skin] || ACORN_SKINS['default'];
     const style = getAcornStyle(a.skin);
     const currentX = a.x + Math.sin(a.wobble) * 3;
     const currentY = a.y;
-    const shape = a.shape || 'normal';
-
     ctx.save();
     ctx.translate(currentX, currentY);
     ctx.scale(a.scale * a.variation, a.scale * a.variation);
-
     if (a.skin === 'phantom') {
       a.hue = (a.hue + 0.5) % 360; const hue = (a.hue + 240) % 360;
       ctx.shadowColor = `hsl(${hue}, 80%, 60%)`; ctx.shadowBlur = 40;
@@ -2455,7 +2858,6 @@
       ctx.beginPath(); ctx.arc(0, 6, 5, 0, Math.PI * 2); ctx.fill();
       ctx.restore(); return;
     }
-
     if (a.skin === 'rainbow') {
       a.hue = (a.hue + 0.8) % 360;
       const hue1 = a.hue, hue2 = (a.hue + 60) % 360, hue3 = (a.hue + 120) % 360;
@@ -2491,7 +2893,6 @@
       }
       ctx.restore(); return;
     }
-
     if (a.skin === 'beast') {
       a.bubblePhase += 0.04;
       ctx.fillStyle = '#4A2E18'; ctx.fillRect(-2, -20, 4, 6);
@@ -2516,47 +2917,16 @@
       ctx.shadowBlur = 0;
       ctx.restore(); return;
     }
-
-    const specialShapes = ['spiky', 'bubble', 'fluffy', 'crystal', 'star', 'ice', 'dark', 'light', 'cosmic'];
-    if (specialShapes.includes(shape)) {
-      drawAcornShape(ctx, a, style, 0, 0, 1);
-    } else {
-      if (style.glow) { ctx.shadowColor = style.glow; ctx.shadowBlur = 20; }
-      ctx.fillStyle = style.nut;
-      ctx.beginPath(); ctx.ellipse(0, 10, 9, 11, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = style.cap;
-      ctx.beginPath(); ctx.arc(0, 3, 10, Math.PI, Math.PI * 2); ctx.fill();
-      if (a.skin === 'bubble' || a.skin === 'green') {
-        a.bubblePhase += 0.05;
-        for(let i=0; i<3; i++) {
-          const angle = a.bubblePhase + i * 2.1, radius = 14 + Math.sin(a.bubblePhase + i) * 4;
-          ctx.fillStyle = `rgba(100,255,180,${0.15 + Math.sin(a.bubblePhase + i*1.5)*0.05})`;
-          ctx.beginPath(); ctx.arc(Math.cos(angle) * radius * 0.7, Math.sin(angle) * radius * 0.5 + 5, 3 + Math.sin(a.bubblePhase + i*2) * 1, 0, Math.PI*2); ctx.fill();
-        }
-      }
-      if (a.skin === 'flame') {
-        for(let i=0; i<3; i++) {
-          const angle = a.bubblePhase + i * 2.1, radius = 12 + Math.sin(a.bubblePhase * 0.7 + i) * 3;
-          ctx.fillStyle = `rgba(255,200,50,${0.1 + Math.sin(a.bubblePhase + i*1.5)*0.05})`;
-          ctx.beginPath(); ctx.arc(Math.cos(angle) * radius * 0.5, -5 + Math.sin(angle) * radius * 0.3, 4 + Math.sin(a.bubblePhase + i*2) * 1.5, 0, Math.PI*2); ctx.fill();
-        }
-      }
-      if (a.skin === 'cosmic') {
-        a.bubblePhase += 0.03;
-        for (let i = 0; i < 8; i++) {
-          const angle = a.bubblePhase + i * 0.8, dist = 6 + Math.sin(a.bubblePhase * 0.3 + i * 1.1) * 5;
-          const size = 1.5 + Math.sin(a.bubblePhase * 0.5 + i * 0.7) * 1;
-          const hue = (a.hue + i * 45) % 360;
-          ctx.fillStyle = `hsla(${hue}, 80%, 60%, ${0.15 + Math.sin(a.bubblePhase * 0.4 + i * 1.3) * 0.1})`;
-          ctx.beginPath(); ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.6 + 5, size, 0, Math.PI * 2); ctx.fill();
-        }
-      }
-    }
+    if (style.glow) { ctx.shadowColor = style.glow; ctx.shadowBlur = 20; }
+    ctx.fillStyle = style.nut;
+    ctx.beginPath(); ctx.ellipse(0, 10, 9, 11, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = style.cap;
+    ctx.beginPath(); ctx.arc(0, 3, 10, Math.PI, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
 
-  // ============ パーティクル・エフェクト（particleCount対応 + 透明度持続時間延長） ============
+  // ============ パーティクル・エフェクト ============
   function createSpecialParticles(x, y, skin) {
     const style = getAcornStyle(skin);
     const colors = style.particleColors;
@@ -2564,7 +2934,6 @@
     let multiplier = 1;
     if (skin === 'phantom') multiplier = 0.4;
     else if (skin === 'beast') multiplier = 0.4;
-    else if (skin === 'gold' || skin === 'cosmic') multiplier = 0.6;
     else multiplier = 0.6;
     
     const count = Math.max(0, Math.floor(baseCount * multiplier) + Math.floor(Math.random() * 2));
@@ -2574,14 +2943,11 @@
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2, speed = 2 + Math.random() * 4;
       const color = colors[Math.floor(Math.random() * colors.length)];
-      const type = skin === 'beast' ? 'white' : (Math.random() > 0.6 ? 'star' : (Math.random() > 0.5 ? 'circle' : 'sparkle'));
       particles.push({ x: x + (Math.random() - 0.5) * 10, y: y + (Math.random() - 0.5) * 10,
         vx: Math.cos(angle) * speed * (0.5 + Math.random() * 0.5), vy: Math.sin(angle) * speed * (0.5 + Math.random() * 0.5) - 2,
-        life: 1.0, 
-        decay: 0.003 + Math.random() * 0.006, 
-        size: 3 + Math.random() * 6,
-        color: skin === 'beast' ? '#ffffff' : color, type: type,
-        rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1, hue: Math.random() * 360 });
+        life: 1.0, decay: 0.003 + Math.random() * 0.006, size: 3 + Math.random() * 6,
+        color: color, type: 'circle',
+        rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1 });
     }
     if (skin === 'phantom') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.2)); i++) {
@@ -2589,8 +2955,7 @@
         particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
           life: 1.0, decay: 0.003 + Math.random() * 0.005, size: 2 + Math.random() * 4,
-          color: `hsl(280, 100%, 70%)`, type: 'glow',
-          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
+          color: `hsl(280, 100%, 70%)`, type: 'glow' });
       }
     } else if (skin === 'beast') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.6)); i++) {
@@ -2598,19 +2963,9 @@
         particles.push({ x: x + (Math.random() - 0.5) * 8, y: y + (Math.random() - 0.5) * 8,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2,
           life: 1.0, decay: 0.004 + Math.random() * 0.008, size: 1 + Math.random() * 3,
-          color: `rgba(255,255,255,${0.5 + Math.random() * 0.5})`, type: 'glow',
-          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: 0 });
+          color: `rgba(255,255,255,${0.5 + Math.random() * 0.5})`, type: 'glow' });
       }
       playBeastSound();
-    } else if (skin === 'gold' || skin === 'cosmic') {
-      for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.4)); i++) {
-        const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
-        particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
-          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
-          life: 1.0, decay: 0.003 + Math.random() * 0.006, size: 2 + Math.random() * 4,
-          color: `hsl(${Math.random() * 360}, 100%, 70%)`, type: 'glow',
-          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
-      }
     }
     return particles;
   }
@@ -2651,33 +3006,16 @@
     }
     for(let i=specialParticles.length-1; i>=0; i--) {
       const p = specialParticles[i];
-      p.x += p.vx; p.y += p.vy; p.vy += 0.06; p.life -= p.decay; p.rot += p.rotSpeed;
+      p.x += p.vx; p.y += p.vy; p.vy += 0.06; p.life -= p.decay;
       if(p.life <= 0 || p.y > acornCanvas.height + 50) { specialParticles.splice(i, 1); continue; }
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = Math.max(0, p.life);
-      if (p.type === 'star') {
-        ctx.fillStyle = p.color; const s = p.size * 0.5;
-        ctx.beginPath();
-        for (let j = 0; j < 5; j++) {
-          const angle = (j / 5) * Math.PI * 2 - Math.PI / 2;
-          const r = j % 2 === 0 ? s : s * 0.4;
-          if (j === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-        }
-        ctx.closePath(); ctx.fill();
-      } else if (p.type === 'glow') {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.globalAlpha = Math.max(0, p.life);
+      if (p.type === 'glow') {
         const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 0.8);
         grad.addColorStop(0, p.color); grad.addColorStop(0.5, p.color); grad.addColorStop(1, 'rgba(255,255,255,0)');
         ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.8, 0, Math.PI * 2); ctx.fill();
         ctx.shadowColor = p.color; ctx.shadowBlur = 20;
         ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.2, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
-      } else if (p.type === 'sparkle') {
-        ctx.strokeStyle = p.color; ctx.lineWidth = 1.5; const s = p.size * 0.6;
-        ctx.beginPath(); ctx.moveTo(-s, 0); ctx.lineTo(s, 0); ctx.moveTo(0, -s); ctx.lineTo(0, s); ctx.stroke();
-        ctx.beginPath(); const d = s * 0.5; ctx.moveTo(-d, -d); ctx.lineTo(d, d); ctx.moveTo(d, -d); ctx.lineTo(-d, d); ctx.stroke();
-      } else if (p.type === 'white') {
-        ctx.fillStyle = '#ffffff'; ctx.shadowColor = 'rgba(255,255,255,0.5)'; ctx.shadowBlur = 15;
-        ctx.beginPath(); ctx.arc(0, 0, p.size * 0.7, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
       } else {
         ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.5, 0, Math.PI * 2); ctx.fill();
       }
@@ -2740,13 +3078,6 @@
   function parseKanaToUnits(str) {
     const units = []; let i = 0;
     while(i < str.length) {
-      if (i + 3 < str.length) {
-        const s = str.substr(i, 4);
-        const choices = getRomajiChoices(s, false);
-        if (choices.length > 0 && !(choices.length === 1 && choices[0] === s)) {
-          units.push({ chars: s, isLast: false, custom: choices }); i += 4; continue;
-        }
-      }
       if (i + 2 < str.length) {
         const s = str.substr(i, 3);
         const choices = getRomajiChoices(s, false);
@@ -2820,13 +3151,9 @@
     const w=queue[qIndex];
     if (!w) { queue = buildQueue(TARGET_LEN, isSentenceMode); qIndex = 0; renderWord(); return; }
     
-    // 上部：ひらがな（小）
     kanaSmallEl.textContent = w.kana;
-    
-    // 中央：漢字（またはひらがな表示切替）
     kanjiDisplayEl.textContent = useKanji ? w.display : w.kana;
     
-    // 下部：ローマ字
     if(!w.activePaths) { w.activePaths=generateAllCombinations(w.unitChoices); w.currentIndex=0; w.typedKeys=""; }
     let displayStr = w.forcedRomaji;
     if(!displayStr) {
@@ -2971,8 +3298,6 @@
     if(!word.activePaths) { word.activePaths=generateAllCombinations(word.unitChoices); word.currentIndex=0; word.typedKeys=""; }
     if (key === ' ' || key === 'Space') return;
     let processedKey = key;
-    if (key === '(') processedKey = '(';
-    if (key === ')') processedKey = ')';
     const possibleNext=new Set();
     word.activePaths.forEach(p=>{
       if(p && p.length>word.currentIndex) {
@@ -3114,14 +3439,11 @@
     ['typed','miss','start','result','bgm'].forEach(type => {
       const statusEl = document.getElementById('status-' + type);
       const url = document.getElementById('sound-' + type).value.trim();
-      if (url) { statusEl.textContent = '📁 外部ファイル設定済み（実際の使用時に再生）'; statusEl.className = 'sound-status success'; }
+      if (url) { statusEl.textContent = '📁 外部ファイル設定済み'; statusEl.className = 'sound-status success'; }
       else { statusEl.textContent = '🎵 デフォルト音声を使用中'; statusEl.className = 'sound-status'; }
     });
     particleSlider.value = particleCount;
     particleCountDisplay.textContent = particleCount;
-    document.getElementById('status-particle').textContent = '破片の数を調整します（0で非表示）';
-    document.getElementById('status-particle').className = 'sound-status';
-    // 表示設定の状態を反映
     updateDisplaySettings();
   }
 
@@ -3142,24 +3464,66 @@
     else if (result === 'phantom') { codeVerified = true; codeStatus.textContent = '🌀 幻のどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockPhantomAcorn(); saveData(); }
     else if (result === 'double') { codeVerified = true; codeStatus.textContent = '🔮 ダブルどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockDoubleAcorn(); saveData(); }
     else if (result === 'beast') { codeVerified = true; codeStatus.textContent = '🐻 野獣先輩どんぐり＆部屋を解き放ちました！'; codeStatus.className = 'code-status success'; unlockBeastAcorn(); unlockBeastBg(); saveData(); }
-    else { codeStatus.textContent = '❌ 認証失敗！ アクセス拒否'; codeStatus.className = 'code-status error'; console.warn('コード認証失敗:', input); }
+    else { codeStatus.textContent = '❌ 認証失敗！ アクセス拒否'; codeStatus.className = 'code-status error'; }
     codeInput.value = '';
   }
-
-  // ============ お知らせフレーム ============
-  function updateAnnounceVisibility() {
-    if (announceVersion === '1.0') { hideAnnounce(); }
-    else { showAnnounce(); }
-  }
-  function showAnnounce() { announceFrame.classList.remove('hidden'); announceOverlay.classList.remove('hidden'); }
-  function hideAnnounce() { announceFrame.classList.add('hidden'); announceOverlay.classList.add('hidden'); }
-  announceClose.addEventListener('click', hideAnnounce);
-  announceDismiss.addEventListener('click', () => { announceVersion = '1.0'; saveData(); hideAnnounce(); });
 
   // ============ イベントリスナー ============
   document.getElementById('info-open-btn').addEventListener('click', (e) => { e.stopPropagation(); openInfoModal(); });
   document.getElementById('info-close-btn').addEventListener('click', () => { infoOverlay.classList.remove('active'); });
   infoOverlay.addEventListener('click', (e) => { if(e.target === infoOverlay) infoOverlay.classList.remove('active'); });
+
+  // オンライン対戦ボタン
+  document.getElementById('online-open-btn').addEventListener('click', (e) => { e.stopPropagation(); openOnlineModal(); });
+  document.getElementById('online-close-btn').addEventListener('click', () => { onlineOverlay.classList.remove('active'); });
+  onlineOverlay.addEventListener('click', (e) => { if(e.target === onlineOverlay) onlineOverlay.classList.remove('active'); });
+
+  function openOnlineModal() {
+    // プレイヤーコード表示
+    if (!playerCode || playerCode.length !== 12) {
+      playerCode = ensureUniquePlayerCode();
+      saveData();
+    }
+    playerCodeDisplay.textContent = playerCode;
+    updateReceivedChallengesUI();
+    onlineOverlay.classList.add('active');
+  }
+
+  // プレイヤーコードクリックでコピー
+  playerCodeDisplay.addEventListener('click', () => {
+    if (playerCode) {
+      navigator.clipboard.writeText(playerCode).then(() => {
+        showPopup('📋 コードをコピーしました！');
+      }).catch(() => {
+        // フォールバック
+        const range = document.createRange();
+        range.selectNode(playerCodeDisplay);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        showPopup('📋 コードをコピーしました！');
+      });
+    }
+  });
+
+  // ランダムマッチングは削除（特定プレイヤーのみ）
+  // 特定のプレイヤー
+  document.getElementById('specific-match-btn').addEventListener('click', () => {
+    const area = document.getElementById('specific-match-area');
+    area.style.display = area.style.display === 'none' ? 'block' : 'none';
+  });
+
+  document.getElementById('send-challenge-btn').addEventListener('click', () => {
+    const targetCode = document.getElementById('target-player-code').value.trim().toLowerCase();
+    sendChallenge(targetCode);
+  });
+
+  document.getElementById('target-player-code').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('send-challenge-btn').click();
+    }
+  });
 
   document.getElementById('achievement-open-btn').addEventListener('click', () => { updateAchievementUI(); achievementOverlay.classList.add('active'); });
   document.getElementById('achievement-close-btn').addEventListener('click', () => { achievementOverlay.classList.remove('active'); });
@@ -3199,7 +3563,6 @@
   document.getElementById('code-exec-btn').addEventListener('click', (e) => { e.stopPropagation(); executeCodeAuth(); });
   codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); executeCodeAuth(); } });
 
-  // ★ particleCount スライダーイベント
   particleSlider.addEventListener('input', () => {
     particleCount = parseInt(particleSlider.value);
     particleCountDisplay.textContent = particleCount;
@@ -3208,7 +3571,6 @@
     document.getElementById('status-particle').className = 'sound-status success';
   });
 
-  // ★ 表示設定トグルボタン
   toggleRomajiBtn.addEventListener('click', () => {
     showRomaji = !showRomaji;
     saveData();
@@ -3234,10 +3596,16 @@
       phantomAcornUnlocked=d.phantomAcornUnlocked || false; doubleAcornUnlocked=d.doubleAcornUnlocked || false;
       beastAcornUnlocked=d.beastAcornUnlocked || false; beastBgUnlocked=d.beastBgUnlocked || false;
       announceVersion = d.announceVersion || '';
+      infoBadgeVersion = d.infoBadgeVersion || '';
       infoRead = d.infoRead || false;
       particleCount = d.particleCount || 5;
       showRomaji = d.showRomaji !== undefined ? d.showRomaji : true;
       showKanaSmall = d.showKanaSmall !== undefined ? d.showKanaSmall : true;
+      playerCode = d.playerCode || '';
+      sentChallenges = d.sentChallenges || [];
+      receivedChallenges = d.receivedChallenges || [];
+      ignoredChallenges = d.ignoredChallenges || [];
+      challengeCooldown = d.challengeCooldown || 0;
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -3247,14 +3615,16 @@
       for (const type of ['typed','miss','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
       stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor(); updateInfoBadge();
       updateDisplaySettings();
+      if (playerCodeDisplay) playerCodeDisplay.textContent = playerCode || '----';
+      updateReceivedChallengesUI();
     }
   });
 
   hankoBadge.addEventListener('click', () => { updateShopUI(); shopOverlay.classList.add('active'); });
 
   document.addEventListener('keydown', (e) => {
-    if(shopOverlay.classList.contains('active') || settingsOverlay.classList.contains('active') || achievementOverlay.classList.contains('active') || infoOverlay.classList.contains('active')) {
-      if(e.key === 'Escape') { e.preventDefault(); shopOverlay.classList.remove('active'); settingsOverlay.classList.remove('active'); achievementOverlay.classList.remove('active'); infoOverlay.classList.remove('active'); }
+    if(shopOverlay.classList.contains('active') || settingsOverlay.classList.contains('active') || achievementOverlay.classList.contains('active') || infoOverlay.classList.contains('active') || onlineOverlay.classList.contains('active')) {
+      if(e.key === 'Escape') { e.preventDefault(); shopOverlay.classList.remove('active'); settingsOverlay.classList.remove('active'); achievementOverlay.classList.remove('active'); infoOverlay.classList.remove('active'); onlineOverlay.classList.remove('active'); }
       return;
     }
     if(state === 'menu') { if(e.code === 'Space') { e.preventDefault(); initGame(); } return; }
@@ -3271,7 +3641,7 @@
     }
   });
 
-  // ============ 音声復元（ページ更新時も前回の設定を読み込む） ============
+  // ============ 音声復元 ============
   async function restoreSavedSounds() {
     const types = ['typed','miss','start','result','bgm'];
     for (const type of types) {
@@ -3285,7 +3655,7 @@
           if (buffer) { 
             soundBuffers[type] = buffer; 
             soundUrls[type] = url;
-            statusEl.textContent = '✅ 保存済み音声を復元しました（再生準備完了）';
+            statusEl.textContent = '✅ 保存済み音声を復元しました';
             statusEl.className = 'sound-status success';
           } else {
             statusEl.textContent = '⚠️ 音声復元に失敗（フォールバック）';
@@ -3318,10 +3688,16 @@
     phantomAcornUnlocked = data.phantomAcornUnlocked || false; doubleAcornUnlocked = data.doubleAcornUnlocked || false;
     beastAcornUnlocked = data.beastAcornUnlocked || false; beastBgUnlocked = data.beastBgUnlocked || false;
     announceVersion = data.announceVersion || '';
+    infoBadgeVersion = data.infoBadgeVersion || '';
     infoRead = data.infoRead || false;
     particleCount = data.particleCount || 5;
     showRomaji = data.showRomaji !== undefined ? data.showRomaji : true;
     showKanaSmall = data.showKanaSmall !== undefined ? data.showKanaSmall : true;
+    playerCode = data.playerCode || '';
+    sentChallenges = data.sentChallenges || [];
+    receivedChallenges = data.receivedChallenges || [];
+    ignoredChallenges = data.ignoredChallenges || [];
+    challengeCooldown = data.challengeCooldown || 0;
 
     soundTypedInput.value = soundTyped;
     soundMissInput.value = soundMiss;
@@ -3337,7 +3713,6 @@
     updateAchievementUI();
     updatePhantomFont();
     updateShopUI();
-    updateAnnounceVisibility();
     updateInfoBadge();
     initAudio();
     
@@ -3355,6 +3730,28 @@
     particleSlider.value = particleCount;
     particleCountDisplay.textContent = particleCount;
     updateDisplaySettings();
+    
+    // プレイヤーコードがなければ生成
+    if (!playerCode || playerCode.length !== 12) {
+      playerCode = ensureUniquePlayerCode();
+      saveData();
+    }
+    if (playerCodeDisplay) playerCodeDisplay.textContent = playerCode;
+    
+    updateAnnounceVisibility();
+    updateReceivedChallengesUI();
+    
+    // 定期的に擬似的な挑戦状を受信（デモ用）
+    setInterval(() => {
+      // ランダムに挑戦状が来る（5%の確率で）
+      if (Math.random() < 0.05 && receivedChallenges.length < 3) {
+        let fromCode = generatePlayerCode();
+        while (fromCode === playerCode) {
+          fromCode = generatePlayerCode();
+        }
+        receiveChallenge(fromCode, playerCode);
+      }
+    }, 30000); // 30秒ごとにチェック
   }
 
   init();
