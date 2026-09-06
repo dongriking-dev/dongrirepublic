@@ -1232,7 +1232,11 @@
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
     version: 'v1.1.0',
-    updateDate: '2026年9月7日'
+    updateDate: '2026年9月7日',
+    // ===== お知らせ詳細リンク =====
+    detailLinks: [
+      { title: 'どんぐりや背景の取引実装した方がいいと思いますか？', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfMD6Ez3q3nsBIBMWbLzk9SRBucBP9VccpyO8UnYAjl-EaIgg/viewform?usp=publish-editor', desc: '投票の詳細はこちら' },
+    ]
   };
 
   // ============ 単語データ ============
@@ -1410,8 +1414,6 @@
     beastAcornUnlocked: false, beastBgUnlocked: false,
     announceVersion: '',
     infoRead: false,
-    votedOption: null, // 投票した選択肢
-    voteCounts: { optionA: 0, optionB: 0 }, // 投票数
   };
 
   // --- デフォルト音声 ---
@@ -1452,8 +1454,7 @@
     const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
-      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoRead,
-      votedOption, voteCounts };
+      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoRead };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1470,8 +1471,7 @@
       codeVerified = false, superMode = false, normalMode = false,
       phantomAcornUnlocked = false, doubleAcornUnlocked = false,
       beastAcornUnlocked = false, beastBgUnlocked = false,
-      announceVersion = '', infoRead = false,
-      votedOption = null, voteCounts = { optionA: 0, optionB: 0 };
+      announceVersion = '', infoRead = false;
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -1700,50 +1700,23 @@
       </div>`;
     });
 
-    // ===== 投票セクション =====
-    html += '<h3>🗳️ 投票コーナー</h3>';
-    html += `<div style="background:rgba(0,0,0,0.2);border-radius:8px;padding:14px;margin-bottom:6px;">`;
-    html += `<p style="margin:0 0 10px 0;font-weight:700;color:var(--gold-soft);">どんぐりタイピングに実装してほしい機能は？</p>`;
-    html += `<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">`;
-    if (votedOption) {
-      html += `<span style="background:rgba(160,115,70,0.2);padding:6px 16px;border-radius:6px;font-size:13px;">✅ 投票済み: <strong>${votedOption === 'optionA' ? '🎮 ミニゲーム' : '🌐 ランキング'}</strong></span>`;
-    } else {
-      html += `<button class="vote-btn" data-option="optionA" style="background:var(--gold);border:none;color:var(--ink);padding:8px 20px;border-radius:6px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s;">🎮 ミニゲーム</button>`;
-      html += `<button class="vote-btn" data-option="optionB" style="background:var(--gold);border:none;color:var(--ink);padding:8px 20px;border-radius:6px;font-family:'Zen Maru Gothic',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s;">🌐 ランキング</button>`;
-    }
-    html += `</div>`;
-    html += `<div style="margin-top:10px;font-size:12px;color:var(--muted);">📊 現在の投票数: <span id="vote-result-display">🎮 ${voteCounts.optionA}票 / 🌐 ${voteCounts.optionB}票</span></div>`;
+    // ===== 詳細リンクセクション（押すと詳細ページへ） =====
+    html += '<h3>投票</h3>';
+    html += `<div style="display:flex;flex-direction:column;gap:8px;margin:4px 0 10px 0;">`;
+    INFO_DATA.detailLinks.forEach(link => {
+      html += `<a href="${link.url}" target="_blank" style="display:block;background:rgba(0,0,0,0.2);border-radius:8px;padding:12px 16px;text-decoration:none;color:var(--text);border-left:3px solid var(--gold);transition:background 0.2s,transform 0.2s;"
+                 onmouseover="this.style.background='rgba(160,115,70,0.2)';this.style.transform='translateX(4px)';"
+                 onmouseout="this.style.background='rgba(0,0,0,0.2)';this.style.transform='translateX(0)';">
+                <div style="font-weight:700;color:var(--gold-soft);">${link.title}</div>
+                <div style="font-size:13px;color:var(--muted);">${link.desc}</div>
+                <div style="font-size:11px;color:var(--gold);margin-top:4px;">こちら</div>
+              </a>`;
+    });
     html += `</div>`;
 
     html += `<div class="version-info">📌 バージョン ${INFO_DATA.version}（${INFO_DATA.updateDate}更新）</div>`;
 
     infoContent.innerHTML = html;
-
-    // 投票ボタンのイベント
-    infoContent.querySelectorAll('.vote-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (votedOption) return;
-        const option = btn.dataset.option;
-        votedOption = option;
-        if (option === 'optionA') voteCounts.optionA++;
-        else voteCounts.optionB++;
-        saveData();
-        renderInfoContent(); // 再描画
-        showPopup('🗳️ 投票ありがとうございます！');
-      });
-    });
-  }
-
-  // ============ 投票結果表示（コード9900） ============
-  function showVoteResult() {
-    const total = voteCounts.optionA + voteCounts.optionB;
-    if (total === 0) {
-      showPopup('📊 まだ投票はありません');
-      return;
-    }
-    const msg = `🎮 ミニゲーム: ${voteCounts.optionA}票　🌐 ランキング: ${voteCounts.optionB}票`;
-    showPopup('📊 ' + msg);
   }
 
   function openInfoModal() {
@@ -2688,7 +2661,7 @@
   function checkSentenceMode() {
     if (!isSentenceMode && score >= SENTENCE_THRESHOLD) {
       pendingSentenceMode = true;
-      showPopup('📖 文章モード準備中...（現在の単語を終わらせてから移行）');
+      showPopup('やりますね！？');
     }
   }
 
@@ -2730,7 +2703,6 @@
     if (inputHash === CORRECT_HASH_PHANTOM) return 'phantom';
     if (inputHash === CORRECT_HASH_DOUBLE) return 'double';
     if (inputHash === CORRECT_HASH_BEAST) return 'beast';
-    if (input === '9900') return 'vote_result';
     return false;
   }
   function hashPassword(pwd) {
@@ -2953,7 +2925,6 @@
     else if (result === 'phantom') { codeVerified = true; codeStatus.textContent = '🌀 幻のどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockPhantomAcorn(); saveData(); }
     else if (result === 'double') { codeVerified = true; codeStatus.textContent = '🔮 ダブルどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockDoubleAcorn(); saveData(); }
     else if (result === 'beast') { codeVerified = true; codeStatus.textContent = '🐻 野獣先輩どんぐり＆部屋を解き放ちました！'; codeStatus.className = 'code-status success'; unlockBeastAcorn(); unlockBeastBg(); saveData(); }
-    else if (result === 'vote_result') { showVoteResult(); codeStatus.textContent = '📊 投票結果を表示しました'; codeStatus.className = 'code-status success'; }
     else { codeStatus.textContent = '❌ 認証失敗！ アクセス拒否'; codeStatus.className = 'code-status error'; console.warn('コード認証失敗:', input); }
     codeInput.value = '';
   }
@@ -3026,8 +2997,6 @@
       beastAcornUnlocked=d.beastAcornUnlocked || false; beastBgUnlocked=d.beastBgUnlocked || false;
       announceVersion = d.announceVersion || '';
       infoRead = d.infoRead || false;
-      votedOption = d.votedOption || null;
-      voteCounts = d.voteCounts || { optionA: 0, optionB: 0 };
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -3092,8 +3061,6 @@
     beastAcornUnlocked = data.beastAcornUnlocked || false; beastBgUnlocked = data.beastBgUnlocked || false;
     announceVersion = data.announceVersion || '';
     infoRead = data.infoRead || false;
-    votedOption = data.votedOption || null;
-    voteCounts = data.voteCounts || { optionA: 0, optionB: 0 };
 
     highscoreValueEl.textContent = highscore;
     updateTotalTypedDisplay();
