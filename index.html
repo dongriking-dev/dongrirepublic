@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:site_name" content="どんぐりタイピング">
+<meta name="application-name" content="どんぐりタイピング">
 <title>どんぐりタイピング</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23ffffff' d='M45,10 C42,15 35,12 30,18 C25,24 28,32 22,35 C15,38 10,32 5,42 C12,42 16,46 20,43 C24,40 25,35 30,36 C28,42 22,46 18,52 C24,52 30,48 34,44 C32,50 28,55 24,62 C32,58 38,52 42,46 C40,54 36,62 30,72 C48,74 58,64 62,50 C65,40 60,32 65,24 C70,16 80,20 85,12 C78,16 74,12 70,18 C66,24 68,32 62,35 C58,37 54,32 50,34 C54,28 56,22 54,16 C52,22 48,25 45,10 Z M65,48 C72,52 82,50 90,56 C82,56 76,58 72,62 C78,65 86,68 95,74 C84,72 76,70 70,66 C68,72 64,80 58,88 C62,80 64,74 65,66 C60,64 54,64 48,66 C54,62 60,60 65,48 Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,6 +191,7 @@
     transition: transform 0.3s ease;
     z-index: 201;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   #achievement-overlay.active .achievement-card {
     transform: translateY(0);
@@ -310,6 +313,7 @@
     transition: transform 0.3s ease;
     z-index: 201;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   #shop-overlay.active .shop-card,
   #settings-overlay.active .settings-card {
@@ -672,6 +676,147 @@
     font-family:'Zen Maru Gothic', sans-serif; font-size:13px; color:var(--muted);
   }
 
+  /* ---------- お知らせフレーム ---------- */
+  #announce-frame {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(90%, 600px);
+    max-height: 90vh;
+    background: var(--panel);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    z-index: 500;
+    padding: 28px 32px 24px;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto;
+    backdrop-filter: blur(6px);
+  }
+  #announce-frame.hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+    pointer-events: none;
+  }
+  #announce-frame .close-area {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  #announce-frame .close-area button {
+    background: transparent;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  #announce-frame .close-area button:hover {
+    border-color: var(--gold-soft);
+    color: var(--gold-soft);
+    background: rgba(160,115,70,0.1);
+  }
+  #announce-frame .close-area button.primary {
+    border-color: var(--gold);
+    color: var(--gold-soft);
+    background: rgba(160,115,70,0.15);
+  }
+  #announce-frame .close-area button.primary:hover {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  #announce-frame .content {
+    overflow-y: auto;
+    padding-right: 4px;
+    flex: 1;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  #announce-frame .content h2 {
+    font-size: 24px;
+    color: var(--gold-soft);
+    margin-top: 0;
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--panel-edge);
+    padding-bottom: 8px;
+  }
+  #announce-frame .content a {
+    color: var(--gold-soft);
+    text-decoration: underline;
+    word-break: break-all;
+  }
+  #announce-frame .content a:hover {
+    color: var(--gold);
+  }
+  #announce-frame .content p {
+    margin: 10px 0;
+  }
+  .announce-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    z-index: 499;
+    transition: opacity 0.3s ease;
+  }
+  .announce-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ===== 虹色エフェクト用 ===== */
+  .rainbow-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-conic-gradient(
+      from 0deg,
+      red, orange, yellow, green, blue, indigo, violet, red
+    );
+    opacity: 0;
+    mix-blend-mode: overlay;
+    animation: none;
+    transition: opacity 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rainbow-overlay.active {
+    opacity: 0.6;
+    animation: rainbowSpin 0.15s linear infinite;
+  }
+  .rainbow-overlay .rainbow-text {
+    font-size: clamp(48px, 12vw, 96px);
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,100,0,0.6), 0 0 90px rgba(255,0,255,0.4);
+    mix-blend-mode: difference;
+    pointer-events: none;
+    animation: textPulse 0.3s ease-in-out infinite alternate;
+    letter-spacing: 0.1em;
+    transform: none !important;
+  }
+  @keyframes rainbowSpin {
+    0% { transform: rotate(0deg) scale(1.5); filter: hue-rotate(0deg); }
+    100% { transform: rotate(360deg) scale(1.5); filter: hue-rotate(360deg); }
+  }
+  @keyframes textPulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.1); opacity: 0.9; }
+  }
+
   @media (max-width:480px){
     .hud{ margin-bottom:24px; }
     .word-stage{ padding:32px 16px; }
@@ -694,6 +839,16 @@
     .code-area .code-row input[type="password"] {
       min-width: 100%;
     }
+    #announce-frame {
+      padding: 20px 18px;
+      width: 95%;
+    }
+    #announce-frame .content h2 {
+      font-size: 20px;
+    }
+    .rainbow-overlay .rainbow-text {
+      font-size: clamp(32px, 10vw, 48px);
+    }
   }
 </style>
 <base target="_blank">
@@ -704,6 +859,28 @@
   <!-- Forest Background Canvas -->
   <canvas id="forest-canvas"></canvas>
   <canvas id="acorn-canvas"></canvas>
+
+  <!-- 虹色オーバーレイ -->
+  <div class="rainbow-overlay" id="rainbowOverlay">
+    <span class="rainbow-text">ドーパミン補給中</span>
+  </div>
+
+  <!-- お知らせフレーム -->
+  <div id="announce-overlay" class="announce-overlay"></div>
+  <div id="announce-frame">
+    <div class="close-area">
+      <button id="announce-dismiss" class="primary">次から表示しない</button>
+      <button id="announce-close">閉じる</button>
+    </div>
+    <div class="content">
+      <h2>🎉 サイト公開記念日！</h2>
+      <p>みなさん！ついにGoogleに2026年9月5日に公開できました！ありがとうございます！</p>
+      <p>これからもっと楽しんでくれるようにイベントなども追加していきますので是非お楽しみください。</p>
+      <p>また、何か不具合などがありましたらここから報告お願いします！<br>
+      <a href="https://dongriking-dev.github.io/dongurihoukoku/" target="_blank">https://dongriking-dev.github.io/dongurihoukoku/</a></p>
+      <p>byどんぐり国王</p>
+    </div>
+  </div>
 
   <!-- Achievement Toast -->
   <div id="achievement-toast">
@@ -804,7 +981,7 @@
         <div class="sound-status" id="status-bgm"></div>
       </div>
 
-      <!-- コード入力エリア（超厳重） -->
+      <!-- コード入力エリア -->
       <div class="code-area">
         <label>🔐 コード入力（超厳重）</label>
         <div class="code-row">
@@ -823,6 +1000,16 @@
           <span class="setting-label">全データ削除</span>
           <button id="reset-data-btn" class="setting-toggle" style="color:var(--vermillion);border-color:var(--vermillion);">削除</button>
         </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;width:100%;padding:8px 0 4px 0;border-top:1px solid var(--panel-edge);margin-top:8px;">
+        <span class="setting-label">📝 不具合報告</span>
+        <a href="https://dongriking-dev.github.io/dongurihoukoku/" target="_blank" 
+           style="color:var(--gold-soft);text-decoration:underline;font-size:14px;transition:color 0.2s;"
+           onmouseover="this.style.color='var(--gold)'" 
+           onmouseout="this.style.color='var(--gold-soft)'">
+          https://dongriking-dev.github.io/dongurihoukoku/
+        </a>
       </div>
 
       <button id="settings-close-btn" class="settings-close-btn">閉じる</button>
@@ -856,7 +1043,7 @@
   <!-- Result Modal -->
   <div id="result-overlay">
     <div class="result-card">
-      <h2 class="result-title">リザルト</h2>
+      <h2 class="result-title">結果発表</h2>
       <div class="result-score-num" id="modal-score">0</div>
       <div id="modal-badge-container"></div>
       <div class="result-prompt">
@@ -872,450 +1059,187 @@
 (function(){
   "use strict";
 
-  // ============ 単語データ（重複防止のためID付き） ============
+  // ============ お知らせバージョン ============
+  const ANNOUNCE_VERSION = "v1.0.0";
+
+  // ============ 単語データ ============
   const WORD_POOL = [
-    { kana: "あさ", kanji: "朝" },
-    { kana: "ひる", kanji: "昼" },
-    { kana: "よる", kanji: "夜" },
-    { kana: "がっこう", kanji: "学校" },
-    { kana: "せんせい", kanji: "先生" },
-    { kana: "がくせい", kanji: "学生" },
-    { kana: "ともだち", kanji: "友達" },
-    { kana: "かぞく", kanji: "家族" },
-    { kana: "りんご", kanji: "林檎" },
-    { kana: "みかん", kanji: "蜜柑" },
-    { kana: "さくら", kanji: "桜" },
-    { kana: "とけい", kanji: "時計" },
-    { kana: "くるま", kanji: "車" },
-    { kana: "でんしゃ", kanji: "電車" },
-    { kana: "ひこうき", kanji: "飛行機" },
-    { kana: "うみ", kanji: "海" },
-    { kana: "やま", kanji: "山" },
-    { kana: "かわ", kanji: "川" },
-    { kana: "そら", kanji: "空" },
-    { kana: "くも", kanji: "雲" },
-    { kana: "あめ", kanji: "雨" },
-    { kana: "ゆき", kanji: "雪" },
-    { kana: "かぜ", kanji: "風" },
-    { kana: "はな", kanji: "花" },
-    { kana: "みず", kanji: "水" },
-    { kana: "つき", kanji: "月" },
-    { kana: "ほし", kanji: "星" },
-    { kana: "たいよう", kanji: "太陽" },
-    { kana: "ちきゅう", kanji: "地球" },
-    { kana: "うちゅう", kanji: "宇宙" },
-    { kana: "ほん", kanji: "本" },
-    { kana: "えんぴつ", kanji: "鉛筆" },
-    { kana: "けしごむ", kanji: "消しゴム" },
-    { kana: "つくえ", kanji: "机" },
-    { kana: "いす", kanji: "椅子" },
-    { kana: "まど", kanji: "窓" },
-    { kana: "かばん", kanji: "鞄" },
-    { kana: "くつ", kanji: "靴" },
-    { kana: "ぼうし", kanji: "帽子" },
-    { kana: "めがね", kanji: "眼鏡" },
-    { kana: "でんわ", kanji: "電話" },
-    { kana: "おんがく", kanji: "音楽" },
-    { kana: "えいが", kanji: "映画" },
-    { kana: "りょうり", kanji: "料理" },
-    { kana: "たべもの", kanji: "食べ物" },
-    { kana: "のみもの", kanji: "飲み物" },
-    { kana: "すし", kanji: "寿司" },
-    { kana: "ぱん", kanji: "パン" },
-    { kana: "ぎゅうにゅう", kanji: "牛乳" },
-    { kana: "たまご", kanji: "卵" },
-    { kana: "やさい", kanji: "野菜" },
-    { kana: "にく", kanji: "肉" },
-    { kana: "さかな", kanji: "魚" },
-    { kana: "くだもの", kanji: "果物" },
-    { kana: "びょういん", kanji: "病院" },
-    { kana: "がっき", kanji: "楽器" },
-    { kana: "やきゅう", kanji: "野球" },
-    { kana: "さっかー", kanji: "サッカー" },
-    { kana: "てにす", kanji: "テニス" },
-    { kana: "すいえい", kanji: "水泳" },
-    { kana: "りょこう", kanji: "旅行" },
-    { kana: "にほん", kanji: "日本" },
-    { kana: "とうきょう", kanji: "東京" },
-    { kana: "おおさか", kanji: "大阪" },
-    { kana: "きょうと", kanji: "京都" },
-    { kana: "こんぴゅーた", kanji: "コンピュータ" },
-    { kana: "いんたーねっと", kanji: "インターネット" },
-    { kana: "ぱそこん", kanji: "パソコン" },
-    { kana: "すまほ", kanji: "スマホ" },
-    { kana: "けいたい", kanji: "携帯" },
-    { kana: "きーぼーど", kanji: "キーボード" },
-    { kana: "まうす", kanji: "マウス" },
-    { kana: "かめら", kanji: "カメラ" },
-    { kana: "ぷりんたー", kanji: "プリンター" },
-    { kana: "やじゅう", kanji: "野獣"},
-    { kana: "ふじさん", kanji: "富士山"},
-    { kana: "たいぴんぐ", kanji: "タイピング"},
-    { kana: "ふぁいる", kanji: "ファイル"},
-    { kana: "あいすてぃー", kanji: "アイスティー"},
-    { kana: "てすと", kanji: "テスト"},
-    // 新規追加単語
-    { kana: "しけん", kanji: "試験" },
-    { kana: "もち", kanji: "餅" },
-    { kana: "ぼうえんきょう", kanji: "望遠鏡" },
-    { kana: "ほんだな", kanji: "本棚" },
-    { kana: "たんす", kanji: "タンス" },
-    { kana: "せいふく", kanji: "制服" },
-    { kana: "きょうわこく", kanji: "共和国" },
-    { kana: "どんぐりきょうわこく", kanji: "どんぐり共和国" },
-    { kana: "ねじ", kanji: "ネジ" },
-    { kana: "ほうりつ", kanji: "法律" },
-    { kana: "でんき", kanji: "電気" },
-    { kana: "がす", kanji: "ガス" },
-    { kana: "すいどう", kanji: "水道" },
-    { kana: "じんせい", kanji: "人生" },
-    { kana: "とけい", kanji: "時計" },
-    { kana: "きょうかしょ", kanji: "教科書" },
-    { kana: "すまほ", kanji: "スマホ" },
-    { kana: "じゃーじ", kanji: "ジャージ" },
-    { kana: "でんち", kanji: "電池" },
-    { kana: "りもこん", kanji: "リモコン" },
-    { kana: "てぃっしゅ", kanji: "ティッシュ" },
-    { kana: "まくら", kanji: "枕" },
-    { kana: "けんたま", kanji: "けん玉" },
-    { kana: "せかいちず", kanji: "世界地図" },
-    { kana: "おしぴん", kanji: "押しピン" },
-    { kana: "ぴんせっと", kanji: "ピンセット" },
-    { kana: "びにーるぶくろ", kanji: "ビニール袋" },
-    { kana: "えんぴつけずり", kanji: "鉛筆削り" },
-    { kana: "かーどげーむ", kanji: "カードゲーム" },
-    { kana: "じてん", kanji: "辞典" },
-    { kana: "じてんしゃ", kanji: "自転車" },
-    { kana: "ふうとう", kanji: "封筒" },
-    { kana: "ぼくじょう", kanji: "牧場" },
-    { kana: "やりら", kanji: "やりら" },
-    { kana: "のーとぶっく", kanji: "ノートブック" },
-    { kana: "すまほたて", kanji: "スマホ立て" },
-    { kana: "こくとう", kanji: "黒糖" },
-    { kana: "さとう", kanji: "砂糖" },
-    { kana: "にほんれっとう", kanji: "日本列島" },
-    { kana: "もうふ", kanji: "毛布" },
-    { kana: "どあ", kanji: "ドア" },
-    { kana: "ちきゅう", kanji: "地球" },
-    { kana: "ぎんが", kanji: "銀河" },
-    { kana: "うちゅうじん", kanji: "宇宙人" },
-    { kana: "うちゅうしょく", kanji: "宇宙食" },
-    { kana: "うちゅうひこうし", kanji: "宇宙飛行士" },
-    { kana: "かぞく", kanji: "家族" },
-    { kana: "ぺっと", kanji: "ペット" },
-    { kana: "あるばむ", kanji: "アルバム" },
-    { kana: "しゃっきん", kanji: "借金" },
-    { kana: "そうがんきょう", kanji: "双眼鏡" },
-    { kana: "ぽっぷこーん", kanji: "ポップコーン" },
-    { kana: "どんぐり", kanji: "どんぐり" },
-    { kana: "もり", kanji: "森" },
-    { kana: "いわ", kanji: "岩" },
-    { kana: "ようせい", kanji: "妖精" },
-    { kana: "がいちゅう", kanji: "害虫" },
-    { kana: "ねこ", kanji: "猫" },
-    { kana: "いぬ", kanji: "犬" },
-    { kana: "みせ", kanji: "店" },
-    { kana: "ぱん", kanji: "パン" },
-    { kana: "けしごむ", kanji: "消しゴム" },
-    { kana: "なないろえんぴつ", kanji: "七色鉛筆" },
-    { kana: "たいふう", kanji: "台風" },
-    { kana: "たつまき", kanji: "竜巻" },
-    { kana: "あめ", kanji: "雨" },
-    { kana: "しぜんさいがい", kanji: "自然災害" },
-    { kana: "れきし", kanji: "歴史" },
-    { kana: "まんが", kanji: "漫画" },
-    { kana: "もぎしけん", kanji: "模擬試験" },
-    { kana: "ごりらほてる", kanji: "ゴリラホテル" },
-    { kana: "まなつのよる", kanji: "真夏の夜" },
-    { kana: "ごめんなさい", kanji: "ごめんなさい" },
-    { kana: "くりすます", kanji: "クリスマス" },
-    { kana: "さんたくろーす", kanji: "サンタクロース" },
-    { kana: "れいしょう", kanji: "冷笑" },
-    { kana: "じだい", kanji: "時代" },
-    { kana: "ぱーふぇくとひゅーまん", kanji: "パーフェクトヒューマン" },
-    { kana: "うんどうかい", kanji: "運動会" },
-    { kana: "れんしゅう", kanji: "練習" },
-    { kana: "しゅうじ", kanji: "習字" },
-    { kana: "しゅうまつ", kanji: "週末" },
-    { kana: "こーひー", kanji: "コーヒー" },
-    { kana: "ここあ", kanji: "ココア" },
-    { kana: "ぶかつ", kanji: "部活" },
-    { kana: "まつり", kanji: "祭り" },
-    { kana: "やたい", kanji: "屋台" },
-    { kana: "からおけ", kanji: "カラオケ" },
-    { kana: "まいく", kanji: "マイク" },
-    { kana: "からあげ", kanji: "唐揚げ" },
-    { kana: "たこやき", kanji: "たこ焼き" },
-    { kana: "たこあげ", kanji: "凧揚げ" },
+    { kana: "あさ", kanji: "朝" }, { kana: "ひる", kanji: "昼" }, { kana: "よる", kanji: "夜" },
+    { kana: "がっこう", kanji: "学校" }, { kana: "せんせい", kanji: "先生" }, { kana: "がくせい", kanji: "学生" },
+    { kana: "ともだち", kanji: "友達" }, { kana: "かぞく", kanji: "家族" }, { kana: "りんご", kanji: "林檎" },
+    { kana: "みかん", kanji: "蜜柑" }, { kana: "さくら", kanji: "桜" }, { kana: "とけい", kanji: "時計" },
+    { kana: "くるま", kanji: "車" }, { kana: "でんしゃ", kanji: "電車" }, { kana: "ひこうき", kanji: "飛行機" },
+    { kana: "うみ", kanji: "海" }, { kana: "やま", kanji: "山" }, { kana: "かわ", kanji: "川" },
+    { kana: "そら", kanji: "空" }, { kana: "くも", kanji: "雲" }, { kana: "あめ", kanji: "雨" },
+    { kana: "ゆき", kanji: "雪" }, { kana: "かぜ", kanji: "風" }, { kana: "はな", kanji: "花" },
+    { kana: "みず", kanji: "水" }, { kana: "つき", kanji: "月" }, { kana: "ほし", kanji: "星" },
+    { kana: "たいよう", kanji: "太陽" }, { kana: "ちきゅう", kanji: "地球" }, { kana: "うちゅう", kanji: "宇宙" },
+    { kana: "ほん", kanji: "本" }, { kana: "えんぴつ", kanji: "鉛筆" }, { kana: "けしごむ", kanji: "消しゴム" },
+    { kana: "つくえ", kanji: "机" }, { kana: "いす", kanji: "椅子" }, { kana: "まど", kanji: "窓" },
+    { kana: "かばん", kanji: "鞄" }, { kana: "くつ", kanji: "靴" }, { kana: "ぼうし", kanji: "帽子" },
+    { kana: "めがね", kanji: "眼鏡" }, { kana: "でんわ", kanji: "電話" }, { kana: "おんがく", kanji: "音楽" },
+    { kana: "えいが", kanji: "映画" }, { kana: "りょうり", kanji: "料理" }, { kana: "たべもの", kanji: "食べ物" },
+    { kana: "のみもの", kanji: "飲み物" }, { kana: "すし", kanji: "寿司" }, { kana: "ぱん", kanji: "パン" },
+    { kana: "ぎゅうにゅう", kanji: "牛乳" }, { kana: "たまご", kanji: "卵" }, { kana: "やさい", kanji: "野菜" },
+    { kana: "にく", kanji: "肉" }, { kana: "さかな", kanji: "魚" }, { kana: "くだもの", kanji: "果物" },
+    { kana: "びょういん", kanji: "病院" }, { kana: "がっき", kanji: "楽器" }, { kana: "やきゅう", kanji: "野球" },
+    { kana: "さっかー", kanji: "サッカー" }, { kana: "てにす", kanji: "テニス" }, { kana: "すいえい", kanji: "水泳" },
+    { kana: "りょこう", kanji: "旅行" }, { kana: "にほん", kanji: "日本" }, { kana: "とうきょう", kanji: "東京" },
+    { kana: "おおさか", kanji: "大阪" }, { kana: "きょうと", kanji: "京都" }, { kana: "こんぴゅーた", kanji: "コンピュータ" },
+    { kana: "いんたーねっと", kanji: "インターネット" }, { kana: "ぱそこん", kanji: "パソコン" }, { kana: "すまほ", kanji: "スマホ" },
+    { kana: "けいたい", kanji: "携帯" }, { kana: "きーぼーど", kanji: "キーボード" }, { kana: "まうす", kanji: "マウス" },
+    { kana: "かめら", kanji: "カメラ" }, { kana: "ぷりんたー", kanji: "プリンター" }, { kana: "やじゅう", kanji: "野獣"},
+    { kana: "ふじさん", kanji: "富士山"}, { kana: "たいぴんぐ", kanji: "タイピング"}, { kana: "ふぁいる", kanji: "ファイル"},
+    { kana: "あいすてぃー", kanji: "アイスティー"}, { kana: "てすと", kanji: "テスト"}, { kana: "しけん", kanji: "試験" },
+    { kana: "もち", kanji: "餅" }, { kana: "ぼうえんきょう", kanji: "望遠鏡" }, { kana: "ほんだな", kanji: "本棚" },
+    { kana: "たんす", kanji: "タンス" }, { kana: "せいふく", kanji: "制服" }, { kana: "きょうわこく", kanji: "共和国" },
+    { kana: "どんぐりきょうわこく", kanji: "どんぐり共和国" }, { kana: "ねじ", kanji: "ネジ" }, { kana: "ほうりつ", kanji: "法律" },
+    { kana: "でんき", kanji: "電気" }, { kana: "がす", kanji: "ガス" }, { kana: "すいどう", kanji: "水道" },
+    { kana: "じんせい", kanji: "人生" }, { kana: "きょうかしょ", kanji: "教科書" }, { kana: "じゃーじ", kanji: "ジャージ" },
+    { kana: "でんち", kanji: "電池" }, { kana: "りもこん", kanji: "リモコン" }, { kana: "てぃっしゅ", kanji: "ティッシュ" },
+    { kana: "まくら", kanji: "枕" }, { kana: "せかいちず", kanji: "世界地図" }, { kana: "おしぴん", kanji: "押しピン" },
+    { kana: "ぴんせっと", kanji: "ピンセット" }, { kana: "びにーるぶくろ", kanji: "ビニール袋" }, { kana: "えんぴつけずり", kanji: "鉛筆削り" },
+    { kana: "かーどげーむ", kanji: "カードゲーム" }, { kana: "じてん", kanji: "辞典" }, { kana: "じてんしゃ", kanji: "自転車" },
+    { kana: "ふうとう", kanji: "封筒" }, { kana: "ぼくじょう", kanji: "牧場" }, { kana: "やりら", kanji: "やりら" },
+    { kana: "のーとぶっく", kanji: "ノートブック" }, { kana: "すまほたて", kanji: "スマホ立て" }, { kana: "こくとう", kanji: "黒糖" },
+    { kana: "さとう", kanji: "砂糖" }, { kana: "にほんれっとう", kanji: "日本列島" }, { kana: "もうふ", kanji: "毛布" },
+    { kana: "どあ", kanji: "ドア" }, { kana: "ぎんが", kanji: "銀河" }, { kana: "うちゅうじん", kanji: "宇宙人" },
+    { kana: "うちゅうしょく", kanji: "宇宙食" }, { kana: "うちゅうひこうし", kanji: "宇宙飛行士" }, { kana: "ぺっと", kanji: "ペット" },
+    { kana: "あるばむ", kanji: "アルバム" }, { kana: "しゃっきん", kanji: "借金" }, { kana: "そうがんきょう", kanji: "双眼鏡" },
+    { kana: "ぽっぷこーん", kanji: "ポップコーン" }, { kana: "どんぐり", kanji: "どんぐり" }, { kana: "もり", kanji: "森" },
+    { kana: "いわ", kanji: "岩" }, { kana: "ようせい", kanji: "妖精" }, { kana: "がいちゅう", kanji: "害虫" },
+    { kana: "ねこ", kanji: "猫" }, { kana: "いぬ", kanji: "犬" }, { kana: "みせ", kanji: "店" },
+    { kana: "なないろえんぴつ", kanji: "七色鉛筆" }, { kana: "たいふう", kanji: "台風" }, { kana: "たつまき", kanji: "竜巻" },
+    { kana: "しぜんさいがい", kanji: "自然災害" }, { kana: "れきし", kanji: "歴史" }, { kana: "まんが", kanji: "漫画" },
+    { kana: "もぎしけん", kanji: "模擬試験" }, { kana: "ごりらほてる", kanji: "ゴリラホテル" }, { kana: "まなつのよる", kanji: "真夏の夜" },
+    { kana: "ごめんなさい", kanji: "ごめんなさい" }, { kana: "くりすます", kanji: "クリスマス" }, { kana: "さんたくろーす", kanji: "サンタクロース" },
+    { kana: "れいしょう", kanji: "冷笑" }, { kana: "じだい", kanji: "時代" }, { kana: "ぱーふぇくとひゅーまん", kanji: "パーフェクトヒューマン" },
+    { kana: "うんどうかい", kanji: "運動会" }, { kana: "れんしゅう", kanji: "練習" }, { kana: "しゅうじ", kanji: "習字" },
+    { kana: "しゅうまつ", kanji: "週末" }, { kana: "こーひー", kanji: "コーヒー" }, { kana: "ここあ", kanji: "ココア" },
+    { kana: "ぶかつ", kanji: "部活" }, { kana: "まつり", kanji: "祭り" }, { kana: "やたい", kanji: "屋台" },
+    { kana: "からおけ", kanji: "カラオケ" }, { kana: "まいく", kanji: "マイク" }, { kana: "からあげ", kanji: "唐揚げ" },
+    { kana: "たこやき", kanji: "たこ焼き" }, { kana: "たこあげ", kanji: "凧揚げ" }, { kana: "ぱっちゅん", kanji: "パッチュン" },
+    { kana: "しゃんぷー", kanji: "シャンプー" }, { kana: "ぺがさす", kanji: "ペガサス" }, { kana: "しょーとすいーぱー", kanji: "ショートスイーパー" },
+    { kana: "どうぶつびょういん", kanji: "動物病院" }, { kana: "びょういん", kanji: "病院" }, { kana: "かーてん", kanji: "カーテン" },
+    { kana: "せんぷうき", kanji: "扇風機" }, { kana: "よーろっぱ", kanji: "ヨーロッパ" },{ kana: "いかやき", kanji: "イカ焼き" },
   ];
 
-  // ============ 文章データ（文章フェーズ：スコア300突破で出現） ============
+  // ============ 文章データ ============
   const SENTENCE_POOL = [
     { kana: "ちりもつもればやまとなる", kanji: "塵も積もれば山となる" },
-    { kana: "いちごいちえ", kanji: "一期一会" },
-    { kana: "にわのあらし", kanji: "庭の嵐" },
-    { kana: "さんぜんせかい", kanji: "三千世界" },
-    { kana: "よんせかい", kanji: "四世界" },
-    { kana: "ごりむちゅう", kanji: "五里霧中" },
-    { kana: "ろくねんせい", kanji: "六年生" },
-    { kana: "しちへんげ", kanji: "七変化" },
-    { kana: "はちめんろっぴ", kanji: "八面六臂" },
-    { kana: "きゅうしゅう", kanji: "九州" },
-    { kana: "じゅうにんといろ", kanji: "十人十色" },
-    { kana: "あいしてる", kanji: "愛してる" },
-    { kana: "ありがとう", kanji: "ありがとう" },
-    { kana: "おつかれさま", kanji: "お疲れ様" },
-    { kana: "こんにちは", kanji: "こんにちは" },
-    { kana: "こんばんは", kanji: "こんばんは" },
-    { kana: "おやすみなさい", kanji: "おやすみなさい" },
-    { kana: "だいすき", kanji: "大好き" },
-    { kana: "がんばって", kanji: "頑張って" },
-    { kana: "ゆめをかなえる", kanji: "夢を叶える" },
-    { kana: "せいこうする", kanji: "成功する" },
-    { kana: "しんぱいしないで", kanji: "心配しないで" },
-    { kana: "わすれない", kanji: "忘れない" },
-    { kana: "えがお", kanji: "笑顔" },
-    { kana: "なかよく", kanji: "仲良く" },
-    { kana: "たのしい", kanji: "楽しい" },
-    { kana: "うれしい", kanji: "嬉しい" },
-    { kana: "さびしい", kanji: "寂しい" },
-    { kana: "かなしい", kanji: "悲しい" },
-    { kana: "すごい", kanji: "凄い" },
-    { kana: "やばい", kanji: "やばい" },
-    { kana: "まじで", kanji: "まじで" },
-    { kana: "ほんと", kanji: "本当" },
-    { kana: "すき", kanji: "好き" },
-    { kana: "きらい", kanji: "嫌い" },
-    { kana: "たべたい", kanji: "食べたい" },
-    { kana: "のみたい", kanji: "飲みたい" },
-    { kana: "いきたい", kanji: "行きたい" },
-    { kana: "きたい", kanji: "来たい" },
-    { kana: "みたい", kanji: "見たい" },
-    { kana: "しりたい", kanji: "知りたい" },
-    // 新規追加文章
-    { kana: "はやくおきなさい", kanji: "早く起きなさい" },
-    { kana: "でかける", kanji: "出かける" },
-    { kana: "どあをのっくする", kanji: "ドアをノックする" },
+    { kana: "いちごいちえ", kanji: "一期一会" }, { kana: "にわのあらし", kanji: "庭の嵐" },
+    { kana: "さんぜんせかい", kanji: "三千世界" }, { kana: "よんせかい", kanji: "四世界" }, { kana: "ごりむちゅう", kanji: "五里霧中" },
+    { kana: "ろくねんせい", kanji: "六年生" }, { kana: "しちへんげ", kanji: "七変化" }, { kana: "はちめんろっぴ", kanji: "八面六臂" },
+    { kana: "きゅうしゅう", kanji: "九州" }, { kana: "じゅうにんといろ", kanji: "十人十色" }, { kana: "あいしてる", kanji: "愛してる" },
+    { kana: "ありがとう", kanji: "ありがとう" }, { kana: "おつかれさま", kanji: "お疲れ様" }, { kana: "こんにちは", kanji: "こんにちは" },
+    { kana: "こんばんは", kanji: "こんばんは" }, { kana: "おやすみなさい", kanji: "おやすみなさい" }, { kana: "だいすき", kanji: "大好き" },
+    { kana: "がんばって", kanji: "頑張って" }, { kana: "ゆめをかなえる", kanji: "夢を叶える" }, { kana: "せいこうする", kanji: "成功する" },
+    { kana: "しんぱいしないで", kanji: "心配しないで" }, { kana: "わすれない", kanji: "忘れない" }, { kana: "えがお", kanji: "笑顔" },
+    { kana: "なかよく", kanji: "仲良く" }, { kana: "たのしい", kanji: "楽しい" }, { kana: "うれしい", kanji: "嬉しい" },
+    { kana: "さびしい", kanji: "寂しい" }, { kana: "かなしい", kanji: "悲しい" }, { kana: "すごい", kanji: "凄い" },
+    { kana: "やばい", kanji: "やばい" }, { kana: "まじで", kanji: "まじで" }, { kana: "ほんと", kanji: "本当" },
+    { kana: "すき", kanji: "好き" }, { kana: "きらい", kanji: "嫌い" }, { kana: "たべたい", kanji: "食べたい" },
+    { kana: "のみたい", kanji: "飲みたい" }, { kana: "いきたい", kanji: "行きたい" }, { kana: "きたい", kanji: "来たい" },
+    { kana: "みたい", kanji: "見たい" }, { kana: "しりたい", kanji: "知りたい" }, { kana: "はやくおきなさい", kanji: "早く起きなさい" },
+    { kana: "でかける", kanji: "出かける" }, { kana: "どあをのっくする", kanji: "ドアをノックする" },
     { kana: "じんせいのとけいはいちどしかねじをまかない", kanji: "人生の時計は一度しかネジをまかない" },
-    { kana: "はやくべんきょうしなさい", kanji: "早く勉強しなさい" },
-    { kana: "おまえのことがすきだったんだよ", kanji: "お前のことが好きだったんだよ！" },
-    { kana: "してきしたらばれるよね", kanji: "指摘したらバレるよね" },
-    { kana: "ちかくのらーめんやにいきましょう", kanji: "近くのラーメン屋に行きましょう" },
-    { kana: "てすとかいし", kanji: "テスト開始" },
-    { kana: "まえからおもってたけどぼうずにしたらにあうよ", kanji: "前から思ってたけど坊主にしたら似合うよ" },
-    { kana: "ここではおならはできない", kanji: "ここではオナラはできない" },
-    { kana: "こくごのてんすうなんだった", kanji: "国語の点数なんだった？" },
-    { kana: "いっしょにげーむしようよ", kanji: "一緒にゲームしようよ" },
-    { kana: "きょうはつきがきれいですね", kanji: "今日は月が綺麗ですね" },
-    { kana: "おまえにはあきれた", kanji: "お前には呆れた" },
-    { kana: "どりょくしてないやつがゆめかたんなよ", kanji: "努力してない奴が夢語んなよ" },
-    { kana: "げんかいなんてがいとじぶんがきめてるだけです", kanji: "限界なんて意外と自分が決めてるだけです" },
-    { kana: "いきてるだけでまるもうけ", kanji: "生きてるだけで丸儲け" },
-    { kana: "なんでもしますから（なんでもするとはいってない）", kanji: "なんでもしますから（なんでもするとは言ってない）" },
-    { kana: "しないぜんよりするぎぜん", kanji: "しない善よりする偽善" },
-    { kana: "しかたよりいきかた", kanji: "死に方より生き方" },
-    { kana: "あんたはやくねないとさんたさんこないわよ", kanji: "あんた早く寝ないとサンタさん来ないわよ" },
-    { kana: "かれーはのみもの", kanji: "カレーは飲み物" },
-    { kana: "ちきゅうはきゅうたい", kanji: "地球は球体" },
-    { kana: "そのこころわらってるね", kanji: "その心笑ってるね" },
-    { kana: "ねたばれやめてくれ", kanji: "ネタバレやめてくれ" },
-    { kana: "あきらめるな", kanji: "諦めるな" },
-    { kana: "どーぱみんがたりない", kanji: "ドーパミンが足りない" },
-    { kana: "にーとはやめて", kanji: "ニートはやめて" },
-    { kana: "ひやけっていいよね", kanji: "日焼けっていいよね" },
-    { kana: "おくじょうでやいてかない", kanji: "屋上で焼いてかない？" },
+    { kana: "はやくべんきょうしなさい", kanji: "早く勉強しなさい" }, { kana: "おまえのことがすきだったんだよ", kanji: "お前のことが好きだったんだよ！" },
+    { kana: "してきしたらばれるよね", kanji: "指摘したらバレるよね" }, { kana: "ちかくのらーめんやにいきましょう", kanji: "近くのラーメン屋に行きましょう" },
+    { kana: "てすとかいし", kanji: "テスト開始" }, { kana: "まえからおもってたけどぼうずにしたらにあうよ", kanji: "前から思ってたけど坊主にしたら似合うよ" },
+    { kana: "ここではおならはできない", kanji: "ここではオナラはできない" }, { kana: "こくごのてんすうなんだった", kanji: "国語の点数なんだった？" },
+    { kana: "きょうはつきがきれいですね", kanji: "今日は月が綺麗ですね" }, { kana: "おまえにはあきれた", kanji: "お前には呆れた" },
+    { kana: "どりょくしてないやつがゆめかたんなよ", kanji: "努力してない奴が夢語んなよ" }, { kana: "いきてるだけでまるもうけ", kanji: "生きてるだけで丸儲け" },
+    { kana: "しないぜんよりするぎぜん", kanji: "しない善よりする偽善" }, { kana: "しかたよりいきかた", kanji: "死に方より生き方" },
+    { kana: "あんたはやくねないとさんたさんこないわよ", kanji: "あんた早く寝ないとサンタさん来ないわよ" }, { kana: "かれーはのみもの", kanji: "カレーは飲み物" },
+    { kana: "ちきゅうはきゅうたい", kanji: "地球は球体" }, { kana: "そのこころわらってるね", kanji: "その心笑ってるね" },
+    { kana: "ねたばれやめてくれ", kanji: "ネタバレやめてくれ" }, { kana: "あきらめるな", kanji: "諦めるな" },
+    { kana: "どーぱみんがたりない", kanji: "ドーパミンが足りない" }, { kana: "にーとはやめて", kanji: "ニートはやめて" },
+    { kana: "ひやけっていいよね", kanji: "日焼けっていいよね" }, { kana: "おくじょうでやいてかない", kanji: "屋上で焼いてかない？" },
     { kana: "ありのままをあいしてくれるのはおやかさぎし", kanji: "ありのままを愛してくれるのは親か詐欺師" },
-    { kana: "おまえちょうしのんなよ", kanji: "お前調子乗んなよ" },
-    { kana: "どんぐりきょうわこくおうじ", kanji: "どんぐり共和国王子" },
+    { kana: "おまえちょうしのんなよ", kanji: "お前調子乗んなよ" }, { kana: "どんぐりきょうわこくおうじ", kanji: "どんぐり共和国王子" },
     { kana: "おたくのむすこさんどうにかしてちょうだい", kanji: "オタクの息子さんどうにかしてちょうだい" },
-    { kana: "もうやめましょうよ", kanji: "もうやめましょうよ" },
-    { kana: "じゃ、いれるね", kanji: "じゃ、いれるね" },
+    { kana: "もうやめましょうよ", kanji: "もうやめましょうよ" }, { kana: "なつのおわり", kanji: "夏の終わり" },
+    { kana: "おどるやりらふぃー", kanji: "踊るヤリラフィー" }, { kana: "さんしょくちーずぎゅうどんとくもりにおんたまつきをおねがいします", kanji: "三色チーズ牛丼特盛に温玉付きをお願いします" },
+    { kana: "ひとのきもちかんがえて", kanji: "人の気持ち考えて" }, { kana: "どーぱみんをもとめる", kanji: "ドーパミンを求める" },
+    { kana: "にじゅうよんさいがくせいです", kanji: "二十四歳学生です" }, { kana: "いきるいみとは", kanji: "生きる意味とは" },
+    { kana: "いきるいみとは", kanji: "イキル意味とは" }, { kana: "おれはこいつらとはちがう", kanji: "俺はこいつらとは違う" },
+    { kana: "おまえやりますねすぎ", kanji: "お前やりますねすぎ" }, { kana: "なつかしいあじをおもいだす", kanji: "懐かしい味を思い出す" },
+    { kana: "いのちのおもさをしる", kanji: "命の重さを知る" }, { kana: "どんぐりをたべてはいけない", kanji: "どんぐりを食べてはいけない" },{ kana: "ここらへんくさいね", kanji: "ここら辺臭いね" },{ kana: "ここだけみずあたたかい", kanji: "ここだけ水暖かい" },
   ];
 
   // ============ 実績定義 ============
   const ACHIEVEMENTS = {
-    'first_typed': {
-      id: 'first_typed',
-      name: '最初の一歩',
-      desc: '初めて文字を打った',
-      icon: '👣',
-      check: () => totalTyped >= 1
-    },
-    'donut_field': {
-      id: 'donut_field',
-      name: 'どんぐり畑',
-      desc: '1分間で1文字だけ打って終了',
-      icon: '🌰',
-      check: () => lastGameTyped === 1 && lastGameDuration === 60
-    },
-    'score_3000': {
-      id: 'score_3000',
-      name: '3000スコア',
-      desc: 'スコア3000達成',
-      icon: '🥉',
-      check: () => highscore >= 3000
-    },
-    'score_10000': {
-      id: 'score_10000',
-      name: '10000スコア',
-      desc: 'スコア10000達成',
-      icon: '🥈',
-      check: () => highscore >= 10000
-    },
-    'score_15000': {
-      id: 'score_15000',
-      name: '15000スコア',
-      desc: 'スコア15000達成',
-      icon: '🥇',
-      check: () => highscore >= 15000
-    },
-    'score_20000': {
-      id: 'score_20000',
-      name: '20000スコア',
-      desc: 'スコア20000達成',
-      icon: '💎',
-      check: () => highscore >= 20000
-    },
-    'score_30000': {
-      id: 'score_30000',
-      name: '30000スコア',
-      desc: 'スコア30000達成',
-      icon: '👑',
-      check: () => highscore >= 30000
-    },
-    'score_50000': {
-      id: 'score_50000',
-      name: '50000スコア',
-      desc: 'スコア50000達成',
-      icon: '🌟',
-      check: () => highscore >= 50000
-    },
-    'eh': {
-      id: 'eh',
-      name: 'え？',
-      desc: '10秒間に100字以上打つ',
-      icon: '😮',
-      check: () => max10sTyped >= 100
-    },
-    'speed_50': {
-      id: 'speed_50',
-      name: 'タイピングマスター',
-      desc: '10秒間に50字以上打つ',
-      icon: '⚡',
-      check: () => max10sTyped >= 50
-    },
-    'speed_80': {
-      id: 'speed_80',
-      name: 'タイピングエキスパート',
-      desc: '10秒間に80字以上打つ',
-      icon: '🔥',
-      check: () => max10sTyped >= 80
-    },
-    'total_1000': {
-      id: 'total_1000',
-      name: '1000字突破',
-      desc: '累計入力1000字達成',
-      icon: '📖',
-      check: () => totalTyped >= 1000
-    },
-    'total_5000': {
-      id: 'total_5000',
-      name: '5000字突破',
-      desc: '累計入力5000字達成',
-      icon: '📚',
-      check: () => totalTyped >= 5000
-    },
-    'total_10000': {
-      id: 'total_10000',
-      name: '10000字突破',
-      desc: '累計入力10000字達成',
-      icon: '🏛️',
-      check: () => totalTyped >= 10000
-    },
-    'phantom_acorn': {
-      id: 'phantom_acorn',
-      name: '幻のどんぐり',
-      desc: '幻のどんぐり',
-      icon: '🌀',
-      check: () => phantomAcornUnlocked
-    },
-    'double_acorn': {
-      id: 'double_acorn',
-      name: 'ダブルどんぐり',
-      desc: '6769のコードで解き放たれた倍率どんぐり',
-      icon: '🔮',
-      check: () => doubleAcornUnlocked
-    },
-    'beast_acorn': {
-      id: 'beast_acorn',
-      name: 'さすがインムチュウ',
-      desc: '申し訳ないけど野獣先輩女の子説はNGかなぁ〜',
-      icon: '野',
-      check: () => beastAcornUnlocked
-    },
+    'first_typed': { id: 'first_typed', name: '最初の一歩', desc: '初めて文字を打った', icon: '👣', check: () => totalTyped >= 1 },
+    'donut_field': { id: 'donut_field', name: 'どんぐり畑', desc: '1分間で1文字だけ打って終了', icon: '🌰', check: () => lastGameTyped === 1 && lastGameDuration === 60 },
+    'score_3000': { id: 'score_3000', name: '3000スコア', desc: 'スコア3000達成', icon: '🥉', check: () => highscore >= 3000 },
+    'score_10000': { id: 'score_10000', name: '10000スコア', desc: 'スコア10000達成', icon: '🥈', check: () => highscore >= 10000 },
+    'score_15000': { id: 'score_15000', name: '15000スコア', desc: 'スコア15000達成', icon: '🥇', check: () => highscore >= 15000 },
+    'score_20000': { id: 'score_20000', name: '20000スコア', desc: 'スコア20000達成', icon: '💎', check: () => highscore >= 20000 },
+    'score_30000': { id: 'score_30000', name: '30000スコア', desc: 'スコア30000達成', icon: '👑', check: () => highscore >= 30000 },
+    'score_50000': { id: 'score_50000', name: '50000スコア', desc: 'スコア50000達成', icon: '🌟', check: () => highscore >= 50000 },
+    'eh': { id: 'eh', name: 'え？', desc: '10秒間に100字以上打つ', icon: '😮', check: () => max10sTyped >= 100 },
+    'speed_50': { id: 'speed_50', name: 'タイピングマスター', desc: '10秒間に50字以上打つ', icon: '⚡', check: () => max10sTyped >= 50 },
+    'speed_80': { id: 'speed_80', name: 'タイピングエキスパート', desc: '10秒間に80字以上打つ', icon: '🔥', check: () => max10sTyped >= 80 },
+    'total_1000': { id: 'total_1000', name: '1000字突破', desc: '累計入力1000字達成', icon: '📖', check: () => totalTyped >= 1000 },
+    'total_5000': { id: 'total_5000', name: '5000字突破', desc: '累計入力5000字達成', icon: '📚', check: () => totalTyped >= 5000 },
+    'total_10000': { id: 'total_10000', name: '10000字突破', desc: '累計入力10000字達成', icon: '🏛️', check: () => totalTyped >= 10000 },
+    'phantom_acorn': { id: 'phantom_acorn', name: '幻のどんぐり', desc: '幻のどんぐり', icon: '🌀', check: () => phantomAcornUnlocked },
+    'double_acorn': { id: 'double_acorn', name: 'ダブルどんぐり', desc: 'コードで解き放たれた最強どんぐり', icon: '🔮', check: () => doubleAcornUnlocked },
+    'beast_acorn': { id: 'beast_acorn', name: 'さすがインムチュウ', desc: '申し訳ないけど野獣先輩女の子説はNGかなぁ〜', icon: '野', check: () => beastAcornUnlocked },
   };
 
   // --- 背景設定 ---
   const BG_SKINS = {
     'forest': { name: '森の夜', desc: '落ち着いた夜の森', price: 0, priceType: 'none' },
-    'sunset': { name: '夕焼けの森', desc: '暖かい夕日が差す森', price: 5000, priceType: 'coin' },
-    'ocean': { name: '海辺の朝', desc: '青い海と白い砂浜', price: 8000, priceType: 'coin' },
-    'everest': { name: 'エベレスト', desc: '青空と世界最高峰', price: 15000, priceType: 'coin' },
-    'sakura': { name: '桜の森', desc: 'ピンク色の桜が舞う', price: 20000, priceType: 'coin' },
-    'aurora': { name: 'オーロラの森', desc: '幻想的なオーロラ', price: 30000, priceType: 'coin' },
-    'nightcity': { name: '夜景の街', desc: '輝く都市の夜景', price: 25000, priceType: 'coin' },
-    'waterfall': { name: '滝の楽園', desc: '緑豊かな滝の風景', price: 18000, priceType: 'coin' },
-    'desert': { name: '砂漠の夕日', desc: '広がる砂漠と夕日', price: 12000, priceType: 'coin' },
-    'starry': { name: '星空の森', desc: '満天の星空と森', price: 35000, priceType: 'coin' },
-    'summer_festival': { name: '夏祭り', desc: '夜空に咲く花火と賑わう夏祭り', price: 20000, priceType: 'coin' },
-    'republic': { name: '昼のどんぐり共和国', desc: '青空の下、森を抜けると見えるどんぐり共和国の村', price: 25000, priceType: 'coin' },
+    'sunset': { name: '夕焼けの森', desc: '暖かい夕日が差す森', price: 100, priceType: 'coin' },
+    'ocean': { name: '海辺の朝', desc: '青い海と白い砂浜', price: 500, priceType: 'coin' },
+    'everest': { name: 'エベレスト', desc: '青空と世界最高峰', price: 1000, priceType: 'coin' },
+    'sakura': { name: '桜の森', desc: 'ピンク色の桜が舞う', price: 1500, priceType: 'coin' },
+    'aurora': { name: 'オーロラの森', desc: '幻想的なオーロラ', price: 3000, priceType: 'coin' },
+    'waterfall': { name: '滝の楽園', desc: '緑豊かな滝の風景', price: 10000, priceType: 'coin' },
+    'desert': { name: '砂漠の夕日', desc: '広がる砂漠と夕日', price: 13000, priceType: 'coin' },
+    'starry': { name: '星空の森', desc: '満天の星空と森', price: 20000, priceType: 'coin' },
+    'summer_festival': { name: '夏祭り', desc: '夜空に咲く花火と賑わう夏祭り', price: 25000, priceType: 'coin' },
+    'republic': { name: '昼のどんぐり共和国', desc: '青空の下、森を抜けると見えるどんぐり共和国の村', price: 30000, priceType: 'coin' },
     'beast_room': { name: '野獣先輩の部屋', desc: '24歳学生...？', price: 0, priceType: 'none' },
   };
 
-  // --- どんぐりスキン ---
+  // ============ ★ どんぐりスキン（形状＆フォントカラー付き） ============
   const ACORN_SKINS = {
-    'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none' },
-    'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 3000, priceType: 'coin', effect: 'bubble' },
-    'gold': { name: '金のどんぐり', desc: '輝く金色のどんぐり', price: 10000, priceType: 'coin', effect: 'sparkle' },
-    'crystal': { name: '水晶どんぐり', desc: '透き通る結晶', price: 15000, priceType: 'coin', effect: 'shine' },
-    'flame': { name: '炎のどんぐり', desc: '燃え盛る炎のエフェクト', price: 20000, priceType: 'coin', effect: 'fire' },
-    'bubble': { name: '泡どんぐり', desc: '緑色の泡が浮かぶ', price: 8000, priceType: 'coin', effect: 'bubble' },
-    'rainbow': { name: 'レインボーどんぐり', desc: '虹色に輝く', price: 40000, priceType: 'coin', effect: 'rainbow' },
-    'ice': { name: '氷のどんぐり', desc: '透明な氷のように輝く', price: 12000, priceType: 'coin', effect: 'ice' },
-    'dark': { name: '闇のどんぐり', desc: '紫色の闇を纏う', price: 18000, priceType: 'coin', effect: 'dark' },
-    'light': { name: '光のどんぐり', desc: '白く輝く光の粒', price: 25000, priceType: 'coin', effect: 'light' },
-    'cosmic': { name: '宇宙どんぐり', desc: '銀河を映す神秘的な輝き', price: 50000, priceType: 'coin', effect: 'cosmic' },
-    'phantom': { name: '幻のどんぐり', desc: '神秘的な紫色の輝きを放つ幻のどんぐり', price: 0, priceType: 'none', effect: 'phantom' },
-    'double': { name: 'ダブルどんぐり', desc: 'スコアが2倍になるどんぐり', price: 0, priceType: 'none', effect: 'double' },
-    'beast': { name: '野獣先輩どんぐり', desc: 'やりますねぇ', price: 0, priceType: 'none', effect: 'beast' },
+    'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none', shape: 'normal', fontColor: '#d2b48c' },
+    'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 2000, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#6aaa4a' },
+    'gold': { name: '金のどんぐり', desc: '輝く金色のどんぐり', price: 5000, priceType: 'coin', effect: 'sparkle', shape: 'spiky', fontColor: '#ffd700' },
+    'crystal': { name: '水晶どんぐり', desc: '透き通る結晶', price: 10000, priceType: 'coin', effect: 'shine', shape: 'crystal', fontColor: '#8ac4d0' },
+    'flame': { name: '炎のどんぐり', desc: '燃え盛る炎のエフェクト', price: 12000, priceType: 'coin', effect: 'fire', shape: 'flame', fontColor: '#ff6a2a' },
+    'bubble': { name: '泡どんぐり', desc: '緑色の泡が浮かぶ', price: 15000, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#4aaa6a' },
+    'rainbow': { name: 'レインボーどんぐり', desc: '虹色に輝く', price: 19000, priceType: 'coin', effect: 'rainbow', shape: 'rainbow', fontColor: '#ff6bff' },
+    'ice': { name: '氷のどんぐり', desc: '透明な氷のように輝く', price: 20000, priceType: 'coin', effect: 'ice', shape: 'ice', fontColor: '#8ac4e0' },
+    'dark': { name: '闇のどんぐり', desc: '紫色の闇を纏う', price: 23000, priceType: 'coin', effect: 'dark', shape: 'dark', fontColor: '#9a4aaa' },
+    'light': { name: '光のどんぐり', desc: '白く輝く光の粒', price: 26000, priceType: 'coin', effect: 'light', shape: 'light', fontColor: '#f0f0ff' },
+    'cosmic': { name: '宇宙どんぐり', desc: '銀河を映す神秘的な輝き', price: 30000, priceType: 'coin', effect: 'cosmic', shape: 'cosmic', fontColor: '#aa6acc' },
+    'phantom': { name: '幻のどんぐり', desc: '神秘的な紫色の輝きを放つ幻のどんぐり', price: 0, priceType: 'none', effect: 'phantom', shape: 'phantom', fontColor: '#bb66dd' },
+    'double': { name: 'ダブルどんぐり', desc: 'スコアが2倍になるどんぐり', price: 0, priceType: 'none', effect: 'double', shape: 'normal', fontColor: '#ffd700' },
+    'beast': { name: '野獣先輩どんぐり', desc: 'やりますねぇ', price: 0, priceType: 'none', effect: 'beast', shape: 'beast', fontColor: '#ffffff' },
+    // ★ 新規追加：ふわふわ、トゲトゲ、星形
+    'fluffy': { name: 'ふわふわどんぐり', desc: '綿毛のようにふわふわ', price: 8000, priceType: 'coin', effect: 'fluffy', shape: 'fluffy', fontColor: '#ffb6c1' },
+    'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 9000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00' },
+    'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 12000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700' },
   };
 
   // --- デフォルトデータ ---
   const DEFAULT_DATA = {
-    highscore: 0,
-    totalTyped: 0,
-    coins: 0,
-    useKanji: false,
-    equippedBg: 'forest',
-    equippedAcorn: 'default',
-    ownedBg: ['forest'],
-    ownedAcorn: ['default'],
-    unlockedAchievements: [],
-    max10sTyped: 0,
-    soundTyped: '',
-    soundStart: '',
-    soundResult: '',
-    soundBgm: '',
-    codeVerified: false,
-    superMode: false,
-    normalMode: false,
-    phantomAcornUnlocked: false,
-    doubleAcornUnlocked: false,
-    beastAcornUnlocked: false,
-    beastBgUnlocked: false,
+    highscore: 0, totalTyped: 0, coins: 0, useKanji: false,
+    equippedBg: 'forest', equippedAcorn: 'default',
+    ownedBg: ['forest'], ownedAcorn: ['default'],
+    unlockedAchievements: [], max10sTyped: 0,
+    soundTyped: '', soundStart: '', soundResult: '', soundBgm: '',
+    codeVerified: false, superMode: false, normalMode: false,
+    phantomAcornUnlocked: false, doubleAcornUnlocked: false,
+    beastAcornUnlocked: false, beastBgUnlocked: false,
+    announceVersion: '',
   };
 
-  // --- デフォルト音声（Web Audioで生成） ---
+  // --- デフォルト音声 ---
   function generateDefaultSound(type) {
     if (!audioCtx) return null;
     try {
@@ -1323,14 +1247,10 @@
       const sampleRate = audioCtx.sampleRate;
       const buffer = audioCtx.createBuffer(1, sampleRate * duration, sampleRate);
       const data = buffer.getChannelData(0);
-      
       if (type === 'bgm') {
         for (let i = 0; i < data.length; i++) {
           const t = i / sampleRate;
-          const note = Math.sin(2 * Math.PI * 440 * t) * 0.15 +
-                       Math.sin(2 * Math.PI * 554 * t) * 0.1 +
-                       Math.sin(2 * Math.PI * 659 * t) * 0.08;
-          data[i] = note * Math.exp(-t * 2) * 0.3;
+          data[i] = (Math.sin(2 * Math.PI * 440 * t) * 0.15 + Math.sin(2 * Math.PI * 554 * t) * 0.1 + Math.sin(2 * Math.PI * 659 * t) * 0.08) * Math.exp(-t * 2) * 0.3;
         }
       } else if (type === 'typed') {
         for (let i = 0; i < data.length; i++) {
@@ -1340,117 +1260,57 @@
       } else if (type === 'start') {
         for (let i = 0; i < data.length; i++) {
           const t = i / sampleRate;
-          const freq = 400 + t * 600;
-          data[i] = Math.sin(2 * Math.PI * freq * t) * Math.exp(-t * 10) * 0.3;
+          data[i] = Math.sin(2 * Math.PI * (400 + t * 600) * t) * Math.exp(-t * 10) * 0.3;
         }
       } else if (type === 'result') {
         for (let i = 0; i < data.length; i++) {
           const t = i / sampleRate;
-          const val = Math.sin(2 * Math.PI * 523 * t) * 0.15 +
-                      Math.sin(2 * Math.PI * 659 * t) * 0.15 +
-                      Math.sin(2 * Math.PI * 784 * t) * 0.15;
-          data[i] = val * Math.exp(-t * 6) * 0.4;
+          data[i] = (Math.sin(2 * Math.PI * 523 * t) * 0.15 + Math.sin(2 * Math.PI * 659 * t) * 0.15 + Math.sin(2 * Math.PI * 784 * t) * 0.15) * Math.exp(-t * 6) * 0.4;
         }
       }
       return buffer;
-    } catch(e) {
-      return null;
-    }
+    } catch(e) { return null; }
   }
 
-  // --- localStorage 操作 ---
+  // --- localStorage ---
   function saveData() {
-    const data = {
-      highscore: highscore,
-      totalTyped: totalTyped,
-      coins: coins,
-      useKanji: useKanji,
-      equippedBg: equippedBg,
-      equippedAcorn: equippedAcorn,
-      ownedBg: ownedBg,
-      ownedAcorn: ownedAcorn,
-      unlockedAchievements: unlockedAchievements,
-      max10sTyped: max10sTyped,
-      soundTyped: soundTyped,
-      soundStart: soundStart,
-      soundResult: soundResult,
-      soundBgm: soundBgm,
-      codeVerified: codeVerified,
-      superMode: superMode,
-      normalMode: normalMode,
-      phantomAcornUnlocked: phantomAcornUnlocked,
-      doubleAcornUnlocked: doubleAcornUnlocked,
-      beastAcornUnlocked: beastAcornUnlocked,
-      beastBgUnlocked: beastBgUnlocked,
-    };
+    const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
+      unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm,
+      codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
+      beastAcornUnlocked, beastBgUnlocked, announceVersion };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
-
   function loadData() {
-    try {
-      const raw = localStorage.getItem('donguri_data');
-      if (!raw) return { ...DEFAULT_DATA };
-      const data = JSON.parse(raw);
-      return { ...DEFAULT_DATA, ...data };
-    } catch(e) { return { ...DEFAULT_DATA }; }
+    try { const raw = localStorage.getItem('donguri_data'); if (!raw) return { ...DEFAULT_DATA }; return { ...DEFAULT_DATA, ...JSON.parse(raw) }; }
+    catch(e) { return { ...DEFAULT_DATA }; }
   }
 
   // --- 状態変数 ---
-  let highscore = 0;
-  let totalTyped = 0;
-  let coins = 0;
-  let useKanji = false;
-  let equippedBg = 'forest';
-  let equippedAcorn = 'default';
-  let ownedBg = ['forest'];
-  let ownedAcorn = ['default'];
-  let unlockedAchievements = [];
-  let max10sTyped = 0;
-  let soundTyped = '';
-  let soundStart = '';
-  let soundResult = '';
-  let soundBgm = '';
-  let codeVerified = false;
-  let superMode = false;
-  let normalMode = false;
-  let phantomAcornUnlocked = false;
-  let doubleAcornUnlocked = false;
-  let beastAcornUnlocked = false;
-  let beastBgUnlocked = false;
-  let doubleMode = false;
+  let highscore = 0, totalTyped = 0, coins = 0, useKanji = false,
+      equippedBg = 'forest', equippedAcorn = 'default',
+      ownedBg = ['forest'], ownedAcorn = ['default'],
+      unlockedAchievements = [], max10sTyped = 0,
+      soundTyped = '', soundStart = '', soundResult = '', soundBgm = '',
+      codeVerified = false, superMode = false, normalMode = false,
+      phantomAcornUnlocked = false, doubleAcornUnlocked = false,
+      beastAcornUnlocked = false, beastBgUnlocked = false,
+      announceVersion = '';
 
   // --- ゲーム状態 ---
-  let state = 'menu';
-  let queue = [];
-  let qIndex = 0;
-  let score = 0;
-  let multiplier = 1;
-  let correctTotal = 0;
-  let lastMilestoneCount = 0;
-  let milestoneStartTime = 0;
-  let timeLeft = 60;
-  let timerInterval = null;
-  let popupTimeout = null;
-  let gameTotalTyped = 0;
-  let lastGameTyped = 0;
-  let lastGameDuration = 0;
-  let toastTimeout = null;
-  let isSentenceMode = false;
-  let usedWords = [];
-  let sentenceModePending = false;
-  let pendingSentenceMode = false;
+  let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
+      correctTotal = 0, lastMilestoneCount = 0, milestoneStartTime = 0,
+      timeLeft = 60, timerInterval = null, popupTimeout = null,
+      gameTotalTyped = 0, lastGameTyped = 0, lastGameDuration = 0,
+      toastTimeout = null, isSentenceMode = false, usedWords = [],
+      pendingSentenceMode = false;
 
-  // --- Audio Context ---
+  // --- Audio ---
   let audioCtx = null;
   let soundBuffers = { typed: null, start: null, result: null, bgm: null };
   let soundUrls = { typed: '', start: '', result: '', bgm: '' };
-  let bgmSource = null;
-  let isBgmPlaying = false;
-  let bgmAudioEl = null;
+  let bgmSource = null, isBgmPlaying = false, bgmAudioEl = null;
   let soundAudioEls = { typed: null, start: null, result: null, bgm: null };
-
   let beastSoundBuffer = null;
-  let beastSoundLoaded = false;
 
   async function loadBeastSound() {
     try {
@@ -1458,192 +1318,77 @@
       const response = await fetch(url);
       if (!response.ok) throw new Error('HTTP error: ' + response.status);
       const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-      beastSoundBuffer = audioBuffer;
-      beastSoundLoaded = true;
-    } catch(e) {
-      console.warn('野獣先輩効果音の読み込みに失敗:', e);
-    }
+      beastSoundBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    } catch(e) { console.warn('野獣先輩効果音読み込み失敗:', e); }
   }
-
   function playBeastSound() {
     if (!beastSoundBuffer || !audioCtx) return;
-    try {
-      const source = audioCtx.createBufferSource();
-      source.buffer = beastSoundBuffer;
-      source.connect(audioCtx.destination);
-      source.start(0);
-    } catch(e) {
-      console.warn('野獣先輩効果音再生失敗:', e);
-    }
+    try { const s = audioCtx.createBufferSource(); s.buffer = beastSoundBuffer; s.connect(audioCtx.destination); s.start(0); } catch(e) {}
   }
-
-  function initAudio() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      loadBeastSound();
-    }
-    return audioCtx;
-  }
-
+  function initAudio() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); loadBeastSound(); } return audioCtx; }
   async function loadSound(url) {
     if (!url) return null;
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('HTTP error: ' + response.status);
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-      return audioBuffer;
-    } catch(e) {
-      console.warn('Web Audio APIでの読み込み失敗（CORS等）:', url, e);
-      return null;
-    }
+    try { const res = await fetch(url); if (!res.ok) throw new Error('HTTP error'); const buf = await res.arrayBuffer(); return await audioCtx.decodeAudioData(buf); }
+    catch(e) { console.warn('音声読み込み失敗:', url, e); return null; }
   }
-
   function playSound(buffer, fallbackUrl, type) {
     if (buffer && audioCtx) {
-      try {
-        const source = audioCtx.createBufferSource();
-        source.buffer = buffer;
-        source.connect(audioCtx.destination);
-        source.start(0);
-        return source;
-      } catch(e) {
-        console.warn('Web Audio再生失敗、フォールバック試行:', e);
-      }
+      try { const s = audioCtx.createBufferSource(); s.buffer = buffer; s.connect(audioCtx.destination); s.start(0); return s; } catch(e) {}
     }
-    // フォールバック: HTMLAudioElementで直接再生
     if (fallbackUrl) {
       try {
         let audio = soundAudioEls[type];
-        if (!audio || audio.src !== fallbackUrl) {
-          audio = new Audio(fallbackUrl);
-          audio.preload = 'auto';
-          audio.crossOrigin = 'anonymous';
-          soundAudioEls[type] = audio;
-        }
+        if (!audio || audio.src !== fallbackUrl) { audio = new Audio(fallbackUrl); audio.preload = 'auto'; audio.crossOrigin = 'anonymous'; soundAudioEls[type] = audio; }
         audio.currentTime = 0;
-
-        const doPlay = () => {
-          const playPromise = audio.play();
-          if (playPromise) {
-            playPromise.catch(err => {
-              console.warn('Audio play()失敗:', err.name, err.message);
-            });
-          }
-        };
-
-        if (audio.readyState >= 3) {
-          doPlay();
-        } else {
-          audio.addEventListener('canplaythrough', doPlay, { once: true });
-          audio.addEventListener('error', (e) => {
-            console.warn('Audio読み込みエラー:', type, audio.error ? audio.error.code : 'unknown');
-          }, { once: true });
-          audio.load();
-        }
+        const doPlay = () => { audio.play().catch(() => {}); };
+        if (audio.readyState >= 3) doPlay();
+        else { audio.addEventListener('canplaythrough', doPlay, { once: true }); audio.load(); }
         return audio;
-      } catch(e) {
-        console.warn('フォールバック再生失敗:', e);
-      }
+      } catch(e) {}
     }
     return null;
   }
-
   function playBgmLoop() {
     stopBgm();
     const buffer = soundBuffers.bgm;
     if (buffer && audioCtx) {
-      try {
-        bgmSource = audioCtx.createBufferSource();
-        bgmSource.buffer = buffer;
-        bgmSource.loop = true;
-        bgmSource.connect(audioCtx.destination);
-        bgmSource.start(0);
-        isBgmPlaying = true;
-        return;
-      } catch(e) {
-        console.warn('Web Audio BGM再生失敗、フォールバック試行:', e);
-      }
+      try { bgmSource = audioCtx.createBufferSource(); bgmSource.buffer = buffer; bgmSource.loop = true; bgmSource.connect(audioCtx.destination); bgmSource.start(0); isBgmPlaying = true; return; } catch(e) {}
     }
-    // フォールバック: HTMLAudioElementでループ再生
     if (soundUrls.bgm) {
       try {
         let audio = soundAudioEls.bgm;
-        if (!audio || audio.src !== soundUrls.bgm) {
-          audio = new Audio(soundUrls.bgm);
-          audio.preload = 'auto';
-          audio.crossOrigin = 'anonymous';
-          audio.loop = true;
-          soundAudioEls.bgm = audio;
-          bgmAudioEl = audio;
-        }
+        if (!audio || audio.src !== soundUrls.bgm) { audio = new Audio(soundUrls.bgm); audio.preload = 'auto'; audio.crossOrigin = 'anonymous'; audio.loop = true; soundAudioEls.bgm = audio; bgmAudioEl = audio; }
         audio.currentTime = 0;
-        const doPlay = () => {
-          audio.play().catch(err => console.warn('BGM Audio要素再生失敗:', err));
-        };
-        if (audio.readyState >= 3) {
-          doPlay();
-        } else {
-          audio.addEventListener('canplaythrough', doPlay, { once: true });
-          audio.load();
-        }
+        const doPlay = () => { audio.play().catch(() => {}); };
+        if (audio.readyState >= 3) doPlay();
+        else { audio.addEventListener('canplaythrough', doPlay, { once: true }); audio.load(); }
         isBgmPlaying = true;
-      } catch(e) {
-        console.warn('BGMフォールバック失敗:', e);
-      }
+      } catch(e) {}
     }
   }
-
   function stopBgm() {
-    if (bgmSource) {
-      try { bgmSource.stop(); } catch(e) {}
-      bgmSource = null;
-    }
-    if (bgmAudioEl) {
-      try { bgmAudioEl.pause(); bgmAudioEl.currentTime = 0; } catch(e) {}
-    }
-    if (soundAudioEls.bgm) {
-      try { soundAudioEls.bgm.pause(); soundAudioEls.bgm.currentTime = 0; } catch(e) {}
-    }
+    if (bgmSource) { try { bgmSource.stop(); } catch(e) {} bgmSource = null; }
+    if (bgmAudioEl) { try { bgmAudioEl.pause(); bgmAudioEl.currentTime = 0; } catch(e) {} }
+    if (soundAudioEls.bgm) { try { soundAudioEls.bgm.pause(); soundAudioEls.bgm.currentTime = 0; } catch(e) {} }
     isBgmPlaying = false;
   }
+  function getSoundBuffer(type) { return soundBuffers[type] || generateDefaultSound(type); }
+  function playTypedSound() { const buf = getSoundBuffer('typed'); playSound(buf, soundUrls.typed, 'typed'); }
+  function playStartSound() { const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
+  function playResultSound() { const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
 
-  function getSoundBuffer(type) {
-    if (soundBuffers[type]) return soundBuffers[type];
-    return generateDefaultSound(type);
-  }
-
-  function playTypedSound() {
-    const buffer = getSoundBuffer('typed');
-    playSound(buffer, soundUrls.typed, 'typed');
-  }
-
-  function playStartSound() {
-    const buffer = getSoundBuffer('start');
-    playSound(buffer, soundUrls.start, 'start');
-  }
-
-  function playResultSound() {
-    const buffer = getSoundBuffer('result');
-    playSound(buffer, soundUrls.result, 'result');
-  }
-
-  // --- 音声設定用関数 ---
+  // --- 音声設定 ---
   async function applySoundSetting(type, url) {
     const statusEl = document.getElementById('status-' + type);
     statusEl.textContent = '⏳ 読み込み中...';
     statusEl.className = 'sound-status';
-
     try {
       if (!audioCtx) initAudio();
-      
       let buffer = null;
       if (url && url.trim() !== '') {
         buffer = await loadSound(url.trim());
         if (buffer) {
-          soundBuffers[type] = buffer;
-          soundUrls[type] = url.trim();
+          soundBuffers[type] = buffer; soundUrls[type] = url.trim();
           if (type === 'typed') soundTyped = url.trim();
           else if (type === 'start') soundStart = url.trim();
           else if (type === 'result') soundResult = url.trim();
@@ -1651,11 +1396,8 @@
           saveData();
           statusEl.textContent = '✅ 音声を設定しました (外部ファイル)';
           statusEl.className = 'sound-status success';
-          if (type === 'bgm') {
-            playBgmLoop();
-          } else {
-            playSound(buffer);
-          }
+          if (type === 'bgm') playBgmLoop();
+          else playSound(buffer);
         } else {
           statusEl.textContent = '❌ 音声の読み込みに失敗しました';
           statusEl.className = 'sound-status error';
@@ -1664,23 +1406,16 @@
         if (type === 'typed') soundTyped = '';
         else if (type === 'start') soundStart = '';
         else if (type === 'result') soundResult = '';
-        else if (type === 'bgm') {
-          soundBgm = '';
-          stopBgm();
-        }
-        soundBuffers[type] = null;
-        soundUrls[type] = '';
+        else if (type === 'bgm') { soundBgm = ''; stopBgm(); }
+        soundBuffers[type] = null; soundUrls[type] = '';
         saveData();
         const defaultBuffer = generateDefaultSound(type);
         if (defaultBuffer) {
           soundBuffers[type] = defaultBuffer;
           statusEl.textContent = '✅ デフォルト音声に設定しました';
           statusEl.className = 'sound-status success';
-          if (type === 'bgm') {
-            playBgmLoop();
-          } else {
-            playSound(defaultBuffer, '', type);
-          }
+          if (type === 'bgm') playBgmLoop();
+          else playSound(defaultBuffer, '', type);
         }
       }
     } catch(e) {
@@ -1710,7 +1445,6 @@
   const shopItemsContainer = document.getElementById('shop-items-container');
   const shopHighscoreEl = document.getElementById('shop-highscore');
   const shopTotalTypedEl = document.getElementById('shop-total-typed');
-  const shopCoinsEl = document.getElementById('shop-coins');
   const settingsOverlay = document.getElementById('settings-overlay');
   const settingDisplayBtn = document.getElementById('setting-display-btn');
   const resetDataBtn = document.getElementById('reset-data-btn');
@@ -1723,8 +1457,12 @@
   const toastEl = document.getElementById('achievement-toast');
   const toastName = document.getElementById('toast-name');
   const toastDesc = document.getElementById('toast-desc');
-
-  // --- 設定項目 ---
+  const announceFrame = document.getElementById('announce-frame');
+  const announceOverlay = document.getElementById('announce-overlay');
+  const announceDismiss = document.getElementById('announce-dismiss');
+  const announceClose = document.getElementById('announce-close');
+  const rainbowOverlay = document.getElementById('rainbowOverlay');
+  let rainbowAudio = null, rainbowAudio2 = null, rainbowInterval = null, rainbowTimer = null;
   const soundTypedInput = document.getElementById('sound-typed');
   const soundStartInput = document.getElementById('sound-start');
   const soundResultInput = document.getElementById('sound-result');
@@ -1737,699 +1475,507 @@
   const fCtx = forestCanvas.getContext('2d');
   const acornCanvas = document.getElementById('acorn-canvas');
   const ctx = acornCanvas.getContext('2d');
-  let acorns = [];
-  let fragments = [];
-  let specialParticles = [];
-  let trees = [];
+  let acorns = [], fragments = [], specialParticles = [], trees = [];
   let acornSpawnTimer = null;
   const MIN_ACORN_COUNT = 10;
-  let fireworks = [];
-  let villageHouses = [];
+  let fireworks = [], villageHouses = [];
+  let starryYOffset = 0;
 
   // ============ 実績システム ============
   function checkAchievements() {
     let newUnlocked = [];
     for (const [id, ach] of Object.entries(ACHIEVEMENTS)) {
-      if (!unlockedAchievements.includes(id) && ach.check()) {
-        unlockedAchievements.push(id);
-        newUnlocked.push(ach);
-      }
+      if (!unlockedAchievements.includes(id) && ach.check()) { unlockedAchievements.push(id); newUnlocked.push(ach); }
     }
-    if (newUnlocked.length > 0) {
-      saveData();
-      const last = newUnlocked[newUnlocked.length - 1];
-      showAchievementToast(last);
-      updateAchievementUI();
-    }
+    if (newUnlocked.length > 0) { saveData(); const last = newUnlocked[newUnlocked.length - 1]; showAchievementToast(last); updateAchievementUI(); }
   }
-
   function showAchievementToast(ach) {
-    toastName.textContent = ach.name;
-    toastDesc.textContent = ach.desc;
+    toastName.textContent = ach.name; toastDesc.textContent = ach.desc;
     toastEl.classList.add('show');
     clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      toastEl.classList.remove('show');
-    }, 4000);
+    toastTimeout = setTimeout(() => { toastEl.classList.remove('show'); }, 4000);
   }
-
   function updateAchievementUI() {
     const total = Object.keys(ACHIEVEMENTS).length;
     achUnlockedCount.textContent = unlockedAchievements.length;
     achTotalCount.textContent = total;
     achTotalTyped.textContent = totalTyped;
-
     let html = '';
     for (const [id, ach] of Object.entries(ACHIEVEMENTS)) {
       const unlocked = unlockedAchievements.includes(id);
-      html += `
-        <div class="achievement-item ${unlocked ? 'unlocked' : 'locked'}">
-          <div class="achievement-icon">${unlocked ? ach.icon : '❓'}</div>
-          <div class="achievement-info">
-            <div class="achievement-name">${unlocked ? ach.name : '？？？'}</div>
-            <div class="achievement-desc">${unlocked ? ach.desc : '？？？'}</div>
-          </div>
-          <div class="achievement-status ${unlocked ? 'unlocked' : 'locked'}">
-            ${unlocked ? '✅ 解除済' : '🔒 未解除'}
-          </div>
-        </div>
-      `;
+      html += `<div class="achievement-item ${unlocked ? 'unlocked' : 'locked'}">
+        <div class="achievement-icon">${unlocked ? ach.icon : '❓'}</div>
+        <div class="achievement-info"><div class="achievement-name">${unlocked ? ach.name : '？？？'}</div><div class="achievement-desc">${unlocked ? ach.desc : '？？？'}</div></div>
+        <div class="achievement-status ${unlocked ? 'unlocked' : 'locked'}">${unlocked ? '✅ 解除済' : '🔒 未解除'}</div>
+      </div>`;
     }
     achievementList.innerHTML = html;
   }
 
-  // ============ コインシステム ============
-  function addCoinsFromScore(gameScore) {
-    // コインシステム廃止：累計入力文字数で購入
-  }
-
   // ============ 特殊モード ============
   function unlockAllAchievementsAndShop() {
-    for (const [id, ach] of Object.entries(ACHIEVEMENTS)) {
-      if (!unlockedAchievements.includes(id)) {
-        unlockedAchievements.push(id);
-      }
-    }
-    for (const [id] of Object.entries(BG_SKINS)) {
-      if (!ownedBg.includes(id)) {
-        ownedBg.push(id);
-      }
-    }
-    for (const [id] of Object.entries(ACORN_SKINS)) {
-      if (!ownedAcorn.includes(id)) {
-        ownedAcorn.push(id);
-      }
-    }
-    superMode = true;
-    normalMode = false;
-    saveData();
-    updateAchievementUI();
-    updateShopUI();
-    showPopup('🌟 全実績解除 + 全ショップ開放！ 1文字500スコア！');
+    for (const [id] of Object.entries(ACHIEVEMENTS)) { if (!unlockedAchievements.includes(id)) unlockedAchievements.push(id); }
+    for (const [id] of Object.entries(BG_SKINS)) { if (!ownedBg.includes(id)) ownedBg.push(id); }
+    for (const [id] of Object.entries(ACORN_SKINS)) { if (!ownedAcorn.includes(id)) ownedAcorn.push(id); }
+    superMode = true; normalMode = false; saveData(); updateAchievementUI(); updateShopUI(); showPopup('🌟 全実績解除 + 全ショップ開放！');
   }
-
-  function resetToNormalMode() {
-    superMode = false;
-    normalMode = true;
-    saveData();
-    showPopup('🔁 通常モードに戻りました');
-  }
-
+  function resetToNormalMode() { superMode = false; normalMode = true; saveData(); showPopup('🔁 通常モードに戻りました'); }
   function unlockPhantomAcorn() {
     if (!phantomAcornUnlocked) {
       phantomAcornUnlocked = true;
-      if (!unlockedAchievements.includes('phantom_acorn')) {
-        unlockedAchievements.push('phantom_acorn');
-      }
-      if (!ownedAcorn.includes('phantom')) {
-        ownedAcorn.push('phantom');
-      }
-      saveData();
-      updateAchievementUI();
-      updateShopUI();
-      equippedAcorn = 'phantom';
-      saveData();
+      if (!unlockedAchievements.includes('phantom_acorn')) unlockedAchievements.push('phantom_acorn');
+      if (!ownedAcorn.includes('phantom')) ownedAcorn.push('phantom');
+      saveData(); updateAchievementUI(); updateShopUI(); equippedAcorn = 'phantom'; saveData();
       showPopup('🌀 幻のどんぐりを解き放った！');
-      
-      const ach = ACHIEVEMENTS['phantom_acorn'];
-      if (ach) {
-        showAchievementToast(ach);
-      }
-      updatePhantomFont();
-    } else {
-      showPopup('🌀 幻のどんぐりは既に解放されています');
-    }
+      const ach = ACHIEVEMENTS['phantom_acorn']; if (ach) showAchievementToast(ach);
+      updatePhantomFont(); updateFontColor();
+    } else { showPopup('🌀 幻のどんぐりは既に解放されています'); }
   }
-
   function unlockDoubleAcorn() {
     if (!doubleAcornUnlocked) {
       doubleAcornUnlocked = true;
-      if (!unlockedAchievements.includes('double_acorn')) {
-        unlockedAchievements.push('double_acorn');
-      }
-      if (!ownedAcorn.includes('double')) {
-        ownedAcorn.push('double');
-      }
-      saveData();
-      updateAchievementUI();
-      updateShopUI();
+      if (!unlockedAchievements.includes('double_acorn')) unlockedAchievements.push('double_acorn');
+      if (!ownedAcorn.includes('double')) ownedAcorn.push('double');
+      saveData(); updateAchievementUI(); updateShopUI();
       showPopup('🔮 ダブルどんぐりを解き放った！（スコア2倍）');
-      
-      const ach = ACHIEVEMENTS['double_acorn'];
-      if (ach) {
-        showAchievementToast(ach);
-      }
-    } else {
-      showPopup('🔮 ダブルどんぐりは既に解放されています');
-    }
+      const ach = ACHIEVEMENTS['double_acorn']; if (ach) showAchievementToast(ach);
+    } else { showPopup('🔮 ダブルどんぐりは既に解放されています'); }
   }
-
   function unlockBeastAcorn() {
     if (!beastAcornUnlocked) {
       beastAcornUnlocked = true;
-      if (!unlockedAchievements.includes('beast_acorn')) {
-        unlockedAchievements.push('beast_acorn');
-      }
-      if (!ownedAcorn.includes('beast')) {
-        ownedAcorn.push('beast');
-      }
-      saveData();
-      updateAchievementUI();
-      updateShopUI();
+      if (!unlockedAchievements.includes('beast_acorn')) unlockedAchievements.push('beast_acorn');
+      if (!ownedAcorn.includes('beast')) ownedAcorn.push('beast');
+      saveData(); updateAchievementUI(); updateShopUI();
       showPopup('🐻 野獣先輩どんぐりを解き放った！');
-      
-      const ach = ACHIEVEMENTS['beast_acorn'];
-      if (ach) {
-        showAchievementToast(ach);
-      }
-    } else {
-      showPopup('🐻 野獣先輩どんぐりは既に解放されています');
-    }
+      const ach = ACHIEVEMENTS['beast_acorn']; if (ach) showAchievementToast(ach);
+    } else { showPopup('🐻 野獣先輩どんぐりは既に解放されています'); }
   }
-
   function unlockBeastBg() {
-    if (!beastBgUnlocked) {
-      beastBgUnlocked = true;
-      if (!ownedBg.includes('beast_room')) {
-        ownedBg.push('beast_room');
-      }
-      saveData();
-      updateShopUI();
-      showPopup('🛋️ 野獣先輩の部屋を解放した！');
-    } else {
-      showPopup('🛋️ 野獣先輩の部屋は既に解放されています');
-    }
+    if (!beastBgUnlocked) { beastBgUnlocked = true; if (!ownedBg.includes('beast_room')) ownedBg.push('beast_room'); saveData(); updateShopUI(); showPopup('🛋️ 野獣先輩の部屋を解放した！'); }
+    else { showPopup('🛋️ 野獣先輩の部屋は既に解放されています'); }
   }
 
   // ============ 幻のどんぐりフォント適用 ============
   function updatePhantomFont() {
+    if (equippedAcorn === 'phantom') { document.body.classList.add('phantom-font'); }
+    else { document.body.classList.remove('phantom-font'); }
+  }
+
+  // ============ ★ フォントカラー適用関数 ============
+  function updateFontColor() {
+    const skin = ACORN_SKINS[equippedAcorn];
+    const fontColor = skin ? skin.fontColor : '#d2b48c';
+    
+    kanaDisplayEl.style.color = fontColor;
+    scoreValueEl.style.color = fontColor;
+    document.querySelector('.title').style.color = fontColor;
+    modalScoreEl.style.color = fontColor;
+    document.querySelector('.hanko-score').style.color = fontColor;
+    
     if (equippedAcorn === 'phantom') {
-      document.body.classList.add('phantom-font');
+      kanaDisplayEl.style.textShadow = '0 0 30px rgba(155,89,182,0.6), 0 0 60px rgba(155,89,182,0.3)';
+      document.querySelector('.title').style.textShadow = '0 0 30px rgba(155,89,182,0.4), 0 2px 8px rgba(0,0,0,0.5)';
+    } else if (equippedAcorn === 'gold') {
+      kanaDisplayEl.style.textShadow = '0 0 20px rgba(255,215,0,0.3)';
+      document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,215,0,0.2), 0 2px 8px rgba(0,0,0,0.5)';
+    } else if (equippedAcorn === 'rainbow') {
+      kanaDisplayEl.style.textShadow = '0 0 20px rgba(255,100,255,0.3)';
+      document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,100,255,0.2), 0 2px 8px rgba(0,0,0,0.5)';
     } else {
-      document.body.classList.remove('phantom-font');
+      kanaDisplayEl.style.textShadow = 'none';
+      document.querySelector('.title').style.textShadow = '0 2px 8px rgba(0,0,0,0.5)';
     }
   }
 
   // ============ 背景描画システム ============
   function initForest() {
-    forestCanvas.width = window.innerWidth;
-    forestCanvas.height = window.innerHeight;
-    trees = [];
-    villageHouses = [];
-    fireworks = [];
+    forestCanvas.width = window.innerWidth; forestCanvas.height = window.innerHeight;
+    trees = []; villageHouses = []; fireworks = [];
     const count = Math.floor(window.innerWidth / 70) + 5;
     for(let i = 0; i < count; i++) {
-      trees.push({
-        x: (i / count) * window.innerWidth + (Math.random() - 0.5) * 50,
-        height: 180 + Math.random() * 250,
-        width: 30 + Math.random() * 40,
-        layer: Math.random() > 0.5 ? 1 : 2,
-        sway: Math.random() * Math.PI * 2,
-        swaySpeed: 0.01 + Math.random() * 0.015,
-        color: Math.random() > 0.7 ? 'sakura' : 'normal'
-      });
+      trees.push({ x: (i / count) * window.innerWidth + (Math.random() - 0.5) * 50, height: 180 + Math.random() * 250,
+        width: 30 + Math.random() * 40, layer: Math.random() > 0.5 ? 1 : 2,
+        sway: Math.random() * Math.PI * 2, swaySpeed: 0.01 + Math.random() * 0.015,
+        color: Math.random() > 0.7 ? 'sakura' : 'normal' });
     }
     for (let i = 0; i < 12; i++) {
-      villageHouses.push({
-        x: Math.random() * forestCanvas.width,
-        y: forestCanvas.height * 0.65 + Math.random() * 0.3 * forestCanvas.height,
-        w: 30 + Math.random() * 50,
-        h: 30 + Math.random() * 40,
-        color: ['#d4a373', '#e9c9a0', '#b88a5c', '#c9a87c', '#a67c52'][Math.floor(Math.random() * 5)],
-        roofColor: ['#8b5a2b', '#a0522d', '#6b3a1f', '#7a4a2a'][Math.floor(Math.random() * 4)],
-        hasChimney: Math.random() > 0.6,
-      });
+      villageHouses.push({ x: Math.random() * forestCanvas.width, y: forestCanvas.height * 0.65 + Math.random() * 0.3 * forestCanvas.height,
+        w: 30 + Math.random() * 50, h: 30 + Math.random() * 40,
+        color: ['#d4a373','#e9c9a0','#b88a5c','#c9a87c','#a67c52'][Math.floor(Math.random() * 5)],
+        roofColor: ['#8b5a2b','#a0522d','#6b3a1f','#7a4a2a'][Math.floor(Math.random() * 4)],
+        hasChimney: Math.random() > 0.6 });
     }
     for (let i = 0; i < 6; i++) {
-      fireworks.push({
-        x: 50 + Math.random() * (forestCanvas.width - 100),
-        y: 50 + Math.random() * (forestCanvas.height * 0.4),
-        radius: 0,
-        maxRadius: 20 + Math.random() * 40,
-        life: Math.random() * 0.5,
-        speed: 0.005 + Math.random() * 0.01,
-        hue: Math.random() * 360,
-        particles: [],
-        active: false,
-        phase: Math.random() * Math.PI * 2,
-      });
+      fireworks.push({ x: 50 + Math.random() * (forestCanvas.width - 100), y: 50 + Math.random() * (forestCanvas.height * 0.4),
+        radius: 0, maxRadius: 20 + Math.random() * 40, life: Math.random() * 0.5,
+        speed: 0.005 + Math.random() * 0.01, hue: Math.random() * 360,
+        particles: [], active: false, phase: Math.random() * Math.PI * 2 });
     }
   }
 
   function drawForest() {
     fCtx.clearRect(0, 0, forestCanvas.width, forestCanvas.height);
-
-    // 野獣先輩背景
     if (equippedBg === 'beast_room') {
-      // 白い壁
-      fCtx.fillStyle = '#F5F5F5';
-      fCtx.fillRect(0, 0, forestCanvas.width, forestCanvas.height);
-      
-      // 床の線（白い壁に少し影）
-      fCtx.strokeStyle = 'rgba(0,0,0,0.03)';
-      fCtx.lineWidth = 1;
-      for (let i = 0; i < 30; i++) {
-        const y = forestCanvas.height * 0.7 + i * (forestCanvas.height * 0.3 / 30);
-        fCtx.beginPath();
-        fCtx.moveTo(0, y);
-        fCtx.lineTo(forestCanvas.width, y);
-        fCtx.stroke();
-      }
-      
-      // 緑のカーテン（左右）
-      const curtainColor = '#2E8B57';
-      const curtainW = forestCanvas.width * 0.08;
-      const curtainH = forestCanvas.height * 0.85;
-      // 左カーテン
-      fCtx.fillStyle = curtainColor;
-      fCtx.shadowColor = 'rgba(0,0,0,0.1)';
-      fCtx.shadowBlur = 8;
-      fCtx.fillRect(0, 0, curtainW, curtainH);
-      // カーテンのひだ
-      for (let i = 0; i < 6; i++) {
-        const cx = i * (curtainW / 6);
-        fCtx.fillStyle = 'rgba(0,0,0,0.08)';
-        fCtx.fillRect(cx, 0, 2, curtainH);
-      }
-      // 右カーテン
-      fCtx.fillStyle = curtainColor;
-      fCtx.fillRect(forestCanvas.width - curtainW, 0, curtainW, curtainH);
-      for (let i = 0; i < 6; i++) {
-        const cx = forestCanvas.width - curtainW + i * (curtainW / 6);
-        fCtx.fillStyle = 'rgba(0,0,0,0.08)';
-        fCtx.fillRect(cx, 0, 2, curtainH);
-      }
-      
-      // カーテンの上部（レール）
-      fCtx.fillStyle = '#4a4a4a';
-      fCtx.shadowBlur = 0;
-      fCtx.fillRect(0, 0, forestCanvas.width, 6);
-      
-      // ソファー（茶色）
-      fCtx.shadowBlur = 12;
-      fCtx.shadowColor = 'rgba(0,0,0,0.15)';
-      const sofaX = forestCanvas.width * 0.15;
-      const sofaY = forestCanvas.height * 0.62;
-      const sofaW = forestCanvas.width * 0.7;
-      const sofaH = forestCanvas.height * 0.25;
-      
-      // ソファー本体
-      fCtx.fillStyle = '#8B4513';
-      fCtx.fillRect(sofaX, sofaY, sofaW, sofaH);
-      
-      // ソファーの背もたれ
-      fCtx.fillStyle = '#A0522D';
-      fCtx.fillRect(sofaX, sofaY - sofaH * 0.2, sofaW, sofaH * 0.2);
-      
-      // ソファーの肘掛け
-      fCtx.fillStyle = '#6B3410';
-      fCtx.fillRect(sofaX, sofaY, sofaW * 0.06, sofaH);
-      fCtx.fillRect(sofaX + sofaW - sofaW * 0.06, sofaY, sofaW * 0.06, sofaH);
-      
-      // ソファーの座面の線
-      fCtx.shadowBlur = 0;
-      fCtx.strokeStyle = 'rgba(0,0,0,0.05)';
-      fCtx.lineWidth = 1;
-      for (let i = 0; i < 5; i++) {
-        const lx = sofaX + sofaW * 0.05 + i * (sofaW * 0.9 / 4);
-        fCtx.beginPath();
-        fCtx.moveTo(lx, sofaY + sofaH * 0.05);
-        fCtx.lineTo(lx, sofaY + sofaH * 0.95);
-        fCtx.stroke();
-      }
-      
-      // ソファーの影
-      fCtx.shadowBlur = 0;
-      fCtx.fillStyle = 'rgba(0,0,0,0.03)';
-      fCtx.fillRect(sofaX + sofaW * 0.02, sofaY + sofaH, sofaW * 0.96, sofaH * 0.05);
-      
-      // 床の境界線
-      fCtx.strokeStyle = 'rgba(0,0,0,0.05)';
-      fCtx.lineWidth = 2;
-      fCtx.beginPath();
-      fCtx.moveTo(0, forestCanvas.height * 0.7);
-      fCtx.lineTo(forestCanvas.width, forestCanvas.height * 0.7);
-      fCtx.stroke();
-      
-      requestAnimationFrame(drawForest);
-      return;
+      fCtx.save();
+      const w = forestCanvas.width, h = forestCanvas.height;
+      fCtx.fillStyle = '#8B9B94'; fCtx.fillRect(0, 0, w * 0.5, h * 0.6);
+      fCtx.fillStyle = '#C8C0B8'; fCtx.fillRect(w * 0.5, 0, w * 0.5, h * 0.6);
+      fCtx.fillStyle = '#3E343C';
+      fCtx.beginPath(); fCtx.moveTo(0, h * 0.64); fCtx.lineTo(w * 0.5, h * 0.55); fCtx.lineTo(w, h * 0.64); fCtx.lineTo(w, h); fCtx.lineTo(0, h); fCtx.closePath(); fCtx.fill();
+      const circleRadius = Math.min(w, h) * 0.22;
+      fCtx.fillStyle = '#AC7874';
+      fCtx.beginPath(); fCtx.arc(w * 0.5, h * 0.5, circleRadius, 0, Math.PI * 2); fCtx.fill();
+      fCtx.restore();
+      requestAnimationFrame(drawForest); return;
     }
 
     const bg = BG_SKINS[equippedBg] || BG_SKINS['forest'];
-    let colors;
-    let gradientColors = [];
-    
+    let colors, gradientColors = [];
     switch(equippedBg) {
-      case 'summer_festival':
-        gradientColors = ['#0a0515', '#1a0a2e', '#2d1b4e', '#1a0a2e'];
-        break;
-      case 'republic':
-        gradientColors = ['#87CEEB', '#4A90D9', '#2E7AB3', '#87CEEB'];
-        break;
-      case 'sunset':
-        colors = ['#1a0a0a', '#3d1a0a', '#6b2a15'];
-        break;
-      case 'ocean':
-        colors = ['#0a1a2a', '#0d2a4a', '#1a4a6a'];
-        break;
-      case 'everest':
-        colors = ['#0a1a3a', '#1a3a6a', '#3a7aaa'];
-        break;
-      case 'sakura':
-        colors = ['#1a0a1a', '#3a1a2a', '#5a2a3a'];
-        break;
-      case 'aurora':
-        colors = ['#0a0a1a', '#1a0a3a', '#0a2a3a'];
-        break;
-      case 'nightcity':
-        colors = ['#0a0a14', '#1a0a28', '#2a0a3a'];
-        break;
-      case 'waterfall':
-        colors = ['#0a1a0a', '#1a3a1a', '#2a5a2a'];
-        break;
-      case 'desert':
-        colors = ['#1a0a0a', '#3a2a0a', '#5a3a0a'];
-        break;
-      case 'starry':
-        colors = ['#050510', '#0a0a25', '#0a0a3a'];
-        break;
-      default:
-        colors = ['#0d120a', '#182215'];
+      case 'summer_festival': gradientColors = ['#0a0515','#1a0a2e','#2d1b4e','#1a0a2e']; break;
+      case 'republic': gradientColors = ['#87CEEB','#4A90D9','#2E7AB3','#87CEEB']; break;
+      case 'sunset': colors = ['#1a0a0a','#3d1a0a','#6b2a15']; break;
+      case 'ocean': colors = ['#0a1a2a','#0d2a4a','#1a4a6a']; break;
+      case 'everest': colors = ['#0a1a3a','#1a3a6a','#3a7aaa']; break;
+      case 'sakura': colors = ['#1a0a1a','#3a1a2a','#5a2a3a']; break;
+      case 'aurora': colors = ['#0a0a1a','#1a0a3a','#0a2a3a']; break;
+      case 'nightcity': colors = ['#0a0a14','#1a0a28','#2a0a3a']; break;
+      case 'waterfall': colors = ['#0a1a0a','#1a3a1a','#2a5a2a']; break;
+      case 'desert': colors = ['#1a0a0a','#3a2a0a','#5a3a0a']; break;
+      case 'starry': colors = ['#050510','#0a0a25','#0a0a3a']; break;
+      default: colors = ['#0d120a','#182215'];
     }
-
     const bgGrad = fCtx.createLinearGradient(0, 0, 0, forestCanvas.height);
-    if (gradientColors.length > 0) {
-      gradientColors.forEach((c, i) => {
-        bgGrad.addColorStop(i / (gradientColors.length - 1), c);
-      });
-    } else {
-      bgGrad.addColorStop(0, colors[0]);
-      bgGrad.addColorStop(0.5, colors[1] || colors[0]);
-      bgGrad.addColorStop(1, colors[2] || colors[1] || colors[0]);
-    }
-    fCtx.fillStyle = bgGrad;
-    fCtx.fillRect(0, 0, forestCanvas.width, forestCanvas.height);
+    if (gradientColors.length > 0) { gradientColors.forEach((c, i) => bgGrad.addColorStop(i / (gradientColors.length - 1), c)); }
+    else { bgGrad.addColorStop(0, colors[0]); bgGrad.addColorStop(0.5, colors[1] || colors[0]); bgGrad.addColorStop(1, colors[2] || colors[1] || colors[0]); }
+    fCtx.fillStyle = bgGrad; fCtx.fillRect(0, 0, forestCanvas.width, forestCanvas.height);
 
     if (equippedBg === 'summer_festival') {
       fireworks.forEach(fw => {
         fw.phase += 0.02;
         if (fw.phase % 0.5 < 0.01 && !fw.active) {
-          fw.active = true;
-          fw.x = 50 + Math.random() * (forestCanvas.width - 100);
+          fw.active = true; fw.x = 50 + Math.random() * (forestCanvas.width - 100);
           fw.y = 50 + Math.random() * (forestCanvas.height * 0.4);
-          fw.maxRadius = 20 + Math.random() * 50;
-          fw.hue = Math.random() * 360;
-          fw.particles = [];
+          fw.maxRadius = 20 + Math.random() * 50; fw.hue = Math.random() * 360; fw.particles = [];
           for (let i = 0; i < 30; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 1 + Math.random() * 3;
-            fw.particles.push({
-              x: 0, y: 0,
-              vx: Math.cos(angle) * speed,
-              vy: Math.sin(angle) * speed,
-              life: 1,
-              decay: 0.005 + Math.random() * 0.01,
-              size: 2 + Math.random() * 3,
-              hue: fw.hue + (Math.random() - 0.5) * 60,
-            });
+            const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
+            fw.particles.push({ x: 0, y: 0, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+              life: 1, decay: 0.005 + Math.random() * 0.01, size: 2 + Math.random() * 3,
+              hue: fw.hue + (Math.random() - 0.5) * 60 });
           }
         }
         if (fw.active) {
-          const progress = fw.phase % 0.5 / 0.5;
-          fw.radius = fw.maxRadius * progress;
-          
-          fw.particles.forEach(p => {
-            p.x += p.vx * 0.5;
-            p.y += p.vy * 0.5;
-            p.life -= p.decay;
-            p.size *= 0.99;
-          });
+          fw.particles.forEach(p => { p.x += p.vx * 0.5; p.y += p.vy * 0.5; p.life -= p.decay; p.size *= 0.99; });
           fw.particles = fw.particles.filter(p => p.life > 0);
-          
-          if (fw.particles.length === 0) {
-            fw.active = false;
-          }
-          
+          if (fw.particles.length === 0) fw.active = false;
           fw.particles.forEach(p => {
-            fCtx.save();
-            fCtx.globalAlpha = p.life * 0.8;
+            fCtx.save(); fCtx.globalAlpha = p.life * 0.8;
             fCtx.fillStyle = `hsl(${p.hue}, 100%, 70%)`;
-            fCtx.shadowColor = `hsl(${p.hue}, 100%, 50%)`;
-            fCtx.shadowBlur = 15;
-            fCtx.beginPath();
-            fCtx.arc(fw.x + p.x, fw.y + p.y, p.size, 0, Math.PI * 2);
-            fCtx.fill();
-            fCtx.restore();
+            fCtx.shadowColor = `hsl(${p.hue}, 100%, 50%)`; fCtx.shadowBlur = 15;
+            fCtx.beginPath(); fCtx.arc(fw.x + p.x, fw.y + p.y, p.size, 0, Math.PI * 2); fCtx.fill(); fCtx.restore();
           });
         }
       });
-
       for (let i = 0; i < 8; i++) {
-        const x = 30 + i * (forestCanvas.width - 60) / 7;
-        const y = forestCanvas.height * 0.6 + Math.sin(i * 1.2) * 20;
-        fCtx.save();
-        const glow = 0.6 + Math.sin(Date.now() / 500 + i) * 0.2;
-        fCtx.shadowColor = `rgba(255, 150, 50, ${glow * 0.5})`;
-        fCtx.shadowBlur = 30;
+        const x = 30 + i * (forestCanvas.width - 60) / 7, y = forestCanvas.height * 0.6 + Math.sin(i * 1.2) * 20;
+        fCtx.save(); const glow = 0.6 + Math.sin(Date.now() / 500 + i) * 0.2;
+        fCtx.shadowColor = `rgba(255, 150, 50, ${glow * 0.5})`; fCtx.shadowBlur = 30;
         fCtx.fillStyle = `rgba(255, 100, 50, ${glow * 0.7})`;
-        fCtx.beginPath();
-        fCtx.ellipse(x, y, 12, 18, 0, 0, Math.PI * 2);
-        fCtx.fill();
+        fCtx.beginPath(); fCtx.ellipse(x, y, 12, 18, 0, 0, Math.PI * 2); fCtx.fill();
         fCtx.fillStyle = `rgba(255, 200, 100, ${glow * 0.3})`;
-        fCtx.beginPath();
-        fCtx.ellipse(x, y, 6, 10, 0, 0, Math.PI * 2);
-        fCtx.fill();
+        fCtx.beginPath(); fCtx.ellipse(x, y, 6, 10, 0, 0, Math.PI * 2); fCtx.fill();
         fCtx.restore();
       }
-
       for (let i = 0; i < 5; i++) {
-        const x = 80 + i * (forestCanvas.width - 160) / 4;
-        const y = forestCanvas.height * 0.72;
-        fCtx.fillStyle = '#5a3a2a';
-        fCtx.fillRect(x, y, 50, 30);
-        fCtx.fillStyle = '#8a5a3a';
-        fCtx.fillRect(x + 5, y - 15, 40, 15);
-        fCtx.fillStyle = '#ffcc66';
-        fCtx.fillRect(x + 10, y - 10, 8, 10);
-        fCtx.fillRect(x + 30, y - 10, 8, 10);
+        const x = 80 + i * (forestCanvas.width - 160) / 4, y = forestCanvas.height * 0.72;
+        fCtx.fillStyle = '#5a3a2a'; fCtx.fillRect(x, y, 50, 30);
+        fCtx.fillStyle = '#8a5a3a'; fCtx.fillRect(x + 5, y - 15, 40, 15);
+        fCtx.fillStyle = '#ffcc66'; fCtx.fillRect(x + 10, y - 10, 8, 10); fCtx.fillRect(x + 30, y - 10, 8, 10);
       }
     }
 
     if (equippedBg === 'republic') {
       villageHouses.forEach(house => {
-        fCtx.save();
-        fCtx.shadowColor = 'rgba(0,0,0,0.2)';
-        fCtx.shadowBlur = 10;
-        fCtx.fillStyle = house.color;
-        fCtx.fillRect(house.x - house.w/2, house.y - house.h, house.w, house.h);
+        fCtx.save(); fCtx.shadowColor = 'rgba(0,0,0,0.2)'; fCtx.shadowBlur = 10;
+        fCtx.fillStyle = house.color; fCtx.fillRect(house.x - house.w/2, house.y - house.h, house.w, house.h);
         fCtx.fillStyle = house.roofColor;
-        fCtx.beginPath();
-        fCtx.moveTo(house.x - house.w/2 - 5, house.y - house.h);
-        fCtx.lineTo(house.x, house.y - house.h - house.w * 0.4);
-        fCtx.lineTo(house.x + house.w/2 + 5, house.y - house.h);
-        fCtx.closePath();
-        fCtx.fill();
+        fCtx.beginPath(); fCtx.moveTo(house.x - house.w/2 - 5, house.y - house.h);
+        fCtx.lineTo(house.x, house.y - house.h - house.w * 0.4); fCtx.lineTo(house.x + house.w/2 + 5, house.y - house.h);
+        fCtx.closePath(); fCtx.fill();
         if (house.hasChimney) {
-          fCtx.fillStyle = '#6b4a2a';
-          fCtx.fillRect(house.x + house.w/4, house.y - house.h - house.w * 0.3, 8, 15);
+          fCtx.fillStyle = '#6b4a2a'; fCtx.fillRect(house.x + house.w/4, house.y - house.h - house.w * 0.3, 8, 15);
           if (Math.random() > 0.7) {
             fCtx.fillStyle = 'rgba(200,200,200,0.1)';
-            fCtx.beginPath();
-            fCtx.arc(house.x + house.w/4 + 4, house.y - house.h - house.w * 0.3 - 10, 10 + Math.random() * 8, 0, Math.PI * 2);
-            fCtx.fill();
+            fCtx.beginPath(); fCtx.arc(house.x + house.w/4 + 4, house.y - house.h - house.w * 0.3 - 10, 10 + Math.random() * 8, 0, Math.PI * 2); fCtx.fill();
           }
         }
-        fCtx.shadowBlur = 0;
-        fCtx.fillStyle = '#ffdd88';
+        fCtx.shadowBlur = 0; fCtx.fillStyle = '#ffdd88';
         fCtx.fillRect(house.x - house.w/4 - 4, house.y - house.h * 0.6, 8, 10);
         fCtx.fillRect(house.x + house.w/4 - 4, house.y - house.h * 0.6, 8, 10);
-        fCtx.fillStyle = '#4a2a1a';
-        fCtx.fillRect(house.x - 6, house.y - 20, 12, 20);
+        fCtx.fillStyle = '#4a2a1a'; fCtx.fillRect(house.x - 6, house.y - 20, 12, 20);
         fCtx.restore();
       });
-
-      fCtx.save();
-      fCtx.fillStyle = 'rgba(180,160,130,0.3)';
-      fCtx.beginPath();
-      fCtx.moveTo(0, forestCanvas.height * 0.8);
+      fCtx.save(); fCtx.fillStyle = 'rgba(180,160,130,0.3)';
+      fCtx.beginPath(); fCtx.moveTo(0, forestCanvas.height * 0.8);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.3, forestCanvas.height * 0.7, forestCanvas.width * 0.5, forestCanvas.height * 0.75);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.7, forestCanvas.height * 0.8, forestCanvas.width, forestCanvas.height * 0.7);
-      fCtx.lineTo(forestCanvas.width, forestCanvas.height);
-      fCtx.lineTo(0, forestCanvas.height);
-      fCtx.closePath();
-      fCtx.fill();
-      fCtx.restore();
-
-      fCtx.save();
-      fCtx.fillStyle = '#2a5a2a';
-      fCtx.fillRect(forestCanvas.width * 0.7, forestCanvas.height * 0.4, 4, 40);
-      fCtx.fillStyle = '#ffd700';
-      fCtx.font = '20px sans-serif';
-      fCtx.fillText('🌰', forestCanvas.width * 0.7 - 15, forestCanvas.height * 0.4 - 5);
-      fCtx.restore();
-
-      fCtx.save();
-      fCtx.fillStyle = 'rgba(255,255,255,0.15)';
-      fCtx.font = 'bold 28px "Zen Maru Gothic", sans-serif';
-      fCtx.textAlign = 'center';
-      fCtx.fillText('どんぐり共和国', forestCanvas.width * 0.5, 60);
-      fCtx.restore();
-
+      fCtx.lineTo(forestCanvas.width, forestCanvas.height); fCtx.lineTo(0, forestCanvas.height); fCtx.closePath(); fCtx.fill(); fCtx.restore();
+      fCtx.save(); fCtx.fillStyle = '#2a5a2a'; fCtx.fillRect(forestCanvas.width * 0.7, forestCanvas.height * 0.4, 4, 40);
+      fCtx.fillStyle = '#ffd700'; fCtx.font = '20px sans-serif'; fCtx.fillText('🌰', forestCanvas.width * 0.7 - 15, forestCanvas.height * 0.4 - 5); fCtx.restore();
+      fCtx.save(); fCtx.fillStyle = 'rgba(255,255,255,0.15)'; fCtx.font = 'bold 28px "Zen Maru Gothic", sans-serif'; fCtx.textAlign = 'center';
+      fCtx.fillText('どんぐり共和国', forestCanvas.width * 0.5, 60); fCtx.restore();
       for (let i = 0; i < 5; i++) {
-        const x = ((i * 200 + Date.now() * 0.01) % (forestCanvas.width + 100)) - 50;
-        const y = 30 + i * 30 % 80;
-        fCtx.save();
-        fCtx.globalAlpha = 0.3;
-        fCtx.fillStyle = 'white';
-        fCtx.beginPath();
-        fCtx.arc(x, y, 40, 0, Math.PI * 2);
-        fCtx.arc(x + 40, y - 10, 35, 0, Math.PI * 2);
-        fCtx.arc(x + 70, y, 30, 0, Math.PI * 2);
-        fCtx.fill();
-        fCtx.restore();
+        const x = ((i * 200 + Date.now() * 0.01) % (forestCanvas.width + 100)) - 50, y = 30 + i * 30 % 80;
+        fCtx.save(); fCtx.globalAlpha = 0.3; fCtx.fillStyle = 'white';
+        fCtx.beginPath(); fCtx.arc(x, y, 40, 0, Math.PI * 2); fCtx.arc(x + 40, y - 10, 35, 0, Math.PI * 2); fCtx.arc(x + 70, y, 30, 0, Math.PI * 2); fCtx.fill(); fCtx.restore();
       }
     }
 
     const treeOpacity = equippedBg === 'republic' ? 0.5 : 1.0;
     trees.forEach(t => {
-      t.sway += t.swaySpeed;
-      const swayOffset = Math.sin(t.sway) * 4;
-
-      fCtx.save();
-      fCtx.globalAlpha = treeOpacity;
+      t.sway += t.swaySpeed; const swayOffset = Math.sin(t.sway) * 4;
+      fCtx.save(); fCtx.globalAlpha = treeOpacity;
       const isSakura = (equippedBg === 'sakura' && t.color === 'sakura');
-      if(t.layer === 1) {
-        fCtx.fillStyle = isSakura ? 'rgba(60,30,40,0.5)' : 'rgba(25,38,22,0.45)';
-      } else {
-        fCtx.fillStyle = isSakura ? 'rgba(80,40,50,0.7)' : 'rgba(32,48,28,0.75)';
-      }
-
-      fCtx.beginPath();
-      fCtx.moveTo(t.x - t.width * 0.2, forestCanvas.height);
+      if(t.layer === 1) fCtx.fillStyle = isSakura ? 'rgba(60,30,40,0.5)' : 'rgba(25,38,22,0.45)';
+      else fCtx.fillStyle = isSakura ? 'rgba(80,40,50,0.7)' : 'rgba(32,48,28,0.75)';
+      fCtx.beginPath(); fCtx.moveTo(t.x - t.width * 0.2, forestCanvas.height);
       fCtx.lineTo(t.x + t.width * 0.2, forestCanvas.height);
       fCtx.lineTo(t.x + t.width * 0.1 + swayOffset * 0.5, forestCanvas.height - t.height * 0.5);
-      fCtx.lineTo(t.x - t.width * 0.1 + swayOffset * 0.5, forestCanvas.height - t.height * 0.5);
-      fCtx.fill();
-
+      fCtx.lineTo(t.x - t.width * 0.1 + swayOffset * 0.5, forestCanvas.height - t.height * 0.5); fCtx.fill();
       const crownY = forestCanvas.height - t.height * 0.6;
       if(isSakura) {
         fCtx.fillStyle = 'rgba(200,120,140,0.6)';
         for(let j=0; j<5; j++) {
           const angle = (j/5)*Math.PI*2 + t.sway*0.1;
-          fCtx.beginPath();
-          fCtx.arc(t.x + swayOffset + Math.cos(angle)*t.width*0.5, crownY + Math.sin(angle)*t.width*0.3, t.width*0.3, 0, Math.PI*2);
-          fCtx.fill();
+          fCtx.beginPath(); fCtx.arc(t.x + swayOffset + Math.cos(angle)*t.width*0.5, crownY + Math.sin(angle)*t.width*0.3, t.width*0.3, 0, Math.PI*2); fCtx.fill();
         }
       } else {
-        fCtx.beginPath();
-        fCtx.arc(t.x + swayOffset, crownY, t.width * 0.9, 0, Math.PI * 2);
+        fCtx.beginPath(); fCtx.arc(t.x + swayOffset, crownY, t.width * 0.9, 0, Math.PI * 2);
         fCtx.arc(t.x - t.width * 0.4 + swayOffset, crownY + 20, t.width * 0.7, 0, Math.PI * 2);
-        fCtx.arc(t.x + t.width * 0.4 + swayOffset, crownY + 20, t.width * 0.7, 0, Math.PI * 2);
-        fCtx.fill();
+        fCtx.arc(t.x + t.width * 0.4 + swayOffset, crownY + 20, t.width * 0.7, 0, Math.PI * 2); fCtx.fill();
       }
       fCtx.restore();
     });
 
     if(equippedBg === 'everest') {
-      fCtx.save();
-      fCtx.fillStyle = 'rgba(200,210,220,0.15)';
-      fCtx.beginPath();
-      fCtx.moveTo(0, forestCanvas.height * 0.7);
+      fCtx.save(); fCtx.fillStyle = 'rgba(200,210,220,0.15)';
+      fCtx.beginPath(); fCtx.moveTo(0, forestCanvas.height * 0.7);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.2, forestCanvas.height * 0.3, forestCanvas.width * 0.4, forestCanvas.height * 0.5);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.5, forestCanvas.height * 0.2, forestCanvas.width * 0.6, forestCanvas.height * 0.45);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.8, forestCanvas.height * 0.35, forestCanvas.width, forestCanvas.height * 0.55);
-      fCtx.lineTo(forestCanvas.width, forestCanvas.height);
-      fCtx.lineTo(0, forestCanvas.height);
-      fCtx.fill();
-
+      fCtx.lineTo(forestCanvas.width, forestCanvas.height); fCtx.lineTo(0, forestCanvas.height); fCtx.fill();
       fCtx.fillStyle = 'rgba(255,255,255,0.08)';
-      fCtx.beginPath();
-      fCtx.moveTo(forestCanvas.width * 0.3, forestCanvas.height * 0.5);
+      fCtx.beginPath(); fCtx.moveTo(forestCanvas.width * 0.3, forestCanvas.height * 0.5);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.45, forestCanvas.height * 0.25, forestCanvas.width * 0.55, forestCanvas.height * 0.4);
       fCtx.quadraticCurveTo(forestCanvas.width * 0.65, forestCanvas.height * 0.3, forestCanvas.width * 0.75, forestCanvas.height * 0.45);
-      fCtx.lineTo(forestCanvas.width * 0.75, forestCanvas.height);
-      fCtx.lineTo(forestCanvas.width * 0.3, forestCanvas.height);
-      fCtx.fill();
-      fCtx.restore();
-    }
-
-    if(equippedBg === 'nightcity') {
-      fCtx.save();
-      for(let i=0; i<20; i++) {
-        const x = Math.random() * forestCanvas.width;
-        const y = forestCanvas.height * (0.5 + Math.random() * 0.4);
-        const w = 3 + Math.random() * 8;
-        const h = 5 + Math.random() * 20;
-        fCtx.fillStyle = `rgba(255,200,50,${0.1 + Math.random() * 0.2})`;
-        fCtx.fillRect(x, y, w, h);
-      }
-      fCtx.restore();
+      fCtx.lineTo(forestCanvas.width * 0.75, forestCanvas.height); fCtx.lineTo(forestCanvas.width * 0.3, forestCanvas.height); fCtx.fill(); fCtx.restore();
     }
 
     if(equippedBg === 'starry') {
-      fCtx.save();
-      for(let i=0; i<100; i++) {
-        const x = Math.random() * forestCanvas.width;
-        const y = Math.random() * forestCanvas.height * 0.6;
-        const size = 0.5 + Math.random() * 1.5;
-        const alpha = 0.3 + Math.random() * 0.7;
+      fCtx.save(); starryYOffset += 0.5;
+      for(let i = 0; i < 100; i++) {
+        const x = ((i * 137.5) % forestCanvas.width);
+        let baseY = ((i * 53.1) % (forestCanvas.height * 0.6));
+        let y = (baseY - starryYOffset) % (forestCanvas.height * 0.6);
+        if (y < 0) y += forestCanvas.height * 0.6;
+        const size = 0.5 + ((i % 5) / 5) * 1.5;
+        const alpha = 0.3 + ((i % 7) / 7) * 0.7;
         fCtx.fillStyle = `rgba(255,255,255,${alpha * 0.5})`;
-        fCtx.beginPath();
-        fCtx.arc(x, y, size, 0, Math.PI * 2);
-        fCtx.fill();
+        fCtx.beginPath(); fCtx.arc(x, y, size, 0, Math.PI * 2); fCtx.fill();
       }
       fCtx.restore();
     }
-
     requestAnimationFrame(drawForest);
   }
 
-  // ============ どんぐり描画システム ============
-  function resizeCanvas() {
-    acornCanvas.width = window.innerWidth;
-    acornCanvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', () => { resizeCanvas(); initForest(); });
-  resizeCanvas();
-  initForest();
-  requestAnimationFrame(drawForest);
-
+  // ============ ★ どんぐり形状描画（拡張） ============
   function getAcornStyle(skin) {
     const styles = {
-      'default': { cap: '#654321', nut: '#a07346', glow: null, particleColors: ['#654321', '#a07346', '#8B6B3D'] },
-      'green': { cap: '#2d5a1a', nut: '#4a8a2a', glow: 'rgba(74,138,42,0.3)', particleColors: ['#2d5a1a', '#4a8a2a', '#6aaa4a'] },
-      'gold': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.4)', particleColors: ['#ffd700', '#ffaa00', '#ffcc33'] },
-      'crystal': { cap: '#4a6a8a', nut: '#8ac4d0', glow: 'rgba(138,196,208,0.4)', particleColors: ['#8ac4d0', '#aaddff', '#66aacc'] },
-      'flame': { cap: '#8a2a0a', nut: '#ff4a1a', glow: 'rgba(255,74,26,0.4)', particleColors: ['#ff4a1a', '#ff8a00', '#ffcc00'] },
-      'bubble': { cap: '#2a5a3a', nut: '#4aaa6a', glow: 'rgba(74,170,106,0.3)', particleColors: ['#4aaa6a', '#66dd88', '#88ffaa'] },
-      'rainbow': { cap: '#ff6b6b', nut: '#ffd93d', glow: 'rgba(255,100,100,0.3)', particleColors: ['#ff6b6b', '#ffd93d', '#6bcfff', '#ff6bff'] },
-      'ice': { cap: '#3a6a8a', nut: '#8ac4e0', glow: 'rgba(138,196,224,0.4)', particleColors: ['#8ac4e0', '#cceeff', '#66aacc'] },
-      'dark': { cap: '#2a0a3a', nut: '#6a2a8a', glow: 'rgba(106,42,138,0.4)', particleColors: ['#6a2a8a', '#9a4aaa', '#3a0a5a'] },
-      'light': { cap: '#8a8a8a', nut: '#f0f0ff', glow: 'rgba(255,255,255,0.4)', particleColors: ['#f0f0ff', '#ffffff', '#ccccdd'] },
-      'cosmic': { cap: '#1a0a3a', nut: '#4a1a6a', glow: 'rgba(74,26,106,0.5)', particleColors: ['#4a1a6a', '#8a3aaa', '#1a0a3a', '#aa6acc'] },
-      'phantom': { cap: '#4a1a6a', nut: '#8a4aaa', glow: 'rgba(155,89,182,0.6)', particleColors: ['#8a4aaa', '#bb66dd', '#6a2a8a', '#dd88ff'] },
-      'double': { cap: '#654321', nut: '#a07346', glow: 'rgba(255,215,0,0.3)', particleColors: ['#654321', '#a07346', '#8B6B3D'] },
-      'beast': { cap: '#8B6B3D', nut: '#1a2a4a', glow: 'rgba(255,255,255,0.4)', particleColors: ['#ffffff', '#eeeeee', '#dddddd'] },
+      'default': { cap: '#654321', nut: '#a07346', glow: null, particleColors: ['#654321','#a07346','#8B6B3D'] },
+      'green': { cap: '#2d5a1a', nut: '#4a8a2a', glow: 'rgba(74,138,42,0.3)', particleColors: ['#2d5a1a','#4a8a2a','#6aaa4a'] },
+      'gold': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.4)', particleColors: ['#ffd700','#ffaa00','#ffcc33'] },
+      'crystal': { cap: '#4a6a8a', nut: '#8ac4d0', glow: 'rgba(138,196,208,0.4)', particleColors: ['#8ac4d0','#aaddff','#66aacc'] },
+      'flame': { cap: '#8a2a0a', nut: '#ff4a1a', glow: 'rgba(255,74,26,0.4)', particleColors: ['#ff4a1a','#ff8a00','#ffcc00'] },
+      'bubble': { cap: '#2a5a3a', nut: '#4aaa6a', glow: 'rgba(74,170,106,0.3)', particleColors: ['#4aaa6a','#66dd88','#88ffaa'] },
+      'rainbow': { cap: '#ff6b6b', nut: '#ffd93d', glow: 'rgba(255,100,100,0.3)', particleColors: ['#ff6b6b','#ffd93d','#6bcfff','#ff6bff'] },
+      'ice': { cap: '#3a6a8a', nut: '#8ac4e0', glow: 'rgba(138,196,224,0.4)', particleColors: ['#8ac4e0','#cceeff','#66aacc'] },
+      'dark': { cap: '#2a0a3a', nut: '#6a2a8a', glow: 'rgba(106,42,138,0.4)', particleColors: ['#6a2a8a','#9a4aaa','#3a0a5a'] },
+      'light': { cap: '#8a8a8a', nut: '#f0f0ff', glow: 'rgba(255,255,255,0.4)', particleColors: ['#f0f0ff','#ffffff','#ccccdd'] },
+      'cosmic': { cap: '#1a0a3a', nut: '#4a1a6a', glow: 'rgba(74,26,106,0.5)', particleColors: ['#4a1a6a','#8a3aaa','#1a0a3a','#aa6acc'] },
+      'phantom': { cap: '#4a1a6a', nut: '#8a4aaa', glow: 'rgba(155,89,182,0.6)', particleColors: ['#8a4aaa','#bb66dd','#6a2a8a','#dd88ff'] },
+      'double': { cap: '#654321', nut: '#a07346', glow: 'rgba(255,215,0,0.3)', particleColors: ['#654321','#a07346','#8B6B3D'] },
+      'beast': { cap: '#8B6B3D', nut: '#1a2a4a', glow: 'rgba(255,255,255,0.4)', particleColors: ['#ffffff','#eeeeee','#dddddd'] },
+      // ★ 新規
+      'fluffy': { cap: '#e8a0b0', nut: '#ffb6c1', glow: 'rgba(255,182,193,0.4)', particleColors: ['#ffb6c1','#ffc0cb','#ffd1dc'] },
+      'spiky': { cap: '#8B5A00', nut: '#ff8c00', glow: 'rgba(255,140,0,0.4)', particleColors: ['#ff8c00','#ffa500','#ffb347'] },
+      'star': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.4)', particleColors: ['#ffd700','#ffec8b','#fff8dc'] },
     };
     return styles[skin] || styles['default'];
   }
 
+  function resizeCanvas() {
+    acornCanvas.width = window.innerWidth; acornCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', () => { resizeCanvas(); initForest(); });
+  resizeCanvas(); initForest(); requestAnimationFrame(drawForest);
+
   function spawnAcornTop() {
-    const x = Math.random() * (window.innerWidth - 60) + 30;
-    const y = 15;
-    const skin = equippedAcorn;
-    acorns.push({
-      x, y,
-      vx: (Math.random() - 0.5) * 1.5,
-      vy: Math.random() * 0.5,
-      wobble: Math.random() * Math.PI * 2,
-      wobbleSpeed: 0.05 + Math.random() * 0.05,
-      scale: 0.7 + Math.random() * 0.5,
-      skin: skin,
-      bubblePhase: Math.random() * Math.PI * 2,
-      hue: Math.random() * 360,
-      variation: 0.8 + Math.random() * 0.4,
-    });
+    const x = Math.random() * (window.innerWidth - 60) + 30, y = 15, skin = equippedAcorn;
+    const skinData = ACORN_SKINS[skin] || ACORN_SKINS['default'];
+    acorns.push({ x, y, vx: (Math.random() - 0.5) * 1.5, vy: Math.random() * 0.5,
+      wobble: Math.random() * Math.PI * 2, wobbleSpeed: 0.05 + Math.random() * 0.05,
+      scale: 0.7 + Math.random() * 0.5, skin: skin, shape: skinData.shape || 'normal',
+      bubblePhase: Math.random() * Math.PI * 2, hue: Math.random() * 360,
+      variation: 0.8 + Math.random() * 0.4 });
+  }
+
+  // ★ 形状別描画関数
+  function drawAcornShape(ctx, a, style, x, y, scale) {
+    const shape = a.shape || 'normal';
+    const size = 10 * scale;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    switch(shape) {
+      case 'spiky':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = style.glow || 'rgba(255,140,0,0.3)'; ctx.shadowBlur = 15;
+        ctx.beginPath();
+        for (let i = 0; i < 16; i++) {
+          const angle = (i / 16) * Math.PI * 2 - Math.PI / 2;
+          const r = i % 2 === 0 ? size * 1.2 : size * 0.6;
+          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 2);
+          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 2);
+        }
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(0, -4, size * 0.9, Math.PI * 1.1, Math.PI * 1.9); ctx.fill();
+        break;
+
+      case 'bubble':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = style.glow || 'rgba(74,170,106,0.3)'; ctx.shadowBlur = 20;
+        ctx.beginPath(); ctx.arc(0, 4, size, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(0, -2, size * 0.7, Math.PI, Math.PI * 2); ctx.fill();
+        for (let i = 0; i < 5; i++) {
+          const angle = a.bubblePhase + i * 1.26, dist = size * 0.6 + Math.sin(a.bubblePhase * 0.5 + i) * 3;
+          ctx.fillStyle = `rgba(200,255,230,${0.15 + Math.sin(a.bubblePhase + i) * 0.1})`;
+          ctx.beginPath(); ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.6 + 4, 4 + Math.sin(a.bubblePhase + i * 1.5) * 2, 0, Math.PI * 2); ctx.fill();
+        }
+        break;
+
+      case 'fluffy':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = 'rgba(255,182,193,0.3)'; ctx.shadowBlur = 25;
+        ctx.beginPath(); ctx.arc(0, 4, size * 0.9, 0, Math.PI * 2); ctx.fill();
+        for (let i = 0; i < 12; i++) {
+          const angle = a.bubblePhase + i * 0.52, dist = size * 0.9 + Math.sin(a.bubblePhase * 0.3 + i * 0.7) * 4;
+          const r = 3 + Math.sin(a.bubblePhase * 0.5 + i * 1.1) * 2;
+          ctx.fillStyle = `rgba(255,200,210,${0.2 + Math.sin(a.bubblePhase + i * 0.8) * 0.15})`;
+          ctx.beginPath(); ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.6 + 4, r, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(0, -2, size * 0.6, Math.PI, Math.PI * 2); ctx.fill();
+        break;
+
+      case 'crystal':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = style.glow || 'rgba(138,196,208,0.4)'; ctx.shadowBlur = 20;
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+          const r = size * (i % 2 === 0 ? 1.0 : 0.8);
+          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+        }
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.moveTo(-size * 0.7, -2); ctx.lineTo(0, -size * 0.7); ctx.lineTo(size * 0.7, -2); ctx.closePath(); ctx.fill();
+        break;
+
+      case 'star':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = 'rgba(255,215,0,0.4)'; ctx.shadowBlur = 20;
+        ctx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const angle = (i / 10) * Math.PI * 2 - Math.PI / 2;
+          const r = i % 2 === 0 ? size * 1.1 : size * 0.5;
+          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+        }
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(0, -2, size * 0.5, Math.PI, Math.PI * 2); ctx.fill();
+        break;
+
+      case 'ice':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = style.glow || 'rgba(138,196,224,0.4)'; ctx.shadowBlur = 25;
+        ctx.beginPath();
+        for (let i = 0; i < 8; i++) {
+          const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
+          const r = size * (0.7 + Math.sin(i * 0.7) * 0.3);
+          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+        }
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(0, -2, size * 0.6, Math.PI, Math.PI * 2); ctx.fill();
+        break;
+
+      case 'dark':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = 'rgba(106,42,138,0.5)'; ctx.shadowBlur = 30;
+        ctx.beginPath();
+        for (let i = 0; i < 12; i++) {
+          const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+          const r = size * (0.6 + Math.sin(angle * 2 + a.bubblePhase) * 0.4);
+          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+        }
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(0, -2, size * 0.5, Math.PI, Math.PI * 2); ctx.fill();
+        break;
+
+      case 'light':
+        const grad = ctx.createRadialGradient(0, 4, 0, 0, 4, size);
+        grad.addColorStop(0, '#ffffff'); grad.addColorStop(0.5, style.nut); grad.addColorStop(1, style.nut);
+        ctx.fillStyle = grad;
+        ctx.shadowColor = 'rgba(255,255,255,0.5)'; ctx.shadowBlur = 35;
+        ctx.beginPath(); ctx.arc(0, 4, size, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 15;
+        ctx.beginPath(); ctx.arc(0, -2, size * 0.5, Math.PI, Math.PI * 2); ctx.fill();
+        break;
+
+      case 'cosmic':
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = 'rgba(74,26,106,0.5)'; ctx.shadowBlur = 30;
+        ctx.beginPath();
+        for (let i = 0; i < 16; i++) {
+          const angle = (i / 16) * Math.PI * 2 - Math.PI / 2;
+          const r = size * (0.5 + Math.sin(angle * 2 + a.bubblePhase * 0.5) * 0.5);
+          if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r + 4);
+        }
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 15;
+        ctx.beginPath(); ctx.arc(0, -2, size * 0.4, Math.PI, Math.PI * 2); ctx.fill();
+        break;
+
+      default:
+        ctx.fillStyle = style.nut;
+        if (style.glow) { ctx.shadowColor = style.glow; ctx.shadowBlur = 15; }
+        ctx.beginPath(); ctx.ellipse(0, 5, size * 0.9, size * 1.1, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = style.cap;
+        ctx.beginPath(); ctx.arc(0, -1, size * 0.8, Math.PI, Math.PI * 2); ctx.fill();
+        break;
+    }
+    ctx.restore();
   }
 
   function drawAcorn(ctx, a) {
@@ -2437,287 +1983,194 @@
     const style = getAcornStyle(a.skin);
     const currentX = a.x + Math.sin(a.wobble) * 3;
     const currentY = a.y;
+    const shape = a.shape || 'normal';
 
     ctx.save();
     ctx.translate(currentX, currentY);
     ctx.scale(a.scale * a.variation, a.scale * a.variation);
 
+    // 特殊スキン（phantom, rainbow, beast）は既存の描画を維持
     if (a.skin === 'phantom') {
-      a.hue = (a.hue + 0.5) % 360;
-      const hue = (a.hue + 240) % 360;
-      
-      ctx.shadowColor = `hsl(${hue}, 80%, 60%)`;
-      ctx.shadowBlur = 40;
-      
+      a.hue = (a.hue + 0.5) % 360; const hue = (a.hue + 240) % 360;
+      ctx.shadowColor = `hsl(${hue}, 80%, 60%)`; ctx.shadowBlur = 40;
       const grad = ctx.createRadialGradient(-3, 5, 2, 0, 8, 14);
       grad.addColorStop(0, `hsl(${hue}, 90%, 75%)`);
       grad.addColorStop(0.5, `hsl(${hue}, 85%, 55%)`);
       grad.addColorStop(1, `hsl(${(hue + 30) % 360}, 80%, 35%)`);
-      
       ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.ellipse(0, 10, 10, 12, 0, 0, Math.PI * 2);
-      ctx.fill();
-
+      ctx.beginPath(); ctx.ellipse(0, 10, 10, 12, 0, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 20;
       ctx.fillStyle = `hsl(${(hue + 20) % 360}, 70%, 25%)`;
-      ctx.beginPath();
-      ctx.arc(0, 3, 11, Math.PI, Math.PI * 2);
-      ctx.fill();
-
-      ctx.shadowBlur = 0;
-      a.bubblePhase += 0.03;
+      ctx.beginPath(); ctx.arc(0, 3, 11, Math.PI, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0; a.bubblePhase += 0.03;
       for (let i = 0; i < 6; i++) {
-        const angle = a.bubblePhase + i * 1.05;
-        const dist = 10 + Math.sin(a.bubblePhase * 0.5 + i * 1.3) * 4;
+        const angle = a.bubblePhase + i * 1.05, dist = 10 + Math.sin(a.bubblePhase * 0.5 + i * 1.3) * 4;
         const size = 2 + Math.sin(a.bubblePhase * 0.7 + i * 0.9) * 1.5;
         const alpha = 0.3 + Math.sin(a.bubblePhase * 0.6 + i * 1.1) * 0.3;
         ctx.fillStyle = `hsla(${(hue + i * 60) % 360}, 100%, 80%, ${alpha})`;
-        ctx.beginPath();
-        const cx = Math.cos(angle) * dist;
-        const cy = Math.sin(angle) * dist * 0.6 + 5;
+        ctx.beginPath(); const cx = Math.cos(angle) * dist, cy = Math.sin(angle) * dist * 0.6 + 5;
         for (let j = 0; j < 5; j++) {
           const starAngle = (j / 5) * Math.PI * 2 - Math.PI / 2 + a.bubblePhase * 0.2;
           const r = j % 2 === 0 ? size * 1.8 : size * 0.7;
           if (j === 0) ctx.moveTo(cx + Math.cos(starAngle) * r, cy + Math.sin(starAngle) * r);
           else ctx.lineTo(cx + Math.cos(starAngle) * r, cy + Math.sin(starAngle) * r);
         }
-        ctx.closePath();
-        ctx.fill();
+        ctx.closePath(); ctx.fill();
       }
-
-      ctx.shadowColor = `hsl(${hue}, 100%, 70%)`;
-      ctx.shadowBlur = 25;
+      ctx.shadowColor = `hsl(${hue}, 100%, 70%)`; ctx.shadowBlur = 25;
       ctx.fillStyle = `hsla(${hue}, 100%, 90%, 0.4)`;
-      ctx.beginPath();
-      ctx.arc(0, 6, 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-      return;
+      ctx.beginPath(); ctx.arc(0, 6, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.restore(); return;
     }
 
     if (a.skin === 'rainbow') {
       a.hue = (a.hue + 0.8) % 360;
-      const hue1 = a.hue;
-      const hue2 = (a.hue + 60) % 360;
-      const hue3 = (a.hue + 120) % 360;
-      
+      const hue1 = a.hue, hue2 = (a.hue + 60) % 360, hue3 = (a.hue + 120) % 360;
       const grad = ctx.createRadialGradient(-4, 6, 2, 0, 10, 14);
       grad.addColorStop(0, `hsl(${hue1}, 100%, 70%)`);
       grad.addColorStop(0.4, `hsl(${hue2}, 100%, 65%)`);
       grad.addColorStop(0.8, `hsl(${hue3}, 100%, 60%)`);
       grad.addColorStop(1, `hsl(${(a.hue + 180) % 360}, 100%, 50%)`);
-      
       ctx.fillStyle = grad;
-      ctx.shadowColor = `hsl(${a.hue}, 100%, 70%)`;
-      ctx.shadowBlur = 30;
-      ctx.beginPath();
-      ctx.ellipse(0, 10, 9, 11, 0, 0, Math.PI * 2);
-      ctx.fill();
-
+      ctx.shadowColor = `hsl(${a.hue}, 100%, 70%)`; ctx.shadowBlur = 30;
+      ctx.beginPath(); ctx.ellipse(0, 10, 9, 11, 0, 0, Math.PI * 2); ctx.fill();
       const grad2 = ctx.createRadialGradient(0, 0, 2, 0, 3, 10);
       grad2.addColorStop(0, `hsl(${(a.hue + 30) % 360}, 100%, 75%)`);
       grad2.addColorStop(0.5, `hsl(${(a.hue + 90) % 360}, 100%, 65%)`);
       grad2.addColorStop(1, `hsl(${(a.hue + 150) % 360}, 100%, 55%)`);
-      
       ctx.shadowBlur = 20;
       ctx.fillStyle = grad2;
-      ctx.beginPath();
-      ctx.arc(0, 3, 10, Math.PI, Math.PI * 2);
-      ctx.fill();
-
+      ctx.beginPath(); ctx.arc(0, 3, 10, Math.PI, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
       for (let i = 0; i < 4; i++) {
-        const angle = a.bubblePhase + i * 1.57;
-        const dist = 12 + Math.sin(a.bubblePhase * 0.5 + i) * 3;
+        const angle = a.bubblePhase + i * 1.57, dist = 12 + Math.sin(a.bubblePhase * 0.5 + i) * 3;
         const size = 2 + Math.sin(a.bubblePhase * 0.7 + i * 1.2) * 1;
         const alpha = 0.4 + Math.sin(a.bubblePhase * 0.8 + i * 1.8) * 0.3;
         ctx.fillStyle = `hsla(${(a.hue + i * 90) % 360}, 100%, 90%, ${alpha})`;
-        ctx.beginPath();
-        const cx = Math.cos(angle) * dist;
-        const cy = Math.sin(angle) * dist * 0.7 + 5;
+        ctx.beginPath(); const cx = Math.cos(angle) * dist, cy = Math.sin(angle) * dist * 0.7 + 5;
         for (let j = 0; j < 5; j++) {
           const starAngle = (j / 5) * Math.PI * 2 - Math.PI / 2 + a.bubblePhase * 0.3;
           const r = j % 2 === 0 ? size * 1.5 : size * 0.6;
           if (j === 0) ctx.moveTo(cx + Math.cos(starAngle) * r, cy + Math.sin(starAngle) * r);
           else ctx.lineTo(cx + Math.cos(starAngle) * r, cy + Math.sin(starAngle) * r);
         }
-        ctx.closePath();
-        ctx.fill();
+        ctx.closePath(); ctx.fill();
       }
-      
-      ctx.restore();
-      return;
+      ctx.restore(); return;
     }
 
-    if (style.glow) {
-      ctx.shadowColor = style.glow;
-      ctx.shadowBlur = 20;
-    }
-
-    ctx.fillStyle = style.nut;
-    ctx.beginPath();
-    ctx.ellipse(0, 10, 9, 11, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = style.cap;
-    ctx.beginPath();
-    ctx.arc(0, 3, 10, Math.PI, Math.PI * 2);
-    ctx.fill();
-
-    if (a.skin === 'bubble' || a.skin === 'green') {
-      a.bubblePhase += 0.05;
-      for(let i=0; i<3; i++) {
-        const angle = a.bubblePhase + i * 2.1;
-        const radius = 14 + Math.sin(a.bubblePhase + i) * 4;
-        ctx.fillStyle = `rgba(100,255,180,${0.15 + Math.sin(a.bubblePhase + i*1.5)*0.05})`;
-        ctx.beginPath();
-        ctx.arc(Math.cos(angle) * radius * 0.7, Math.sin(angle) * radius * 0.5 + 5, 3 + Math.sin(a.bubblePhase + i*2) * 1, 0, Math.PI*2);
-        ctx.fill();
-      }
-    }
-
-    if (a.skin === 'flame') {
-      for(let i=0; i<3; i++) {
-        const angle = a.bubblePhase + i * 2.1;
-        const radius = 12 + Math.sin(a.bubblePhase * 0.7 + i) * 3;
-        ctx.fillStyle = `rgba(255,200,50,${0.1 + Math.sin(a.bubblePhase + i*1.5)*0.05})`;
-        ctx.beginPath();
-        ctx.arc(Math.cos(angle) * radius * 0.5, -5 + Math.sin(angle) * radius * 0.3, 4 + Math.sin(a.bubblePhase + i*2) * 1.5, 0, Math.PI*2);
-        ctx.fill();
-      }
-    }
-
-    if (a.skin === 'cosmic') {
-      a.bubblePhase += 0.03;
-      for (let i = 0; i < 8; i++) {
-        const angle = a.bubblePhase + i * 0.8;
-        const dist = 6 + Math.sin(a.bubblePhase * 0.3 + i * 1.1) * 5;
-        const size = 1.5 + Math.sin(a.bubblePhase * 0.5 + i * 0.7) * 1;
-        const hue = (a.hue + i * 45) % 360;
-        ctx.fillStyle = `hsla(${hue}, 80%, 60%, ${0.15 + Math.sin(a.bubblePhase * 0.4 + i * 1.3) * 0.1})`;
-        ctx.beginPath();
-        ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.6 + 5, size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // 野獣先輩どんぐり（帽子紺色、下茶色、白い粒子）
     if (a.skin === 'beast') {
       a.bubblePhase += 0.04;
-      ctx.shadowColor = 'rgba(255,255,255,0.3)';
-      ctx.shadowBlur = 15;
+      ctx.fillStyle = '#4A2E18'; ctx.fillRect(-2, -20, 4, 6);
+      ctx.fillStyle = '#8B4513'; ctx.beginPath(); ctx.arc(0, -6, 12, Math.PI, 0, false); ctx.fill();
+      ctx.strokeStyle = '#5C2E0B'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, -6, 12, Math.PI, 0, false); ctx.stroke();
+      ctx.fillStyle = '#1B2A4A'; ctx.fillRect(-11, -6, 22, 8);
+      ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.moveTo(-11, 2); ctx.lineTo(11, 2);
+      ctx.bezierCurveTo(11, 10, 0, 16, 0, 16); ctx.bezierCurveTo(0, 10, -11, 10, -11, 2); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(-11, -6); ctx.lineTo(-11, 2);
+      ctx.bezierCurveTo(-11, 10, 0, 16, 0, 16); ctx.bezierCurveTo(0, 10, 11, 10, 11, 2); ctx.lineTo(11, -6); ctx.stroke();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)'; ctx.beginPath(); ctx.arc(-4, -1, 2.5, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowColor = 'rgba(255,255,255,0.3)'; ctx.shadowBlur = 15;
       for (let i = 0; i < 4; i++) {
-        const angle = a.bubblePhase + i * 1.57;
-        const dist = 7 + Math.sin(a.bubblePhase * 0.5 + i) * 3;
+        const angle = a.bubblePhase + i * 1.57, dist = 7 + Math.sin(a.bubblePhase * 0.5 + i) * 3;
         const size = 1.5 + Math.sin(a.bubblePhase * 0.7 + i * 0.9) * 1;
         const alpha = 0.2 + Math.sin(a.bubblePhase * 0.6 + i * 1.1) * 0.2;
         ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-        ctx.beginPath();
-        const cx = Math.cos(angle) * dist;
-        const cy = Math.sin(angle) * dist * 0.6 + 5;
-        ctx.arc(cx, cy, size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); const cx = Math.cos(angle) * dist, cy = Math.sin(angle) * dist * 0.6 + 5;
+        ctx.arc(cx, cy, size, 0, Math.PI * 2); ctx.fill();
       }
       ctx.shadowBlur = 0;
+      ctx.restore(); return;
     }
 
+    // ★ 形状に応じて描画を分岐
+    const specialShapes = ['spiky', 'bubble', 'fluffy', 'crystal', 'star', 'ice', 'dark', 'light', 'cosmic'];
+    if (specialShapes.includes(shape)) {
+      drawAcornShape(ctx, a, style, 0, 0, 1);
+    } else {
+      // 通常描画
+      if (style.glow) { ctx.shadowColor = style.glow; ctx.shadowBlur = 20; }
+      ctx.fillStyle = style.nut;
+      ctx.beginPath(); ctx.ellipse(0, 10, 9, 11, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = style.cap;
+      ctx.beginPath(); ctx.arc(0, 3, 10, Math.PI, Math.PI * 2); ctx.fill();
+      if (a.skin === 'bubble' || a.skin === 'green') {
+        a.bubblePhase += 0.05;
+        for(let i=0; i<3; i++) {
+          const angle = a.bubblePhase + i * 2.1, radius = 14 + Math.sin(a.bubblePhase + i) * 4;
+          ctx.fillStyle = `rgba(100,255,180,${0.15 + Math.sin(a.bubblePhase + i*1.5)*0.05})`;
+          ctx.beginPath(); ctx.arc(Math.cos(angle) * radius * 0.7, Math.sin(angle) * radius * 0.5 + 5, 3 + Math.sin(a.bubblePhase + i*2) * 1, 0, Math.PI*2); ctx.fill();
+        }
+      }
+      if (a.skin === 'flame') {
+        for(let i=0; i<3; i++) {
+          const angle = a.bubblePhase + i * 2.1, radius = 12 + Math.sin(a.bubblePhase * 0.7 + i) * 3;
+          ctx.fillStyle = `rgba(255,200,50,${0.1 + Math.sin(a.bubblePhase + i*1.5)*0.05})`;
+          ctx.beginPath(); ctx.arc(Math.cos(angle) * radius * 0.5, -5 + Math.sin(angle) * radius * 0.3, 4 + Math.sin(a.bubblePhase + i*2) * 1.5, 0, Math.PI*2); ctx.fill();
+        }
+      }
+      if (a.skin === 'cosmic') {
+        a.bubblePhase += 0.03;
+        for (let i = 0; i < 8; i++) {
+          const angle = a.bubblePhase + i * 0.8, dist = 6 + Math.sin(a.bubblePhase * 0.3 + i * 1.1) * 5;
+          const size = 1.5 + Math.sin(a.bubblePhase * 0.5 + i * 0.7) * 1;
+          const hue = (a.hue + i * 45) % 360;
+          ctx.fillStyle = `hsla(${hue}, 80%, 60%, ${0.15 + Math.sin(a.bubblePhase * 0.4 + i * 1.3) * 0.1})`;
+          ctx.beginPath(); ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.6 + 5, size, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+    }
     ctx.restore();
   }
 
+  // ============ パーティクル・エフェクト ============
   function createSpecialParticles(x, y, skin) {
     const style = getAcornStyle(skin);
     const colors = style.particleColors;
-    const count = skin === 'phantom' 
-      ? 3 + Math.floor(Math.random() * 3)
-      : (skin === 'beast' ? 4 + Math.floor(Math.random() * 4) : 8 + Math.floor(Math.random() * 12));
-    
+    const count = skin === 'phantom' ? 3 + Math.floor(Math.random() * 3) :
+                  (skin === 'beast' ? 4 + Math.floor(Math.random() * 4) : 8 + Math.floor(Math.random() * 12));
     const particles = [];
-    
     for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 2 + Math.random() * 6;
+      const angle = Math.random() * Math.PI * 2, speed = 2 + Math.random() * 6;
       const color = colors[Math.floor(Math.random() * colors.length)];
       const type = skin === 'beast' ? 'white' : (Math.random() > 0.6 ? 'star' : (Math.random() > 0.5 ? 'circle' : 'sparkle'));
-      
-      particles.push({
-        x: x + (Math.random() - 0.5) * 10,
-        y: y + (Math.random() - 0.5) * 10,
-        vx: Math.cos(angle) * speed * (0.5 + Math.random() * 0.5),
-        vy: Math.sin(angle) * speed * (0.5 + Math.random() * 0.5) - 2,
-        life: 1.0,
-        decay: 0.008 + Math.random() * 0.015,
-        size: 3 + Math.random() * 8,
-        color: skin === 'beast' ? '#ffffff' : color,
-        type: type,
-        rot: Math.random() * Math.PI * 2,
-        rotSpeed: (Math.random() - 0.5) * 0.1,
-        hue: Math.random() * 360,
-      });
+      particles.push({ x: x + (Math.random() - 0.5) * 10, y: y + (Math.random() - 0.5) * 10,
+        vx: Math.cos(angle) * speed * (0.5 + Math.random() * 0.5), vy: Math.sin(angle) * speed * (0.5 + Math.random() * 0.5) - 2,
+        life: 1.0, decay: 0.008 + Math.random() * 0.015, size: 3 + Math.random() * 8,
+        color: skin === 'beast' ? '#ffffff' : color, type: type,
+        rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1, hue: Math.random() * 360 });
     }
-    
     if (skin === 'phantom') {
       for (let i = 0; i < 3; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 1 + Math.random() * 3;
-        particles.push({
-          x: x + (Math.random() - 0.5) * 6,
-          y: y + (Math.random() - 0.5) * 6,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 3,
-          life: 1.0,
-          decay: 0.005 + Math.random() * 0.01,
-          size: 2 + Math.random() * 4,
-          color: skin === 'phantom' ? `hsl(280, 100%, 70%)` : `hsl(${Math.random() * 360}, 100%, 70%)`,
-          type: 'glow',
-          rot: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.05,
-          hue: Math.random() * 360,
-        });
+        const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
+        particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
+          life: 1.0, decay: 0.005 + Math.random() * 0.01, size: 2 + Math.random() * 4,
+          color: `hsl(280, 100%, 70%)`, type: 'glow',
+          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
     } else if (skin === 'beast') {
       for (let i = 0; i < 6; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 0.5 + Math.random() * 2;
-        particles.push({
-          x: x + (Math.random() - 0.5) * 8,
-          y: y + (Math.random() - 0.5) * 8,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 2,
-          life: 1.0,
-          decay: 0.01 + Math.random() * 0.02,
-          size: 1 + Math.random() * 3,
-          color: `rgba(255,255,255,${0.5 + Math.random() * 0.5})`,
-          type: 'glow',
-          rot: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.05,
-          hue: 0,
-        });
+        const angle = Math.random() * Math.PI * 2, speed = 0.5 + Math.random() * 2;
+        particles.push({ x: x + (Math.random() - 0.5) * 8, y: y + (Math.random() - 0.5) * 8,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2,
+          life: 1.0, decay: 0.01 + Math.random() * 0.02, size: 1 + Math.random() * 3,
+          color: `rgba(255,255,255,${0.5 + Math.random() * 0.5})`, type: 'glow',
+          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: 0 });
       }
       playBeastSound();
     } else if (skin === 'gold' || skin === 'cosmic') {
       for (let i = 0; i < 5; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 1 + Math.random() * 3;
-        particles.push({
-          x: x + (Math.random() - 0.5) * 6,
-          y: y + (Math.random() - 0.5) * 6,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 3,
-          life: 1.0,
-          decay: 0.005 + Math.random() * 0.01,
-          size: 2 + Math.random() * 4,
-          color: skin === 'phantom' ? `hsl(280, 100%, 70%)` : `hsl(${Math.random() * 360}, 100%, 70%)`,
-          type: 'glow',
-          rot: Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() - 0.5) * 0.05,
-          hue: Math.random() * 360,
-        });
+        const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
+        particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
+          life: 1.0, decay: 0.005 + Math.random() * 0.01, size: 2 + Math.random() * 4,
+          color: `hsl(${Math.random() * 360}, 100%, 70%)`, type: 'glow',
+          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
     }
-    
     return particles;
   }
 
@@ -2725,108 +2178,43 @@
     if(acorns.length > 0) {
       const index = Math.floor(Math.random() * acorns.length);
       const a = acorns.splice(index, 1)[0];
-      const currentX = a.x + Math.sin(a.wobble) * 3;
-      const currentY = a.y + 15;
-      const skin = a.skin;
-
-      const style = getAcornStyle(skin);
-      const colors = style.particleColors;
-      
-      // 野獣先輩: 帽子は紺色(#1a2a4a)
+      const currentX = a.x + Math.sin(a.wobble) * 3, currentY = a.y + 15, skin = a.skin;
+      const style = getAcornStyle(skin), colors = style.particleColors;
       const capColor = skin === 'beast' ? '#8B6B3D' : (colors[0] || '#654321');
-      
-      fragments.push({
-        x: currentX, y: currentY,
-        vx: (Math.random() - 0.5) * 6,
-        vy: -4 - Math.random() * 3,
-        rot: Math.random() * Math.PI,
-        vrot: (Math.random() - 0.5) * 0.2,
-        type: 'cap',
-        alpha: 1,
-        color: capColor
-      });
-
+      fragments.push({ x: currentX, y: currentY, vx: (Math.random() - 0.5) * 6, vy: -4 - Math.random() * 3,
+        rot: Math.random() * Math.PI, vrot: (Math.random() - 0.5) * 0.2, type: 'cap', alpha: 1, color: capColor });
       for(let i=0; i<3; i++) {
-        fragments.push({
-          x: currentX + (Math.random()-0.5)*8,
-          y: currentY + 8,
-          vx: (Math.random()-0.5)*8,
-          vy: -2 - Math.random()*5,
-          rot: Math.random() * Math.PI,
-          vrot: (Math.random()-0.5)*0.3,
-          type: 'nut',
-          alpha: 1,
-          color: skin === 'beast' ? '#1a2a4a' : (colors[i % colors.length] || colors[0])
-        });
+        fragments.push({ x: currentX + (Math.random()-0.5)*8, y: currentY + 8,
+          vx: (Math.random()-0.5)*8, vy: -2 - Math.random()*5,
+          rot: Math.random() * Math.PI, vrot: (Math.random()-0.5)*0.3, type: 'nut', alpha: 1,
+          color: skin === 'beast' ? '#1a2a4a' : (colors[i % colors.length] || colors[0]) });
       }
-
       const specials = createSpecialParticles(currentX, currentY, skin);
       specialParticles.push(...specials);
-
       if(acorns.length < MIN_ACORN_COUNT) spawnAcornTop();
-    } else {
-      spawnAcornTop();
-    }
+    } else { spawnAcornTop(); }
   }
 
   function updateAndDrawEffects() {
     ctx.clearRect(0, 0, acornCanvas.width, acornCanvas.height);
-
-    if(state === 'waiting' || state === 'playing') {
-      acorns.forEach(a => drawAcorn(ctx, a));
-    }
-
+    if(state === 'waiting' || state === 'playing') { acorns.forEach(a => drawAcorn(ctx, a)); }
     for(let i=fragments.length-1; i>=0; i--) {
       const f = fragments[i];
-      f.x += f.vx;
-      f.y += f.vy;
-      f.vy += 0.4;
-      f.rot += f.vrot;
-      f.alpha -= 0.015;
-
-      if(f.alpha <= 0 || f.y > acornCanvas.height + 50) {
-        fragments.splice(i, 1);
-        continue;
-      }
-
-      ctx.save();
-      ctx.translate(f.x, f.y);
-      ctx.rotate(f.rot);
-      ctx.globalAlpha = Math.max(0, f.alpha);
+      f.x += f.vx; f.y += f.vy; f.vy += 0.4; f.rot += f.vrot; f.alpha -= 0.015;
+      if(f.alpha <= 0 || f.y > acornCanvas.height + 50) { fragments.splice(i, 1); continue; }
+      ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot); ctx.globalAlpha = Math.max(0, f.alpha);
       ctx.fillStyle = f.color || '#654321';
-      if(f.type === 'cap') {
-        ctx.beginPath();
-        ctx.arc(0, 0, 9, Math.PI, Math.PI*2);
-        ctx.fill();
-      } else {
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 7, 9, 0, 0, Math.PI*2);
-        ctx.fill();
-      }
+      if(f.type === 'cap') { ctx.beginPath(); ctx.arc(0, 0, 9, Math.PI, Math.PI*2); ctx.fill(); }
+      else { ctx.beginPath(); ctx.ellipse(0, 0, 7, 9, 0, 0, Math.PI*2); ctx.fill(); }
       ctx.restore();
     }
-
     for(let i=specialParticles.length-1; i>=0; i--) {
       const p = specialParticles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.08;
-      p.life -= p.decay;
-      p.rot += p.rotSpeed;
-
-      if(p.life <= 0 || p.y > acornCanvas.height + 50) {
-        specialParticles.splice(i, 1);
-        continue;
-      }
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
-      ctx.globalAlpha = Math.max(0, p.life);
-      
+      p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.life -= p.decay; p.rot += p.rotSpeed;
+      if(p.life <= 0 || p.y > acornCanvas.height + 50) { specialParticles.splice(i, 1); continue; }
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = Math.max(0, p.life);
       if (p.type === 'star') {
-        ctx.fillStyle = p.color;
-        const s = p.size * 0.5;
+        ctx.fillStyle = p.color; const s = p.size * 0.5;
         ctx.beginPath();
         for (let j = 0; j < 5; j++) {
           const angle = (j / 5) * Math.PI * 2 - Math.PI / 2;
@@ -2834,74 +2222,37 @@
           if (j === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
           else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
         }
-        ctx.closePath();
-        ctx.fill();
+        ctx.closePath(); ctx.fill();
       } else if (p.type === 'glow') {
         const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 0.8);
-        grad.addColorStop(0, p.color);
-        grad.addColorStop(0.5, p.color);
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 20;
-        ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.2, 0, Math.PI * 2);
-        ctx.fill();
+        grad.addColorStop(0, p.color); grad.addColorStop(0.5, p.color); grad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.8, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowColor = p.color; ctx.shadowBlur = 20;
+        ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.2, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
       } else if (p.type === 'sparkle') {
-        ctx.strokeStyle = p.color;
-        ctx.lineWidth = 1.5;
-        const s = p.size * 0.6;
-        ctx.beginPath();
-        ctx.moveTo(-s, 0);
-        ctx.lineTo(s, 0);
-        ctx.moveTo(0, -s);
-        ctx.lineTo(0, s);
-        ctx.stroke();
-        ctx.beginPath();
-        const d = s * 0.5;
-        ctx.moveTo(-d, -d);
-        ctx.lineTo(d, d);
-        ctx.moveTo(d, -d);
-        ctx.lineTo(-d, d);
-        ctx.stroke();
+        ctx.strokeStyle = p.color; ctx.lineWidth = 1.5; const s = p.size * 0.6;
+        ctx.beginPath(); ctx.moveTo(-s, 0); ctx.lineTo(s, 0); ctx.moveTo(0, -s); ctx.lineTo(0, s); ctx.stroke();
+        ctx.beginPath(); const d = s * 0.5; ctx.moveTo(-d, -d); ctx.lineTo(d, d); ctx.moveTo(d, -d); ctx.lineTo(-d, d); ctx.stroke();
       } else if (p.type === 'white') {
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = 'rgba(255,255,255,0.5)';
-        ctx.shadowBlur = 15;
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.7, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#ffffff'; ctx.shadowColor = 'rgba(255,255,255,0.5)'; ctx.shadowBlur = 15;
+        ctx.beginPath(); ctx.arc(0, 0, p.size * 0.7, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
       } else {
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.5, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.5, 0, Math.PI * 2); ctx.fill();
       }
-      
       ctx.restore();
     }
-
     requestAnimationFrame(updateAndDrawEffects);
   }
   requestAnimationFrame(updateAndDrawEffects);
 
   function startAcornAutoSpawn() {
     stopAcornAutoSpawn();
-    acornSpawnTimer = setInterval(() => {
-      if(state === 'waiting' || state === 'playing') spawnAcornTop();
-    }, 3000);
+    acornSpawnTimer = setInterval(() => { if(state === 'waiting' || state === 'playing') spawnAcornTop(); }, 3000);
   }
-  function stopAcornAutoSpawn() {
-    if(acornSpawnTimer) { clearInterval(acornSpawnTimer); acornSpawnTimer = null; }
-  }
+  function stopAcornAutoSpawn() { if(acornSpawnTimer) { clearInterval(acornSpawnTimer); acornSpawnTimer = null; } }
 
-  // ============ タイピングシステム（重複防止付き） ============
+  // ============ タイピングシステム ============
   function getRomajiChoices(char, isLast) {
     const map = {
       "あ":["a"],"い":["i"],"う":["u","wu"],"え":["e"],"お":["o"],
@@ -2915,8 +2266,7 @@
       "ら":["ra"],"り":["ri"],"る":["ru"],"れ":["re"],"ろ":["ro"],
       "わ":["wa"],"を":["wo"],
       "ん": isLast ? ["nn"] : ["nn","xn","n'","n"],
-      "ー":["-","h","^"],
-      "が":["ga"],"ぎ":["gi"],"ぐ":["gu"],"げ":["ge"],"ご":["go"],
+      "ー":["-","h","^"], "が":["ga"],"ぎ":["gi"],"ぐ":["gu"],"げ":["ge"],"ご":["go"],
       "ざ":["za"],"じ":["ji","zi"],"ず":["zu"],"ぜ":["ze"],"ぞ":["zo"],
       "だ":["da"],"ぢ":["di"],"づ":["du"],"で":["de"],"ど":["do"],
       "ば":["ba"],"び":["bi"],"ぶ":["bu"],"べ":["be"],"ぼ":["bo"],
@@ -2938,72 +2288,44 @@
       "とぅ":["twu"],"どぅ":["dwu"],
       "くぁ":["qa","kwa"],"くぃ":["qi"],"くぇ":["qe"],"くぉ":["qo"],
       "ぐぁ":["gwa"],
-      // 追加: 促音・拗音対応
       "っ": ["xtu","ltu","tsu"],
-      "ゃ": ["lya","xya","ya"],
-      "ゅ": ["lyu","xyu","yu"],
-      "ょ": ["lyo","xyo","yo"],
-      // 「けん玉」用: ん + だ → nda 対応
-      "んだ": ["nda","n da"],
-      // 「意外と」用: が → ga, い → i が正しく認識されるように
-      "がい": ["gai"],
-      // 「死に方より生き方」用: しに → shini
-      "しに": ["shini"],
+      "ゃ": ["lya","xya","ya"],"ゅ": ["lyu","xyu","yu"],"ょ": ["lyo","xyo","yo"],
     };
-    // 2文字の組み合わせに対応
-    const comboMap = {
-      "んだ": ["nda"],
-      "がい": ["gai"],
-      "しに": ["shini"],
-    };
-    for (const [key, val] of Object.entries(comboMap)) {
-      if (char === key) return val;
-    }
+    const comboMap = { "んだ": ["nda"], "がい": ["gai"], "しに": ["shini"] };
+    for (const [key, val] of Object.entries(comboMap)) { if (char === key) return val; }
     return map[char] || [char];
   }
 
   function parseKanaToUnits(str) {
-    const units = [];
-    let i = 0;
+    const units = []; let i = 0;
     while(i < str.length) {
-      // 4文字の特殊組み合わせ
       if (i + 3 < str.length) {
         const s = str.substr(i, 4);
         const choices = getRomajiChoices(s, false);
         if (choices.length > 0 && !(choices.length === 1 && choices[0] === s)) {
-          units.push({ chars: s, isLast: false, custom: choices });
-          i += 4;
-          continue;
+          units.push({ chars: s, isLast: false, custom: choices }); i += 4; continue;
         }
       }
-      // 3文字（拗音など）
       if (i + 2 < str.length) {
         const s = str.substr(i, 3);
         const choices = getRomajiChoices(s, false);
         if (choices.length > 0 && !(choices.length === 1 && choices[0] === s)) {
-          units.push({ chars: s, isLast: false, custom: choices });
-          i += 3;
-          continue;
+          units.push({ chars: s, isLast: false, custom: choices }); i += 3; continue;
         }
       }
-      // 2文字（拗音など）
       if (i + 1 < str.length) {
         const s = str.substr(i, 2);
         const choices = getRomajiChoices(s, false);
         if (choices.length > 0 && !(choices.length === 1 && choices[0] === s)) {
-          units.push({ chars: s, isLast: false, custom: choices });
-          i += 2;
-          continue;
+          units.push({ chars: s, isLast: false, custom: choices }); i += 2; continue;
         }
       }
       const s = str.substr(i, 1);
-      // 促音処理
       if (s === "っ" && i + 1 < str.length) {
         const next = str.substr(i + 1, 1);
         const r = getRomajiChoices(next, false);
         units.push({ chars: "っ" + next, custom: r.map(x => x[0] + x), isLast: false });
-        i += 2;
-        continue;
+        i += 2; continue;
       }
       const isLast = (i === str.length - 1);
       const choices = getRomajiChoices(s, isLast);
@@ -3013,62 +2335,35 @@
     return units;
   }
 
-  const TARGET_LEN = 1000;
-  const GAME_SECONDS = 60;
-  const SENTENCE_THRESHOLD = 300;
+  const TARGET_LEN = 1000, GAME_SECONDS = 60, SENTENCE_THRESHOLD = 300;
 
   function createWordItem(wordObj) {
     const units = parseKanaToUnits(wordObj.kana);
-    const unitChoices = units.map((u) => {
-      if (u.custom) return u.custom;
-      return getRomajiChoices(u.chars, u.isLast || false);
-    });
-    return {
-      kana: wordObj.kana,
-      display: useKanji ? wordObj.kanji : wordObj.kana,
-      unitChoices,
-      typedLength: 0,
-      activePaths: null,
-      currentIndex: 0,
-      typedKeys: "",
-      forcedRomaji: null,
-      isSentence: wordObj.isSentence || false,
-      id: wordObj.kana + (wordObj.isSentence ? '_s' : '')
-    };
+    const unitChoices = units.map((u) => { if (u.custom) return u.custom; return getRomajiChoices(u.chars, u.isLast || false); });
+    return { kana: wordObj.kana, display: useKanji ? wordObj.kanji : wordObj.kana,
+      unitChoices, typedLength: 0, activePaths: null, currentIndex: 0,
+      typedKeys: "", forcedRomaji: null, isSentence: wordObj.isSentence || false,
+      id: wordObj.kana + (wordObj.isSentence ? '_s' : '') };
   }
 
-  function resetUsedWords() {
-    usedWords = [];
-  }
+  function resetUsedWords() { usedWords = []; }
 
   function buildQueue(minLen, useSentence = false) {
-    const q=[]; let total=0;
-    let attempts = 0;
+    const q=[]; let total=0, attempts=0;
     const pool = useSentence ? SENTENCE_POOL : WORD_POOL;
     let available = pool.filter(w => !usedWords.includes(w.kana + (useSentence ? '_s' : '')));
-    if (available.length === 0) {
-      usedWords = [];
-      available = pool;
-    }
-    
+    if (available.length === 0) { usedWords = []; available = pool; }
     while(total<minLen && attempts < 10000 && available.length > 0) {
       attempts++;
       const idx = Math.floor(Math.random() * available.length);
-      const w = available[idx];
-      if (!w) continue;
+      const w = available[idx]; if (!w) continue;
       const item = createWordItem(w);
       if (useSentence) item.isSentence = true;
       const sample = generateAllCombinations(item.unitChoices)[0];
-      if (sample) {
-        q.push(item);
-        total += sample.length;
+      if (sample) { q.push(item); total += sample.length;
         usedWords.push(w.kana + (useSentence ? '_s' : ''));
-        available = available.filter((_, i) => i !== idx);
-      }
-      if (available.length === 0) {
-        usedWords = [];
-        available = pool;
-      }
+        available = available.filter((_, i) => i !== idx); }
+      if (available.length === 0) { usedWords = []; available = pool; }
     }
     return q;
   }
@@ -3076,20 +2371,13 @@
   function generateAllCombinations(unitChoices, idx=0, current="") {
     if(idx===unitChoices.length) return [current];
     const results=[];
-    for(const choice of unitChoices[idx]) {
-      results.push(...generateAllCombinations(unitChoices, idx+1, current+choice));
-    }
+    for(const choice of unitChoices[idx]) { results.push(...generateAllCombinations(unitChoices, idx+1, current+choice)); }
     return results;
   }
 
   function renderWord() {
     const w=queue[qIndex];
-    if (!w) { 
-      queue = buildQueue(TARGET_LEN, isSentenceMode);
-      qIndex = 0;
-      renderWord();
-      return;
-    }
+    if (!w) { queue = buildQueue(TARGET_LEN, isSentenceMode); qIndex = 0; renderWord(); return; }
     kanaDisplayEl.textContent = w.display;
     if(!w.activePaths) { w.activePaths=generateAllCombinations(w.unitChoices); w.currentIndex=0; w.typedKeys=""; }
     let displayStr = w.forcedRomaji;
@@ -3097,15 +2385,15 @@
       const matching = w.activePaths.filter(p=>p.startsWith(w.typedKeys));
       displayStr = matching.length>0 ? matching[0] : w.activePaths[0];
     }
-    if (!displayStr) {
-      displayStr = w.unitChoices.map(c => c[0] || '').join('');
-    }
+    if (!displayStr) { displayStr = w.unitChoices.map(c => c[0] || '').join(''); }
     romajiDisplayEl.innerHTML = displayStr.split('').map((ch,i)=>{
       let cls='ch-pending';
       if(i<w.typedLength) cls='ch-done';
       else if(i===w.typedLength) cls='ch-next';
       return '<span class="'+cls+'">'+ch+'</span>';
     }).join('');
+    // ★ フォントカラーを更新
+    updateFontColor();
   }
 
   function renderHud() {
@@ -3116,18 +2404,13 @@
   }
 
   function showPopup(text) {
-    popupEl.textContent=text;
-    popupEl.classList.remove('show');
-    void popupEl.offsetWidth;
-    popupEl.classList.add('show');
-    clearTimeout(popupTimeout);
-    popupTimeout=setTimeout(()=>popupEl.classList.remove('show'),900);
+    popupEl.textContent=text; popupEl.classList.remove('show');
+    void popupEl.offsetWidth; popupEl.classList.add('show');
+    clearTimeout(popupTimeout); popupTimeout=setTimeout(()=>popupEl.classList.remove('show'),900);
   }
 
   function updateUIVisibility() {
-    const isMenu = (state === 'menu');
     const isGame = (state === 'waiting' || state === 'playing' || state === 'result');
-    
     hankoBadge.classList.toggle('hidden-ui', isGame);
     topNav.classList.toggle('hidden-ui', isGame);
   }
@@ -3141,61 +2424,83 @@
 
   function tryActivateSentenceMode() {
     if (pendingSentenceMode && !isSentenceMode) {
-      isSentenceMode = true;
-      pendingSentenceMode = false;
+      isSentenceMode = true; pendingSentenceMode = false;
       showPopup('📖 文章モード突入！');
-      usedWords = [];
-      queue = buildQueue(TARGET_LEN, true);
-      qIndex = 0;
-      renderWord();
+      usedWords = []; queue = buildQueue(TARGET_LEN, true); qIndex = 0; renderWord();
     }
   }
 
+  // ===== 虹色エフェクト =====
+  function startRainbowEffect() {
+    if (rainbowOverlay.classList.contains('active')) return;
+    rainbowOverlay.classList.add('active');
+    if (!rainbowAudio) { rainbowAudio = new Audio('https://www.myinstants.com/media/sounds/dance-la-rat.mp3'); rainbowAudio.loop = true; rainbowAudio.crossOrigin = 'anonymous'; }
+    if (!rainbowAudio2) { rainbowAudio2 = new Audio('https://www.myinstants.com/media/sounds/montagem-xonada-ultra-bom-boox.mp3'); rainbowAudio2.loop = true; rainbowAudio2.crossOrigin = 'anonymous'; }
+    rainbowAudio.volume = 0.8; rainbowAudio2.volume = 0.8;
+    try { rainbowAudio.play().catch(() => {}); rainbowAudio2.play().catch(() => {}); } catch(e) {}
+    if (rainbowInterval) clearInterval(rainbowInterval);
+    rainbowInterval = setInterval(() => { rainbowOverlay.style.opacity = (Math.random() * 0.5 + 0.3).toString(); }, 80);
+    if (rainbowTimer) clearTimeout(rainbowTimer);
+    rainbowTimer = setTimeout(() => { stopRainbowEffect(); }, 10000);
+  }
+  function stopRainbowEffect() {
+    rainbowOverlay.classList.remove('active'); rainbowOverlay.style.opacity = '';
+    if (rainbowInterval) { clearInterval(rainbowInterval); rainbowInterval = null; }
+    if (rainbowTimer) { clearTimeout(rainbowTimer); rainbowTimer = null; }
+    if (rainbowAudio) { try { rainbowAudio.pause(); rainbowAudio.currentTime = 0; } catch(e) {} }
+    if (rainbowAudio2) { try { rainbowAudio2.pause(); rainbowAudio2.currentTime = 0; } catch(e) {} }
+  }
+
+  // ===== コード認証 =====
+  function verifyCode(input) {
+    if (input === '67') return 'rainbow';
+    const inputHash = hashPassword(input);
+    if (inputHash === CORRECT_HASH_SUPER) return 'super';
+    if (inputHash === CORRECT_HASH_NORMAL) return 'normal';
+    if (inputHash === CORRECT_HASH_PHANTOM) return 'phantom';
+    if (inputHash === CORRECT_HASH_DOUBLE) return 'double';
+    if (inputHash === CORRECT_HASH_BEAST) return 'beast';
+    return false;
+  }
+  function hashPassword(pwd) {
+    let hash = 0;
+    for (let i = 0; i < pwd.length; i++) { const char = pwd.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash = hash & hash; }
+    const salt = "D0ngur1Typ1ngS3cur3";
+    let combined = pwd + salt, h = 0;
+    for (let i = 0; i < combined.length; i++) { h = ((h << 7) - h) + combined.charCodeAt(i); h = h & h; }
+    return (h >>> 0).toString(16).padStart(8, '0');
+  }
+  const CORRECT_HASH_SUPER = hashPassword("74965832");
+  const CORRECT_HASH_NORMAL = hashPassword("74153695");
+  const CORRECT_HASH_PHANTOM = hashPassword("5724");
+  const CORRECT_HASH_DOUBLE = hashPassword("6769");
+  const CORRECT_HASH_BEAST = hashPassword("810");
+
   function initGame() {
-    state='waiting';
-    isSentenceMode = false;
-    pendingSentenceMode = false;
-    resetUsedWords();
-    if (soundBuffers.bgm) {
-      playBgmLoop();
-    }
-    acorns=[];
-    specialParticles = [];
-    fragments = [];
+    state='waiting'; isSentenceMode = false; pendingSentenceMode = false; resetUsedWords();
+    if (soundBuffers.bgm) { playBgmLoop(); }
+    acorns=[]; specialParticles=[]; fragments=[];
     for(let i=0;i<MIN_ACORN_COUNT+5;i++) spawnAcornTop();
     startAcornAutoSpawn();
     queue = buildQueue(TARGET_LEN, false);
     qIndex=0; score=0; multiplier=1; correctTotal=0; lastMilestoneCount=0; timeLeft=GAME_SECONDS; gameTotalTyped=0;
-    lastGameTyped = 0;
-    lastGameDuration = 0;
-    menuScreen.classList.add('hidden');
-    gameScreen.classList.remove('hidden');
+    lastGameTyped=0; lastGameDuration=0;
+    menuScreen.classList.add('hidden'); gameScreen.classList.remove('hidden');
     resultOverlay.classList.remove('active');
-    updateUIVisibility();
-    renderWord(); renderHud();
+    updateUIVisibility(); renderWord(); renderHud();
   }
 
   function startTimer() {
-    state='playing';
-    milestoneStartTime=performance.now();
-    let last10sCount = 0;
-    let last10sStart = performance.now();
-    
+    state='playing'; milestoneStartTime=performance.now();
+    let last10sCount=0, last10sStart=performance.now();
     timerInterval = setInterval(()=>{
-      timeLeft--;
-      renderHud();
-      
+      timeLeft--; renderHud();
       const now = performance.now();
       if (now - last10sStart >= 10000) {
         const typedIn10s = correctTotal - last10sCount;
-        if (typedIn10s > max10sTyped) {
-          max10sTyped = typedIn10s;
-          saveData();
-        }
-        last10sCount = correctTotal;
-        last10sStart = now;
+        if (typedIn10s > max10sTyped) { max10sTyped = typedIn10s; saveData(); }
+        last10sCount = correctTotal; last10sStart = now;
       }
-      
       if(timeLeft<=0) endGame(true);
     },1000);
   }
@@ -3203,96 +2508,53 @@
   function checkMilestone() {
     const diffCount=correctTotal-lastMilestoneCount;
     const diffTime=(performance.now()-milestoneStartTime)/1000;
-    if(diffTime<=10 && diffCount>=50) {
-      multiplier*=2; lastMilestoneCount=correctTotal; milestoneStartTime=performance.now();
-      showPopup('50字達成！さらに2倍 (×'+multiplier+')');
-    } else if(diffTime<=10 && diffCount>=25) {
-      multiplier*=2; lastMilestoneCount=correctTotal; milestoneStartTime=performance.now();
-      showPopup('25字達成！×2倍 (×'+multiplier+')');
-    } else if(diffTime>10) {
-      lastMilestoneCount=correctTotal; milestoneStartTime=performance.now();
-    }
+    if(diffTime<=10 && diffCount>=50) { multiplier*=2; lastMilestoneCount=correctTotal; milestoneStartTime=performance.now(); showPopup('50字達成！さらに2倍 (×'+multiplier+')'); }
+    else if(diffTime<=10 && diffCount>=25) { multiplier*=2; lastMilestoneCount=correctTotal; milestoneStartTime=performance.now(); showPopup('25字達成！×2倍 (×'+multiplier+')'); }
+    else if(diffTime>10) { lastMilestoneCount=correctTotal; milestoneStartTime=performance.now(); }
   }
 
-  // 入力処理（空白・括弧対応）
   function handleTypingKey(key) {
-    if(state==='waiting') {
-      playStartSound();
-      startTimer();
-    }
-
+    if(state==='waiting') { playStartSound(); startTimer(); }
     checkSentenceMode();
-
     const word=queue[qIndex];
     if(!word) return;
     if(!word.activePaths) { word.activePaths=generateAllCombinations(word.unitChoices); word.currentIndex=0; word.typedKeys=""; }
-
-    // スペースは完全に無視（何も打たなくてOK）
-    if (key === ' ' || key === 'Space') {
-      return;
-    }
-
-    // 括弧の処理: Shift+8 -> '(' , Shift+9 -> ')'
+    if (key === ' ' || key === 'Space') return;
     let processedKey = key;
     if (key === '(') processedKey = '(';
     if (key === ')') processedKey = ')';
-
     const possibleNext=new Set();
-    word.activePaths.forEach(p=>{ 
+    word.activePaths.forEach(p=>{
       if(p && p.length>word.currentIndex) {
         const nextChar = p[word.currentIndex];
-        // 括弧の一致をチェック（括弧はそのまま）
-        if (nextChar === '(' || nextChar === ')') {
-          if (processedKey === nextChar) possibleNext.add(nextChar);
-        } else {
-          possibleNext.add(nextChar.toLowerCase());
-        }
+        if (nextChar === '(' || nextChar === ')') { if (processedKey === nextChar) possibleNext.add(nextChar); }
+        else { possibleNext.add(nextChar.toLowerCase()); }
       }
     });
-
-    // 現在の位置の文字をチェック
-    const currentTarget = word.activePaths.length > 0 && word.activePaths[0].length > word.currentIndex 
-      ? word.activePaths[0][word.currentIndex] : null;
-    
+    const currentTarget = word.activePaths.length > 0 && word.activePaths[0].length > word.currentIndex ? word.activePaths[0][word.currentIndex] : null;
     let isMatch = false;
-    if (currentTarget && (currentTarget === '(' || currentTarget === ')')) {
-      if (processedKey === currentTarget) isMatch = true;
-    } else {
-      isMatch = possibleNext.has(processedKey.toLowerCase());
-    }
-
+    if (currentTarget && (currentTarget === '(' || currentTarget === ')')) { if (processedKey === currentTarget) isMatch = true; }
+    else { isMatch = possibleNext.has(processedKey.toLowerCase()); }
     if (isMatch) {
       playTypedSound();
-      
       burstAcorn();
       word.currentIndex++;
       word.typedLength=Math.min(word.currentIndex, word.activePaths[0] ? word.activePaths[0].length : 0);
       word.typedKeys += processedKey.toLowerCase();
       word.activePaths=word.activePaths.filter(p=>p && p.startsWith(word.typedKeys));
       if(word.activePaths.length>0) word.forcedRomaji=word.activePaths[0];
-
       const isCompleted = word.activePaths.some(p=>p===word.typedKeys) || word.currentIndex>= (word.forcedRomaji ? word.forcedRomaji.length : 0);
       correctTotal++;
-      
       let addScore = multiplier;
-      if (equippedAcorn === 'double') {
-        addScore = multiplier * 2;
-      }
-      if (superMode) {
-        addScore = 500;
-      }
+      if (equippedAcorn === 'double') addScore = multiplier * 2;
+      if (superMode) addScore = 500;
       score += addScore;
-      
       gameTotalTyped++;
       checkMilestone();
-
       if(isCompleted || word.activePaths.length===0) {
         qIndex++;
         tryActivateSentenceMode();
-        if(queue.length-qIndex<6) {
-          const extra = buildQueue(200, isSentenceMode);
-          queue = queue.concat(extra);
-        }
+        if(queue.length-qIndex<6) { const extra = buildQueue(200, isSentenceMode); queue = queue.concat(extra); }
       }
       renderWord(); renderHud();
     } else {
@@ -3304,55 +2566,28 @@
 
   function endGame(save) {
     if(timerInterval) { clearInterval(timerInterval); timerInterval=null; }
-    stopAcornAutoSpawn();
-    stopBgm();
-    
-    if (save) {
-      lastGameTyped = gameTotalTyped;
-      lastGameDuration = 60 - timeLeft;
-    }
-    
-    state='result';
-    gameScreen.classList.add('hidden');
-
+    stopAcornAutoSpawn(); stopBgm();
+    if (save) { lastGameTyped = gameTotalTyped; lastGameDuration = 60 - timeLeft; }
+    state='result'; gameScreen.classList.add('hidden');
     if(save) {
       const finalScore=Math.floor(score);
-      modalScoreEl.textContent=finalScore;
-      modalBadgeContainer.innerHTML='';
-
-      totalTyped += gameTotalTyped;
-      updateTotalTypedDisplay();
-
-      addCoinsFromScore(finalScore);
-
-      if(finalScore>highscore) {
-        highscore=finalScore;
-        highscoreValueEl.textContent=highscore;
-        const badge=document.createElement('div');
-        badge.className='result-badge-record';
-        badge.textContent='🏆 最新記録！';
-        modalBadgeContainer.appendChild(badge);
-      }
-      
+      modalScoreEl.textContent=finalScore; modalBadgeContainer.innerHTML='';
+      totalTyped += gameTotalTyped; updateTotalTypedDisplay();
+      if(finalScore>highscore) { highscore=finalScore; highscoreValueEl.textContent=highscore;
+        const badge=document.createElement('div'); badge.className='result-badge-record'; badge.textContent='🏆 最新記録！'; modalBadgeContainer.appendChild(badge); }
       playResultSound();
-      
       checkAchievements();
-      
       saveData();
       resultOverlay.classList.add('active');
       updateUIVisibility();
     } else {
-      state='menu';
-      menuScreen.classList.remove('hidden');
-      startAcornAutoSpawn();
-      updateUIVisibility();
+      state='menu'; menuScreen.classList.remove('hidden');
+      startAcornAutoSpawn(); updateUIVisibility();
     }
   }
 
   // ============ UI更新 ============
-  function updateTotalTypedDisplay() {
-    totalTypedDisplayEl.textContent = '入力:' + totalTyped + '字';
-  }
+  function updateTotalTypedDisplay() { totalTypedDisplayEl.textContent = '入力:' + totalTyped + '字'; }
 
   function updateShopUI() {
     shopHighscoreEl.textContent = highscore;
@@ -3362,322 +2597,145 @@
 
   function renderShopItems() {
     let html = '';
-
-    html += '<div class="shop-section-title">🌄 背景スキン</div>';
-    html += '<div class="shop-items">';
+    html += '<div class="shop-section-title">🌄 背景スキン</div><div class="shop-items">';
     for(const [id, skin] of Object.entries(BG_SKINS)) {
       if (id === 'beast_room' && !beastBgUnlocked) continue;
-      
-      const owned = ownedBg.includes(id);
-      const equipped = equippedBg === id;
-      const canBuy = (skin.priceType === 'coin' && coins >= skin.price) ||
-                     skin.priceType === 'none';
-      const priceLabel = skin.priceType === 'none' ? '初期' :
-                         skin.priceType === 'coin' ? '📝'+skin.price+'字' : '🏆'+skin.price;
-
+      const owned = ownedBg.includes(id), equipped = equippedBg === id;
+      const canBuy = (skin.priceType === 'coin' && totalTyped >= skin.price) || skin.priceType === 'none';
+      const priceLabel = skin.priceType === 'none' ? '初期' : '📝'+skin.price+'字';
       html += `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}">
-        <div class="shop-item-info">
-          <div class="shop-item-name">${skin.name} ${equipped?' ✅':''}</div>
-          <div class="shop-item-desc">${skin.desc}</div>
-        </div>
+        <div class="shop-item-info"><div class="shop-item-name">${skin.name} ${equipped?' ✅':''}</div>
+        <div class="shop-item-desc">${skin.desc}</div></div>
         <div class="shop-item-price">${priceLabel}</div>
-        <button class="shop-item-btn ${equipped?'equip-btn':owned?'owned-btn':''}" 
-                data-type="bg" data-id="${id}" ${(!owned && !canBuy) ? 'disabled':''}>
+        <button class="shop-item-btn ${equipped?'equip-btn':owned?'owned-btn':''}" data-type="bg" data-id="${id}" ${(!owned && !canBuy) ? 'disabled':''}>
           ${equipped ? '装備中' : owned ? '装備' : '購入'}
         </button>
       </div>`;
     }
     html += '</div>';
-
-    html += '<div class="shop-section-title">🌰 どんぐりスキン</div>';
-    html += '<div class="shop-items">';
+    html += '<div class="shop-section-title">🌰 どんぐりスキン</div><div class="shop-items">';
     for(const [id, skin] of Object.entries(ACORN_SKINS)) {
       if (id === 'double' && !doubleAcornUnlocked) continue;
       if (id === 'beast' && !beastAcornUnlocked) continue;
-      
-      const owned = ownedAcorn.includes(id);
-      const equipped = equippedAcorn === id;
-      const canBuy = (skin.priceType === 'coin' && coins >= skin.price) ||
-                     skin.priceType === 'none';
-      const priceLabel = skin.priceType === 'none' ? '初期' :
-                         skin.priceType === 'coin' ? '📝'+skin.price+'字' : '🏆'+skin.price;
-
+      const owned = ownedAcorn.includes(id), equipped = equippedAcorn === id;
+      const canBuy = (skin.priceType === 'coin' && totalTyped >= skin.price) || skin.priceType === 'none';
+      const priceLabel = skin.priceType === 'none' ? '初期' : '📝'+skin.price+'字';
       const isPhantom = id === 'phantom';
       const displayName = isPhantom ? '🌀 ' + skin.name : skin.name;
-
+      const shapeIcon = { 'normal':'🌰','spiky':'⚡','bubble':'🫧','fluffy':'☁️','crystal':'💎','star':'⭐','ice':'❄️','dark':'🌑','light':'☀️','cosmic':'🌌','phantom':'🌀','beast':'🐻','rainbow':'🌈','flame':'🔥' }[skin.shape] || '🌰';
       html += `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" style="${(isPhantom && owned) ? 'border-color: var(--phantom); background: rgba(155,89,182,0.15);' : ''}">
-        <div class="shop-item-info">
-          <div class="shop-item-name">${displayName} ${equipped?' ✅':''}</div>
-          <div class="shop-item-desc">${skin.desc}</div>
-        </div>
+        <div class="shop-item-info"><div class="shop-item-name">${shapeIcon} ${displayName} ${equipped?' ✅':''}</div>
+        <div class="shop-item-desc">${skin.desc}</div></div>
         <div class="shop-item-price">${priceLabel}</div>
-        <button class="shop-item-btn ${equipped?'equip-btn':owned?'owned-btn':''}" 
-                data-type="acorn" data-id="${id}" ${(!owned && !canBuy) ? 'disabled':''}>
+        <button class="shop-item-btn ${equipped?'equip-btn':owned?'owned-btn':''}" data-type="acorn" data-id="${id}" ${(!owned && !canBuy) ? 'disabled':''}>
           ${equipped ? '装備中' : owned ? '装備' : '購入'}
         </button>
       </div>`;
     }
     html += '</div>';
-
     shopItemsContainer.innerHTML = html;
-
-    shopItemsContainer.querySelectorAll('.shop-item-btn').forEach(btn => {
-      btn.addEventListener('click', handleShopAction);
-    });
+    shopItemsContainer.querySelectorAll('.shop-item-btn').forEach(btn => { btn.addEventListener('click', handleShopAction); });
   }
 
   function handleShopAction(e) {
-    const btn = e.currentTarget;
-    const type = btn.dataset.type;
-    const id = btn.dataset.id;
-
+    const btn = e.currentTarget, type = btn.dataset.type, id = btn.dataset.id;
     if(type === 'bg') {
-      if(ownedBg.includes(id)) {
-        equippedBg = id;
-        saveData();
-        updateShopUI();
-        return;
-      }
+      if(ownedBg.includes(id)) { equippedBg = id; saveData(); updateShopUI(); return; }
       const skin = BG_SKINS[id];
-      if(skin.priceType === 'coin' && totalTyped >= skin.price) {
-        ownedBg.push(id);
-        equippedBg = id;
-        saveData();
-        updateShopUI();
-        highscoreValueEl.textContent = highscore;
-      }
+      if(skin.priceType === 'coin' && totalTyped >= skin.price) { ownedBg.push(id); equippedBg = id; saveData(); updateShopUI(); highscoreValueEl.textContent = highscore; }
     } else if(type === 'acorn') {
-      if(ownedAcorn.includes(id)) {
-        equippedAcorn = id;
-        saveData();
-        updateShopUI();
-        updatePhantomFont();
-        return;
-      }
+      if(ownedAcorn.includes(id)) { equippedAcorn = id; saveData(); updateShopUI(); updatePhantomFont(); updateFontColor(); return; }
       const skin = ACORN_SKINS[id];
-      if(skin.priceType === 'coin' && totalTyped >= skin.price) {
-        ownedAcorn.push(id);
-        equippedAcorn = id;
-        saveData();
-        updateShopUI();
-        updatePhantomFont();
-      }
+      if(skin.priceType === 'coin' && totalTyped >= skin.price) { ownedAcorn.push(id); equippedAcorn = id; saveData(); updateShopUI(); updatePhantomFont(); updateFontColor(); }
     }
   }
 
   // ============ 設定関連 ============
   function updateSettingsUI() {
-    soundTypedInput.value = soundTyped;
-    soundStartInput.value = soundStart;
-    soundResultInput.value = soundResult;
-    soundBgmInput.value = soundBgm;
-    ['typed', 'start', 'result', 'bgm'].forEach(type => {
-      const fileNameEl = document.getElementById('file-name-' + type);
-      if (fileNameEl) fileNameEl.textContent = '';
-    });
-    if (codeVerified) {
-      codeStatus.textContent = '✅ 認証済み (超厳重)';
-      codeStatus.className = 'code-status success';
-    } else {
-      codeStatus.textContent = '🔒 未認証';
-      codeStatus.className = 'code-status';
-    }
-    
-    const statuses = ['typed', 'start', 'result', 'bgm'];
-    for (const type of statuses) {
+    soundTypedInput.value = soundTyped; soundStartInput.value = soundStart;
+    soundResultInput.value = soundResult; soundBgmInput.value = soundBgm;
+    ['typed','start','result','bgm'].forEach(type => { const el = document.getElementById('file-name-' + type); if (el) el.textContent = ''; });
+    codeStatus.textContent = codeVerified ? '✅ 認証済み (超厳重)' : '🔒 未認証';
+    codeStatus.className = 'code-status' + (codeVerified ? ' success' : '');
+    ['typed','start','result','bgm'].forEach(type => {
       const statusEl = document.getElementById('status-' + type);
       const url = document.getElementById('sound-' + type).value.trim();
-      if (url) {
-        statusEl.textContent = '📁 外部ファイル設定済み';
-        statusEl.className = 'sound-status success';
-      } else {
-        statusEl.textContent = '🎵 デフォルト音声を使用中';
-        statusEl.className = 'sound-status';
-      }
-    }
-  }
-
-  // ============ コード認証システム ============
-  function hashPassword(pwd) {
-    let hash = 0;
-    for (let i = 0; i < pwd.length; i++) {
-      const char = pwd.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
-    }
-    const salt = "D0ngur1Typ1ngS3cur3";
-    let combined = pwd + salt;
-    let h = 0;
-    for (let i = 0; i < combined.length; i++) {
-      h = ((h << 7) - h) + combined.charCodeAt(i);
-      h = h & h;
-    }
-    return (h >>> 0).toString(16).padStart(8, '0');
-  }
-
-  const CORRECT_HASH_SUPER = hashPassword("74965832");
-  const CORRECT_HASH_NORMAL = hashPassword("74153695");
-  const CORRECT_HASH_PHANTOM = hashPassword("5724");
-  const CORRECT_HASH_DOUBLE = hashPassword("6769");
-  const CORRECT_HASH_BEAST = hashPassword("810");
-
-  function verifyCode(input) {
-    const inputHash = hashPassword(input);
-    if (inputHash === CORRECT_HASH_SUPER) return 'super';
-    if (inputHash === CORRECT_HASH_NORMAL) return 'normal';
-    if (inputHash === CORRECT_HASH_PHANTOM) return 'phantom';
-    if (inputHash === CORRECT_HASH_DOUBLE) return 'double';
-    if (inputHash === CORRECT_HASH_BEAST) return 'beast';
-    return false;
+      if (url) { statusEl.textContent = '📁 外部ファイル設定済み'; statusEl.className = 'sound-status success'; }
+      else { statusEl.textContent = '🎵 デフォルト音声を使用中'; statusEl.className = 'sound-status'; }
+    });
   }
 
   function executeCodeAuth() {
     const input = codeInput.value.trim();
-    if (!input) {
-      codeStatus.textContent = '❌ パスワードを入力してください';
-      codeStatus.className = 'code-status error';
-      return;
+    if (!input) { codeStatus.textContent = '❌ パスワードを入力してください'; codeStatus.className = 'code-status error'; return; }
+    if (input === '67') {
+      startRainbowEffect();
+      const audio = new Audio('https://www.myinstants.com/media/sounds/dance-la-rat.mp3');
+      audio.play();
+      codeStatus.textContent = '🌈 虹色エフェクト発動！ (10秒間)';
+      codeStatus.className = 'code-status success';
+      codeInput.value = ''; return;
     }
     const result = verifyCode(input);
-    if (result === 'super') {
-      codeVerified = true;
-      codeStatus.textContent = '✅ スーパーモード発動！ 全解除 + 1文字500スコア';
-      codeStatus.className = 'code-status success';
-      unlockAllAchievementsAndShop();
-      saveData();
-    } else if (result === 'normal') {
-      codeVerified = true;
-      codeStatus.textContent = '✅ 通常モードに戻りました';
-      codeStatus.className = 'code-status success';
-      resetToNormalMode();
-      saveData();
-    } else if (result === 'phantom') {
-      codeVerified = true;
-      codeStatus.textContent = '🌀 幻のどんぐりを解き放ちました！';
-      codeStatus.className = 'code-status success';
-      unlockPhantomAcorn();
-      saveData();
-    } else if (result === 'double') {
-      codeVerified = true;
-      codeStatus.textContent = '🔮 ダブルどんぐりを解き放ちました！（スコア2倍）';
-      codeStatus.className = 'code-status success';
-      unlockDoubleAcorn();
-      saveData();
-    } else if (result === 'beast') {
-      codeVerified = true;
-      codeStatus.textContent = '🐻 野獣先輩どんぐり＆部屋を解き放ちました！';
-      codeStatus.className = 'code-status success';
-      unlockBeastAcorn();
-      unlockBeastBg();
-      saveData();
-    } else {
-      codeStatus.textContent = '❌ 認証失敗！ アクセス拒否';
-      codeStatus.className = 'code-status error';
-      console.warn('コード認証失敗:', input);
-    }
+    if (result === 'super') { codeVerified = true; codeStatus.textContent = '✅ スーパーモード発動！'; codeStatus.className = 'code-status success'; unlockAllAchievementsAndShop(); saveData(); }
+    else if (result === 'normal') { codeVerified = true; codeStatus.textContent = '✅ 通常モードに戻りました'; codeStatus.className = 'code-status success'; resetToNormalMode(); saveData(); }
+    else if (result === 'phantom') { codeVerified = true; codeStatus.textContent = '🌀 幻のどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockPhantomAcorn(); saveData(); }
+    else if (result === 'double') { codeVerified = true; codeStatus.textContent = '🔮 ダブルどんぐりを解き放ちました！'; codeStatus.className = 'code-status success'; unlockDoubleAcorn(); saveData(); }
+    else if (result === 'beast') { codeVerified = true; codeStatus.textContent = '🐻 野獣先輩どんぐり＆部屋を解き放ちました！'; codeStatus.className = 'code-status success'; unlockBeastAcorn(); unlockBeastBg(); saveData(); }
+    else { codeStatus.textContent = '❌ 認証失敗！ アクセス拒否'; codeStatus.className = 'code-status error'; console.warn('コード認証失敗:', input); }
+    codeInput.value = '';
   }
 
+  // ============ お知らせフレーム ============
+  function updateAnnounceVisibility() {
+    if (announceVersion === '1.0') { hideAnnounce(); }
+    else { showAnnounce(); }
+  }
+  function showAnnounce() { announceFrame.classList.remove('hidden'); announceOverlay.classList.remove('hidden'); }
+  function hideAnnounce() { announceFrame.classList.add('hidden'); announceOverlay.classList.add('hidden'); }
+  announceClose.addEventListener('click', hideAnnounce);
+  announceDismiss.addEventListener('click', () => { announceVersion = '1.0'; saveData(); hideAnnounce(); });
+
   // ============ イベントリスナー ============
-  document.getElementById('achievement-open-btn').addEventListener('click', () => {
-    updateAchievementUI();
-    achievementOverlay.classList.add('active');
-  });
-  document.getElementById('achievement-close-btn').addEventListener('click', () => {
-    achievementOverlay.classList.remove('active');
-  });
-  achievementOverlay.addEventListener('click', (e) => {
-    if(e.target === achievementOverlay) achievementOverlay.classList.remove('active');
-  });
+  document.getElementById('achievement-open-btn').addEventListener('click', () => { updateAchievementUI(); achievementOverlay.classList.add('active'); });
+  document.getElementById('achievement-close-btn').addEventListener('click', () => { achievementOverlay.classList.remove('active'); });
+  achievementOverlay.addEventListener('click', (e) => { if(e.target === achievementOverlay) achievementOverlay.classList.remove('active'); });
 
-  document.getElementById('shop-open-btn').addEventListener('click', () => {
-    updateShopUI();
-    shopOverlay.classList.add('active');
-  });
-  document.getElementById('shop-close-btn').addEventListener('click', () => {
-    shopOverlay.classList.remove('active');
-  });
-  shopOverlay.addEventListener('click', (e) => {
-    if(e.target === shopOverlay) shopOverlay.classList.remove('active');
-  });
+  document.getElementById('shop-open-btn').addEventListener('click', () => { updateShopUI(); shopOverlay.classList.add('active'); });
+  document.getElementById('shop-close-btn').addEventListener('click', () => { shopOverlay.classList.remove('active'); });
+  shopOverlay.addEventListener('click', (e) => { if(e.target === shopOverlay) shopOverlay.classList.remove('active'); });
 
-  document.getElementById('settings-open-btn').addEventListener('click', () => {
-    updateSettingsUI();
-    settingsOverlay.classList.add('active');
-  });
-  document.getElementById('settings-close-btn').addEventListener('click', () => {
-    settingsOverlay.classList.remove('active');
-  });
-  settingsOverlay.addEventListener('click', (e) => {
-    if(e.target === settingsOverlay) settingsOverlay.classList.remove('active');
-  });
+  document.getElementById('settings-open-btn').addEventListener('click', () => { updateSettingsUI(); settingsOverlay.classList.add('active'); });
+  document.getElementById('settings-close-btn').addEventListener('click', () => { settingsOverlay.classList.remove('active'); });
+  settingsOverlay.addEventListener('click', (e) => { if(e.target === settingsOverlay) settingsOverlay.classList.remove('active'); });
 
   document.querySelectorAll('.sound-exec-btn').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      e.stopPropagation();
-      const type = btn.dataset.sound;
-      const input = document.getElementById('sound-' + type);
-      const url = input.value.trim();
-      await applySoundSetting(type, url);
-    });
+    btn.addEventListener('click', async (e) => { e.stopPropagation(); const type = btn.dataset.sound; const input = document.getElementById('sound-' + type); const url = input.value.trim(); await applySoundSetting(type, url); });
   });
-
-  // ファイル選択ボタン
   document.querySelectorAll('.sound-file-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const type = btn.dataset.sound;
-      const fileInput = document.getElementById('sound-' + type + '-file');
-      if (fileInput) fileInput.click();
-    });
+    btn.addEventListener('click', (e) => { e.stopPropagation(); const type = btn.dataset.sound; const fileInput = document.getElementById('sound-' + type + '-file'); if (fileInput) fileInput.click(); });
   });
-
-  // ファイル選択時の処理
-  ['typed', 'start', 'result', 'bgm'].forEach(type => {
+  ['typed','start','result','bgm'].forEach(type => {
     const fileInput = document.getElementById('sound-' + type + '-file');
     const textInput = document.getElementById('sound-' + type);
     const fileNameEl = document.getElementById('file-name-' + type);
     if (fileInput) {
       fileInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const blobUrl = URL.createObjectURL(file);
-        textInput.value = blobUrl;
+        const file = e.target.files[0]; if (!file) return;
+        const blobUrl = URL.createObjectURL(file); textInput.value = blobUrl;
         if (fileNameEl) fileNameEl.textContent = '📄 ' + file.name;
-        await applySoundSetting(type, blobUrl);
-        // ファイル選択をリセット（同じファイルを再選択できるように）
-        fileInput.value = '';
+        await applySoundSetting(type, blobUrl); fileInput.value = '';
       });
     }
   });
-
   [soundTypedInput, soundStartInput, soundResultInput, soundBgmInput].forEach(input => {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const type = input.id.replace('sound-', '');
-        const url = input.value.trim();
-        applySoundSetting(type, url);
-      }
-    });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); const type = input.id.replace('sound-', ''); const url = input.value.trim(); applySoundSetting(type, url); } });
   });
 
-  document.getElementById('code-exec-btn').addEventListener('click', (e) => {
-    e.stopPropagation();
-    executeCodeAuth();
-  });
-  codeInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      executeCodeAuth();
-    }
-  });
+  document.getElementById('code-exec-btn').addEventListener('click', (e) => { e.stopPropagation(); executeCodeAuth(); });
+  codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); executeCodeAuth(); } });
 
-  settingDisplayBtn.addEventListener('click', () => {
-    useKanji = !useKanji;
-    settingDisplayBtn.textContent = useKanji ? "漢字" : "ひらがな";
-    saveData();
-  });
-
+  settingDisplayBtn.addEventListener('click', () => { useKanji = !useKanji; settingDisplayBtn.textContent = useKanji ? "漢字" : "ひらがな"; saveData(); });
   resetDataBtn.addEventListener('click', () => {
     if(confirm('すべてのデータを削除しますか？')) {
       localStorage.removeItem('donguri_data');
@@ -3685,115 +2743,75 @@
       highscore=d.highscore; totalTyped=d.totalTyped; coins=d.coins; useKanji=d.useKanji;
       equippedBg=d.equippedBg; equippedAcorn=d.equippedAcorn;
       ownedBg=d.ownedBg; ownedAcorn=d.ownedAcorn;
-      unlockedAchievements=d.unlockedAchievements;
-      max10sTyped=d.max10sTyped;
+      unlockedAchievements=d.unlockedAchievements; max10sTyped=d.max10sTyped;
       soundTyped=d.soundTyped; soundStart=d.soundStart; soundResult=d.soundResult; soundBgm=d.soundBgm;
-      codeVerified=d.codeVerified || false;
-      superMode=d.superMode || false;
-      normalMode=d.normalMode || false;
-      phantomAcornUnlocked=d.phantomAcornUnlocked || false;
-      doubleAcornUnlocked=d.doubleAcornUnlocked || false;
-      beastAcornUnlocked=d.beastAcornUnlocked || false;
-      beastBgUnlocked=d.beastBgUnlocked || false;
-      highscoreValueEl.textContent='0';
-      updateTotalTypedDisplay();
-      settingDisplayBtn.textContent='ひらがな';
-      settingsOverlay.classList.remove('active');
-      updateSettingsUI();
-      saveData();
-      updateAchievementUI();
+      codeVerified=d.codeVerified || false; superMode=d.superMode || false; normalMode=d.normalMode || false;
+      phantomAcornUnlocked=d.phantomAcornUnlocked || false; doubleAcornUnlocked=d.doubleAcornUnlocked || false;
+      beastAcornUnlocked=d.beastAcornUnlocked || false; beastBgUnlocked=d.beastBgUnlocked || false;
+      announceVersion = d.announceVersion || '';
+      highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
+      settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
+      updateSettingsUI(); saveData(); updateAchievementUI();
       soundBuffers = { typed: null, start: null, result: null, bgm: null };
       soundAudioEls = { typed: null, start: null, result: null, bgm: null };
       soundUrls = { typed: '', start: '', result: '', bgm: '' };
-      for (const type of ['typed', 'start', 'result', 'bgm']) {
-        const buf = generateDefaultSound(type);
-        if (buf) soundBuffers[type] = buf;
-      }
-      stopBgm();
-      updateShopUI();
+      for (const type of ['typed','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
+      stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor();
     }
   });
 
-  hankoBadge.addEventListener('click', () => {
-    updateShopUI();
-    shopOverlay.classList.add('active');
-  });
+  hankoBadge.addEventListener('click', () => { updateShopUI(); shopOverlay.classList.add('active'); });
 
   document.addEventListener('keydown', (e) => {
-    if(shopOverlay.classList.contains('active') || 
-       settingsOverlay.classList.contains('active') ||
-       achievementOverlay.classList.contains('active')) {
-      if(e.key === 'Escape') {
-        e.preventDefault();
-        shopOverlay.classList.remove('active');
-        settingsOverlay.classList.remove('active');
-        achievementOverlay.classList.remove('active');
-      }
+    if(shopOverlay.classList.contains('active') || settingsOverlay.classList.contains('active') || achievementOverlay.classList.contains('active')) {
+      if(e.key === 'Escape') { e.preventDefault(); shopOverlay.classList.remove('active'); settingsOverlay.classList.remove('active'); achievementOverlay.classList.remove('active'); }
       return;
     }
-
-    if(state === 'menu') {
-      if(e.code === 'Space') { e.preventDefault(); initGame(); }
-      return;
-    }
+    if(state === 'menu') { if(e.code === 'Space') { e.preventDefault(); initGame(); } return; }
     if(state === 'result') {
-      if(e.code === 'Space') {
-        e.preventDefault();
-        resultOverlay.classList.remove('active');
-        initGame();
-      } else if(e.key === 'Escape') {
-        e.preventDefault();
-        resultOverlay.classList.remove('active');
-        state='menu';
-        menuScreen.classList.remove('hidden');
-        startAcornAutoSpawn();
-        updateUIVisibility();
-      }
+      if(e.code === 'Space') { e.preventDefault(); resultOverlay.classList.remove('active'); initGame(); }
+      else if(e.key === 'Escape') { e.preventDefault(); resultOverlay.classList.remove('active'); state='menu'; menuScreen.classList.remove('hidden'); startAcornAutoSpawn(); updateUIVisibility(); }
       return;
     }
     if(state === 'waiting' || state === 'playing') {
       if(e.key === 'Escape') { e.preventDefault(); endGame(false); return; }
-      if(e.code === 'Space') {
-        e.preventDefault();
-        // スペースは完全に無視
-        return;
-      }
-      // Shift+8, Shift+9 で括弧
-      if (e.key === '(' || e.key === ')') {
-        e.preventDefault();
-        handleTypingKey(e.key);
-        return;
-      }
-      if(e.key.length === 1 && /[a-zA-Z-]/.test(e.key)) {
-        handleTypingKey(e.key);
-      }
+      if(e.code === 'Space') { e.preventDefault(); return; }
+      if (e.key === '(' || e.key === ')') { e.preventDefault(); handleTypingKey(e.key); return; }
+      if(e.key.length === 1 && /[a-zA-Z-]/.test(e.key)) { handleTypingKey(e.key); }
     }
   });
+
+  // ============ 音声復元 ============
+  async function restoreSavedSounds() {
+    const types = ['typed','start','result','bgm'];
+    for (const type of types) {
+      const url = document.getElementById('sound-' + type).value.trim();
+      if (url) {
+        const statusEl = document.getElementById('status-' + type);
+        statusEl.textContent = '⏳ 復元中...'; statusEl.className = 'sound-status';
+        try {
+          const buffer = await loadSound(url);
+          if (buffer) { soundBuffers[type] = buffer; soundUrls[type] = url;
+            statusEl.textContent = '✅ 保存済み音声を復元しました'; statusEl.className = 'sound-status success';
+            if (type === 'bgm' && state !== 'menu') playBgmLoop(); }
+          else { statusEl.textContent = '⚠️ 音声復元に失敗（フォールバック）'; statusEl.className = 'sound-status error'; }
+        } catch(e) { console.warn('音声復元エラー:', type, e); }
+      }
+    }
+  }
 
   // ============ 初期化 ============
   function init() {
     const data = loadData();
-    highscore = data.highscore;
-    totalTyped = data.totalTyped;
-    coins = data.coins || 0;
-    useKanji = data.useKanji;
-    equippedBg = data.equippedBg;
-    equippedAcorn = data.equippedAcorn;
-    ownedBg = data.ownedBg;
-    ownedAcorn = data.ownedAcorn;
-    unlockedAchievements = data.unlockedAchievements || [];
-    max10sTyped = data.max10sTyped || 0;
-    soundTyped = data.soundTyped || '';
-    soundStart = data.soundStart || '';
-    soundResult = data.soundResult || '';
-    soundBgm = data.soundBgm || '';
-    codeVerified = data.codeVerified || false;
-    superMode = data.superMode || false;
-    normalMode = data.normalMode || false;
-    phantomAcornUnlocked = data.phantomAcornUnlocked || false;
-    doubleAcornUnlocked = data.doubleAcornUnlocked || false;
-    beastAcornUnlocked = data.beastAcornUnlocked || false;
-    beastBgUnlocked = data.beastBgUnlocked || false;
+    highscore = data.highscore; totalTyped = data.totalTyped; coins = data.coins || 0;
+    useKanji = data.useKanji; equippedBg = data.equippedBg; equippedAcorn = data.equippedAcorn;
+    ownedBg = data.ownedBg; ownedAcorn = data.ownedAcorn;
+    unlockedAchievements = data.unlockedAchievements || []; max10sTyped = data.max10sTyped || 0;
+    soundTyped = data.soundTyped || ''; soundStart = data.soundStart || ''; soundResult = data.soundResult || ''; soundBgm = data.soundBgm || '';
+    codeVerified = data.codeVerified || false; superMode = data.superMode || false; normalMode = data.normalMode || false;
+    phantomAcornUnlocked = data.phantomAcornUnlocked || false; doubleAcornUnlocked = data.doubleAcornUnlocked || false;
+    beastAcornUnlocked = data.beastAcornUnlocked || false; beastBgUnlocked = data.beastBgUnlocked || false;
+    announceVersion = data.announceVersion || '';
 
     highscoreValueEl.textContent = highscore;
     updateTotalTypedDisplay();
@@ -3803,57 +2821,13 @@
     updateAchievementUI();
     updatePhantomFont();
     updateShopUI();
-    
+    updateAnnounceVisibility();
     initAudio();
-    
-    // デフォルト音声を生成
-    for (const type of ['typed', 'start', 'result', 'bgm']) {
-      const defaultBuf = generateDefaultSound(type);
-      if (defaultBuf) soundBuffers[type] = defaultBuf;
-    }
-    
-    // 保存された音声を読み込む（ページ更新後も維持）
-    setTimeout(async () => {
-      if (soundTyped) {
-        soundUrls.typed = soundTyped;
-        const buf = await loadSound(soundTyped);
-        if (buf) {
-          soundBuffers.typed = buf;
-          document.getElementById('status-typed').textContent = '✅ 保存済み音声を読み込みました';
-          document.getElementById('status-typed').className = 'sound-status success';
-        }
-      }
-      if (soundStart) {
-        soundUrls.start = soundStart;
-        const buf = await loadSound(soundStart);
-        if (buf) {
-          soundBuffers.start = buf;
-          document.getElementById('status-start').textContent = '✅ 保存済み音声を読み込みました';
-          document.getElementById('status-start').className = 'sound-status success';
-        }
-      }
-      if (soundResult) {
-        soundUrls.result = soundResult;
-        const buf = await loadSound(soundResult);
-        if (buf) {
-          soundBuffers.result = buf;
-          document.getElementById('status-result').textContent = '✅ 保存済み音声を読み込みました';
-          document.getElementById('status-result').className = 'sound-status success';
-        }
-      }
-      if (soundBgm) {
-        soundUrls.bgm = soundBgm;
-        const buf = await loadSound(soundBgm);
-        if (buf) {
-          soundBuffers.bgm = buf;
-          document.getElementById('status-bgm').textContent = '✅ 保存済みBGMを読み込みました';
-          document.getElementById('status-bgm').className = 'sound-status success';
-        }
-      }
-      updateSettingsUI();
-    }, 300);
-    
+    for (const type of ['typed','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
+    setTimeout(async () => { await restoreSavedSounds(); }, 500);
     checkAchievements();
+    // ★ フォントカラーを初期適用
+    updateFontColor();
   }
 
   init();
