@@ -1099,10 +1099,22 @@
           <input type="text" id="sound-typed" placeholder="MP3/MP4のURLを入力 または 📁でファイル選択">
           <input type="file" id="sound-typed-file" accept="audio/mp3,audio/wav,audio/ogg,audio/mpeg,audio/*">
           <button class="sound-file-btn" data-sound="typed" title="ローカルMP3ファイルを選択">📁</button>
-          <button class="sound-exec-btn" data-sound="typed">▶ 実行</button>
+          <button class="sound-exec-btn" data-sound="typed">▶ 設定</button>
           <span class="file-name" id="file-name-typed"></span>
         </div>
         <div class="sound-status" id="status-typed"></div>
+      </div>
+
+      <div class="setting-group">
+        <label>❌ ミス音（タイプミス時）</label>
+        <div class="sound-row">
+          <input type="text" id="sound-miss" placeholder="MP3/MP4のURLを入力 または 📁でファイル選択">
+          <input type="file" id="sound-miss-file" accept="audio/mp3,audio/wav,audio/ogg,audio/mpeg,audio/*">
+          <button class="sound-file-btn" data-sound="miss" title="ローカルMP3ファイルを選択">📁</button>
+          <button class="sound-exec-btn" data-sound="miss">▶ 設定</button>
+          <span class="file-name" id="file-name-miss"></span>
+        </div>
+        <div class="sound-status" id="status-miss"></div>
       </div>
 
       <div class="setting-group">
@@ -1111,7 +1123,7 @@
           <input type="text" id="sound-start" placeholder="MP3/MP4のURLを入力 または 📁でファイル選択">
           <input type="file" id="sound-start-file" accept="audio/mp3,audio/wav,audio/ogg,audio/mpeg,audio/*">
           <button class="sound-file-btn" data-sound="start" title="ローカルMP3ファイルを選択">📁</button>
-          <button class="sound-exec-btn" data-sound="start">▶ 実行</button>
+          <button class="sound-exec-btn" data-sound="start">▶ 設定</button>
           <span class="file-name" id="file-name-start"></span>
         </div>
         <div class="sound-status" id="status-start"></div>
@@ -1123,7 +1135,7 @@
           <input type="text" id="sound-result" placeholder="MP3/MP4のURLを入力 または 📁でファイル選択">
           <input type="file" id="sound-result-file" accept="audio/mp3,audio/wav,audio/ogg,audio/mpeg,audio/*">
           <button class="sound-file-btn" data-sound="result" title="ローカルMP3ファイルを選択">📁</button>
-          <button class="sound-exec-btn" data-sound="result">▶ 実行</button>
+          <button class="sound-exec-btn" data-sound="result">▶ 設定</button>
           <span class="file-name" id="file-name-result"></span>
         </div>
         <div class="sound-status" id="status-result"></div>
@@ -1135,7 +1147,7 @@
           <input type="text" id="sound-bgm" placeholder="MP3/MP4のURLを入力 または 📁でファイル選択">
           <input type="file" id="sound-bgm-file" accept="audio/mp3,audio/wav,audio/ogg,audio/mpeg,audio/*">
           <button class="sound-file-btn" data-sound="bgm" title="ローカルMP3ファイルを選択">📁</button>
-          <button class="sound-exec-btn" data-sound="bgm">▶ 実行</button>
+          <button class="sound-exec-btn" data-sound="bgm">▶ 設定</button>
           <span class="file-name" id="file-name-bgm"></span>
         </div>
         <div class="sound-status" id="status-bgm"></div>
@@ -1231,7 +1243,7 @@
       { date: '2026年9月5日', text: '🎉 どんぐりタイピングがGoogleに公開されました！' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
-    version: 'v1.1.0',
+    version: 'v1.1.2',
     updateDate: '2026年9月7日',
     // ===== お知らせ詳細リンク =====
     detailLinks: [
@@ -1408,7 +1420,7 @@
     equippedBg: 'forest', equippedAcorn: 'default',
     ownedBg: ['forest'], ownedAcorn: ['default'],
     unlockedAchievements: [], max10sTyped: 0,
-    soundTyped: '', soundStart: '', soundResult: '', soundBgm: '',
+    soundTyped: '', soundStart: '', soundResult: '', soundBgm: '', soundMiss: '',
     codeVerified: false, superMode: false, normalMode: false,
     phantomAcornUnlocked: false, doubleAcornUnlocked: false,
     beastAcornUnlocked: false, beastBgUnlocked: false,
@@ -1420,7 +1432,7 @@
   function generateDefaultSound(type) {
     if (!audioCtx) return null;
     try {
-      const duration = type === 'bgm' ? 0.5 : (type === 'typed' ? 0.1 : type === 'start' ? 0.2 : 0.4);
+      const duration = type === 'bgm' ? 0.5 : (type === 'typed' ? 0.1 : type === 'start' ? 0.2 : type === 'miss' ? 0.15 : 0.4);
       const sampleRate = audioCtx.sampleRate;
       const buffer = audioCtx.createBuffer(1, sampleRate * duration, sampleRate);
       const data = buffer.getChannelData(0);
@@ -1433,6 +1445,11 @@
         for (let i = 0; i < data.length; i++) {
           const t = i / sampleRate;
           data[i] = Math.sin(2 * Math.PI * 800 * t) * Math.exp(-t * 40) * 0.3;
+        }
+      } else if (type === 'miss') {
+        for (let i = 0; i < data.length; i++) {
+          const t = i / sampleRate;
+          data[i] = Math.sin(2 * Math.PI * 300 * t) * Math.exp(-t * 30) * 0.2 + Math.sin(2 * Math.PI * 450 * t) * Math.exp(-t * 25) * 0.15;
         }
       } else if (type === 'start') {
         for (let i = 0; i < data.length; i++) {
@@ -1452,7 +1469,7 @@
   // --- localStorage ---
   function saveData() {
     const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
-      unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm,
+      unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
       beastAcornUnlocked, beastBgUnlocked, announceVersion, infoRead };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
@@ -1467,7 +1484,7 @@
       equippedBg = 'forest', equippedAcorn = 'default',
       ownedBg = ['forest'], ownedAcorn = ['default'],
       unlockedAchievements = [], max10sTyped = 0,
-      soundTyped = '', soundStart = '', soundResult = '', soundBgm = '',
+      soundTyped = '', soundStart = '', soundResult = '', soundBgm = '', soundMiss = '',
       codeVerified = false, superMode = false, normalMode = false,
       phantomAcornUnlocked = false, doubleAcornUnlocked = false,
       beastAcornUnlocked = false, beastBgUnlocked = false,
@@ -1483,10 +1500,10 @@
 
   // --- Audio ---
   let audioCtx = null;
-  let soundBuffers = { typed: null, start: null, result: null, bgm: null };
-  let soundUrls = { typed: '', start: '', result: '', bgm: '' };
+  let soundBuffers = { typed: null, start: null, result: null, bgm: null, miss: null };
+  let soundUrls = { typed: '', start: '', result: '', bgm: '', miss: '' };
   let bgmSource = null, isBgmPlaying = false, bgmAudioEl = null;
-  let soundAudioEls = { typed: null, start: null, result: null, bgm: null };
+  let soundAudioEls = { typed: null, start: null, result: null, bgm: null, miss: null };
   let beastSoundBuffer = null;
 
   async function loadBeastSound() {
@@ -1551,10 +1568,11 @@
   }
   function getSoundBuffer(type) { return soundBuffers[type] || generateDefaultSound(type); }
   function playTypedSound() { const buf = getSoundBuffer('typed'); playSound(buf, soundUrls.typed, 'typed'); }
+  function playMissSound() { const buf = getSoundBuffer('miss'); playSound(buf, soundUrls.miss, 'miss'); }
   function playStartSound() { const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
   function playResultSound() { const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
 
-  // --- 音声設定 ---
+  // --- 音声設定（プレビュー再生なし） ---
   async function applySoundSetting(type, url) {
     const statusEl = document.getElementById('status-' + type);
     statusEl.textContent = '⏳ 読み込み中...';
@@ -1570,20 +1588,28 @@
           else if (type === 'start') soundStart = url.trim();
           else if (type === 'result') soundResult = url.trim();
           else if (type === 'bgm') soundBgm = url.trim();
+          else if (type === 'miss') soundMiss = url.trim();
           saveData();
-          statusEl.textContent = '✅ 音声を設定しました (外部ファイル)';
+          statusEl.textContent = '✅ 音声を設定しました（実際の使用時に再生されます）';
           statusEl.className = 'sound-status success';
-          if (type === 'bgm') playBgmLoop();
-          else playSound(buffer);
+          // BGMだけは設定後に即座にループ開始（ゲーム中に使われるため）
+          if (type === 'bgm') {
+            // ゲーム中でなければ再生しない（メニューでは再生しない）
+            if (state === 'waiting' || state === 'playing') {
+              playBgmLoop();
+            }
+          }
         } else {
           statusEl.textContent = '❌ 音声の読み込みに失敗しました';
           statusEl.className = 'sound-status error';
         }
       } else {
+        // URLが空の場合はデフォルトに戻す
         if (type === 'typed') soundTyped = '';
         else if (type === 'start') soundStart = '';
         else if (type === 'result') soundResult = '';
         else if (type === 'bgm') { soundBgm = ''; stopBgm(); }
+        else if (type === 'miss') soundMiss = '';
         soundBuffers[type] = null; soundUrls[type] = '';
         saveData();
         const defaultBuffer = generateDefaultSound(type);
@@ -1591,8 +1617,9 @@
           soundBuffers[type] = defaultBuffer;
           statusEl.textContent = '✅ デフォルト音声に設定しました';
           statusEl.className = 'sound-status success';
-          if (type === 'bgm') playBgmLoop();
-          else playSound(defaultBuffer, '', type);
+          if (type === 'bgm' && (state === 'waiting' || state === 'playing')) {
+            playBgmLoop();
+          }
         }
       }
     } catch(e) {
@@ -1645,6 +1672,7 @@
   const rainbowOverlay = document.getElementById('rainbowOverlay');
   let rainbowAudio = null, rainbowAudio2 = null, rainbowInterval = null, rainbowTimer = null;
   const soundTypedInput = document.getElementById('sound-typed');
+  const soundMissInput = document.getElementById('sound-miss');
   const soundStartInput = document.getElementById('sound-start');
   const soundResultInput = document.getElementById('sound-result');
   const soundBgmInput = document.getElementById('sound-bgm');
@@ -2721,7 +2749,8 @@
 
   function initGame() {
     state='waiting'; isSentenceMode = false; pendingSentenceMode = false; resetUsedWords();
-    if (soundBuffers.bgm) { playBgmLoop(); }
+    // BGMはゲーム開始時に再生（メニューでは再生しない）
+    if (soundBuffers.bgm || soundUrls.bgm) { playBgmLoop(); }
     acorns=[]; specialParticles=[]; fragments=[];
     for(let i=0;i<MIN_ACORN_COUNT+5;i++) spawnAcornTop();
     startAcornAutoSpawn();
@@ -2801,6 +2830,8 @@
       }
       renderWord(); renderHud();
     } else {
+      // タイプミス時：ミス音を再生してシェイク
+      playMissSound();
       wordStageEl.classList.remove('shake');
       void wordStageEl.offsetWidth;
       wordStageEl.classList.add('shake');
@@ -2895,15 +2926,18 @@
 
   // ============ 設定関連 ============
   function updateSettingsUI() {
-    soundTypedInput.value = soundTyped; soundStartInput.value = soundStart;
-    soundResultInput.value = soundResult; soundBgmInput.value = soundBgm;
-    ['typed','start','result','bgm'].forEach(type => { const el = document.getElementById('file-name-' + type); if (el) el.textContent = ''; });
+    soundTypedInput.value = soundTyped;
+    soundMissInput.value = soundMiss;
+    soundStartInput.value = soundStart;
+    soundResultInput.value = soundResult;
+    soundBgmInput.value = soundBgm;
+    ['typed','miss','start','result','bgm'].forEach(type => { const el = document.getElementById('file-name-' + type); if (el) el.textContent = ''; });
     codeStatus.textContent = codeVerified ? '✅ 認証済み (超厳重)' : '🔒 未認証';
     codeStatus.className = 'code-status' + (codeVerified ? ' success' : '');
-    ['typed','start','result','bgm'].forEach(type => {
+    ['typed','miss','start','result','bgm'].forEach(type => {
       const statusEl = document.getElementById('status-' + type);
       const url = document.getElementById('sound-' + type).value.trim();
-      if (url) { statusEl.textContent = '📁 外部ファイル設定済み'; statusEl.className = 'sound-status success'; }
+      if (url) { statusEl.textContent = '📁 外部ファイル設定済み（実際の使用時に再生）'; statusEl.className = 'sound-status success'; }
       else { statusEl.textContent = '🎵 デフォルト音声を使用中'; statusEl.className = 'sound-status'; }
     });
   }
@@ -2962,7 +2996,7 @@
   document.querySelectorAll('.sound-file-btn').forEach(btn => {
     btn.addEventListener('click', (e) => { e.stopPropagation(); const type = btn.dataset.sound; const fileInput = document.getElementById('sound-' + type + '-file'); if (fileInput) fileInput.click(); });
   });
-  ['typed','start','result','bgm'].forEach(type => {
+  ['typed','miss','start','result','bgm'].forEach(type => {
     const fileInput = document.getElementById('sound-' + type + '-file');
     const textInput = document.getElementById('sound-' + type);
     const fileNameEl = document.getElementById('file-name-' + type);
@@ -2975,7 +3009,7 @@
       });
     }
   });
-  [soundTypedInput, soundStartInput, soundResultInput, soundBgmInput].forEach(input => {
+  [soundTypedInput, soundMissInput, soundStartInput, soundResultInput, soundBgmInput].forEach(input => {
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); const type = input.id.replace('sound-', ''); const url = input.value.trim(); applySoundSetting(type, url); } });
   });
 
@@ -2991,7 +3025,7 @@
       equippedBg=d.equippedBg; equippedAcorn=d.equippedAcorn;
       ownedBg=d.ownedBg; ownedAcorn=d.ownedAcorn;
       unlockedAchievements=d.unlockedAchievements; max10sTyped=d.max10sTyped;
-      soundTyped=d.soundTyped; soundStart=d.soundStart; soundResult=d.soundResult; soundBgm=d.soundBgm;
+      soundTyped=d.soundTyped; soundStart=d.soundStart; soundResult=d.soundResult; soundBgm=d.soundBgm; soundMiss=d.soundMiss;
       codeVerified=d.codeVerified || false; superMode=d.superMode || false; normalMode=d.normalMode || false;
       phantomAcornUnlocked=d.phantomAcornUnlocked || false; doubleAcornUnlocked=d.doubleAcornUnlocked || false;
       beastAcornUnlocked=d.beastAcornUnlocked || false; beastBgUnlocked=d.beastBgUnlocked || false;
@@ -3000,10 +3034,10 @@
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
-      soundBuffers = { typed: null, start: null, result: null, bgm: null };
-      soundAudioEls = { typed: null, start: null, result: null, bgm: null };
-      soundUrls = { typed: '', start: '', result: '', bgm: '' };
-      for (const type of ['typed','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
+      soundBuffers = { typed: null, start: null, result: null, bgm: null, miss: null };
+      soundAudioEls = { typed: null, start: null, result: null, bgm: null, miss: null };
+      soundUrls = { typed: '', start: '', result: '', bgm: '', miss: '' };
+      for (const type of ['typed','miss','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
       stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor(); updateInfoBadge();
     }
   });
@@ -3031,7 +3065,7 @@
 
   // ============ 音声復元 ============
   async function restoreSavedSounds() {
-    const types = ['typed','start','result','bgm'];
+    const types = ['typed','miss','start','result','bgm'];
     for (const type of types) {
       const url = document.getElementById('sound-' + type).value.trim();
       if (url) {
@@ -3040,9 +3074,18 @@
         try {
           const buffer = await loadSound(url);
           if (buffer) { soundBuffers[type] = buffer; soundUrls[type] = url;
-            statusEl.textContent = '✅ 保存済み音声を復元しました'; statusEl.className = 'sound-status success';
-            if (type === 'bgm' && state !== 'menu') playBgmLoop(); }
-          else { statusEl.textContent = '⚠️ 音声復元に失敗（フォールバック）'; statusEl.className = 'sound-status error'; }
+            statusEl.textContent = '✅ 保存済み音声を復元しました（実際の使用時に再生）'; statusEl.className = 'sound-status success';
+            // BGMはゲーム中のみ再生（メニューでは再生しない）
+            if (type === 'bgm' && (state === 'waiting' || state === 'playing')) {
+              playBgmLoop();
+            }
+          } else {
+            statusEl.textContent = '⚠️ 音声復元に失敗（フォールバック）';
+            statusEl.className = 'sound-status error';
+            // デフォルト音声を設定
+            const defaultBuffer = generateDefaultSound(type);
+            if (defaultBuffer) { soundBuffers[type] = defaultBuffer; }
+          }
         } catch(e) { console.warn('音声復元エラー:', type, e); }
       }
     }
@@ -3055,7 +3098,8 @@
     useKanji = data.useKanji; equippedBg = data.equippedBg; equippedAcorn = data.equippedAcorn;
     ownedBg = data.ownedBg; ownedAcorn = data.ownedAcorn;
     unlockedAchievements = data.unlockedAchievements || []; max10sTyped = data.max10sTyped || 0;
-    soundTyped = data.soundTyped || ''; soundStart = data.soundStart || ''; soundResult = data.soundResult || ''; soundBgm = data.soundBgm || '';
+    soundTyped = data.soundTyped || ''; soundMiss = data.soundMiss || '';
+    soundStart = data.soundStart || ''; soundResult = data.soundResult || ''; soundBgm = data.soundBgm || '';
     codeVerified = data.codeVerified || false; superMode = data.superMode || false; normalMode = data.normalMode || false;
     phantomAcornUnlocked = data.phantomAcornUnlocked || false; doubleAcornUnlocked = data.doubleAcornUnlocked || false;
     beastAcornUnlocked = data.beastAcornUnlocked || false; beastBgUnlocked = data.beastBgUnlocked || false;
@@ -3073,7 +3117,11 @@
     updateAnnounceVisibility();
     updateInfoBadge();
     initAudio();
-    for (const type of ['typed','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
+    // デフォルト音声をプリロード（メニューでは再生しない）
+    for (const type of ['typed','miss','start','result','bgm']) { 
+      const buf = generateDefaultSound(type); 
+      if (buf) soundBuffers[type] = buf; 
+    }
     setTimeout(async () => { await restoreSavedSounds(); }, 500);
     checkAchievements();
     updateFontColor();
