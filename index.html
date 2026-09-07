@@ -1177,10 +1177,33 @@
       <div class="setting-group">
         <label>💫 どんぐりの破片量</label>
         <div class="sound-row">
-          <input type="range" id="particle-slider" min="0" max="20" value="5" step="1">
+          <input type="range" id="particle-slider" min="0" max="30" value="5" step="1">
           <span class="range-value" id="particle-count-display">5</span>
         </div>
         <div class="sound-status" id="status-particle">破片の数を調整します（0で非表示）</div>
+      </div>
+
+      <!-- ====== ★ どんぐりの破片サイズ ====== -->
+      <div class="setting-group">
+        <label>📏 破片の大きさ</label>
+        <div class="sound-row">
+          <input type="range" id="particle-size-slider" min="0.3" max="2.5" value="1.0" step="0.05">
+          <span class="range-value" id="particle-size-display">1.0</span>
+        </div>
+        <div class="sound-status" id="status-particle-size">破片の大きさを調整します（倍率）</div>
+      </div>
+
+      <!-- ====== ★ どんぐりの破片形状 ====== -->
+      <div class="setting-group">
+        <label>🔷 破片の形状</label>
+        <div class="sound-row" style="gap:6px;flex-wrap:wrap;">
+          <button class="shape-btn" data-shape="circle" style="padding:4px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;">⚪ 丸</button>
+          <button class="shape-btn" data-shape="square" style="padding:4px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;">⬜ 四角</button>
+          <button class="shape-btn" data-shape="star" style="padding:4px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;">⭐ 星</button>
+          <button class="shape-btn" data-shape="triangle" style="padding:4px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;">🔺 三角</button>
+          <button class="shape-btn" data-shape="sparkle" style="padding:4px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;">✨ キラ</button>
+        </div>
+        <div class="sound-status" id="status-particle-shape">破片の形状を変更します</div>
       </div>
 
       <!-- ====== ★ 表示設定 ====== -->
@@ -1195,6 +1218,17 @@
           </button>
         </div>
         <div class="sound-status" id="status-display">ローマ字とひらがなの表示/非表示を切り替え</div>
+      </div>
+
+      <!-- ====== ★ 音声無音トグル ====== -->
+      <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
+        <label>🔇 音声設定</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
+          <button id="toggle-sound-mute-btn" class="setting-toggle" style="flex:1;min-width:80px;padding:6px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;transition:all 0.2s;">
+            🔊 音声: 有効
+          </button>
+        </div>
+        <div class="sound-status" id="status-sound">全ての音声を無効にします</div>
       </div>
 
       <div class="setting-group">
@@ -1338,22 +1372,19 @@
 (function(){
   "use strict";
 
-  // ============ ★ バージョン情報（別々に変更可能） ============
-  // お知らせフレーム用バージョン（これを変更するとフレームが再表示されます）
-  const ANNOUNCE_VERSION = "v1.2.2";
-  
-  // 情報バッジ用バージョン（これを変更すると情報バッジに!マークが出ます）
-  const INFO_BADGE_VERSION = "v1.2.2";
+  // ============ ★ バージョン情報 ============
+  const ANNOUNCE_VERSION = "v1.2.3";
+  const INFO_BADGE_VERSION = "v1.2.3";
 
   // ============ 情報コンテンツデータ ============
   const INFO_DATA = {
     events: [
       { date: '2026年9月5日', title: '🎉 サイト公開！', desc: 'どんぐりタイピングがついに公開されました！' },
+      { date: '2026年9月7日', title: '⚙️ 設定追加！', desc: '破片の大きさ・形状、音声無音機能を追加しました！' },
     ],
     notices: [
-      { date: '2026年9月5日', text: '🎉 どんぐりタイピングがGoogleに公開されました！' },
+      { date: '2026年9月7日', text: '⚙️ 設定に「破片の大きさ」「破片の形状」「音声無音」を追加しました！' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
-      { date: '2026年9月5日', text: '設定にひらがな追加（漢字の読み）されました！' },
     ],
     version: INFO_BADGE_VERSION,
     updateDate: '2026年9月7日',
@@ -1397,7 +1428,7 @@
     { kana: "どんぐりきょうわこく", kanji: "どんぐり共和国" }, { kana: "ねじ", kanji: "ネジ" }, { kana: "ほうりつ", kanji: "法律" },
     { kana: "でんき", kanji: "電気" }, { kana: "がす", kanji: "ガス" }, { kana: "すいどう", kanji: "水道" },
     { kana: "じんせい", kanji: "人生" }, { kana: "きょうかしょ", kanji: "教科書" }, { kana: "じゃーじ", kanji: "ジャージ" },
-    { kana: "でんち", kanji: "電池" }, { kana: "りもこん", kanji: "リモコン" }, { kana: "てぃっしゅ", kanji: "ティッシュ" },
+    { kana: "でんち", kanji: "電池" }, { kana: "りもこん", kanji: "リモコン" }, { kana: "きのえだ", kanji: "木の枝" },{ kana: "えだまめ", kanji: "枝豆" },
     { kana: "まくら", kanji: "枕" }, { kana: "せかいちず", kanji: "世界地図" }, { kana: "おしぴん", kanji: "押しピン" },
     { kana: "ぴんせっと", kanji: "ピンセット" }, { kana: "びにーるぶくろ", kanji: "ビニール袋" }, { kana: "えんぴつけずり", kanji: "鉛筆削り" },
     { kana: "かーどげーむ", kanji: "カードゲーム" }, { kana: "じてん", kanji: "辞典" }, { kana: "じてんしゃ", kanji: "自転車" },
@@ -1420,11 +1451,11 @@
     { kana: "ぶかつ", kanji: "部活" }, { kana: "まつり", kanji: "祭り" }, { kana: "やたい", kanji: "屋台" },
     { kana: "からおけ", kanji: "カラオケ" }, { kana: "まいく", kanji: "マイク" }, { kana: "からあげ", kanji: "唐揚げ" },
     { kana: "たこやき", kanji: "たこ焼き" }, { kana: "たこあげ", kanji: "凧揚げ" }, { kana: "ぱっちゅん", kanji: "パッチュン" },
-    { kana: "しゃんぷー", kanji: "シャンプー" }, { kana: "ぺがさす", kanji: "ペガサス" }, { kana: "しょーとすいーぱー", kanji: "ショートスイーパー" },
+    { kana: "しゃんぷー", kanji: "シャンプー" }, { kana: "ぺがさす", kanji: "ペガサス" }, { kana: "しょーとすりーぱー", kanji: "ショートスリーパー" },
     { kana: "どうぶつびょういん", kanji: "動物病院" }, { kana: "びょういん", kanji: "病院" }, { kana: "かーてん", kanji: "カーテン" },
     { kana: "せんぷうき", kanji: "扇風機" }, { kana: "よーろっぱ", kanji: "ヨーロッパ" },{ kana: "いかやき", kanji: "イカ焼き" },{ kana: "さる", kanji: "猿" },
     { kana: "ざるそば", kanji: "ざるそば" },{ kana: "ねこ", kanji: "猫" },{ kana: "たけ", kanji: "竹" },{ kana: "いえ", kanji: "家" },{ kana: "ぞう", kanji: "像" },
-    { kana: "ぐみ", kanji: "グミ" },{ kana: "アイス", kanji: "アイス" },{ kana: "やんきー", kanji: "ヤンキー" },{ kana: "たいたにっく", kanji: "タイタニック" },
+    { kana: "ぐみ", kanji: "グミ" },{ kana: "あいす", kanji: "アイス" },{ kana: "やんきー", kanji: "ヤンキー" },{ kana: "たいたにっく", kanji: "タイタニック" },
     { kana: "ぷらねたりうむ", kanji: "プラネタリウム" },{ kana: "うそ", kanji: "嘘" },{ kana: "あい", kanji: "愛" },{ kana: "ひみつ", kanji: "秘密" },{ kana: "きっく", kanji: "キック" },
     { kana: "すな", kanji: "砂" },{ kana: "あなご", kanji: "アナゴ" },{ kana: "ええんやで", kanji: "ええんやで" },{ kana: "けんさく", kanji: "検索" },{ kana: "ちちのひ", kanji: "父の日" },{ kana: "けいけんち", kanji: "経験値" },
     { kana: "まねきねこ", kanji: "招き猫" },{ kana: "ちょこれーと", kanji: "チョコレート" },{ kana: "どんでんがえし", kanji: "どんでん返し" },
@@ -1524,7 +1555,7 @@
     'beast_room': { name: '野獣先輩の部屋', desc: '24歳学生...？', price: 0, priceType: 'none' },
   };
 
-  // ============ ★ どんぐりスキン（形状＆フォントカラー付き） ============
+  // ============ ★ どんぐりスキン ============
   const ACORN_SKINS = {
     'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none', shape: 'normal', fontColor: '#d2b48c' },
     'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 500, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#6aaa4a' },
@@ -1559,6 +1590,9 @@
     infoBadgeVersion: '',
     infoRead: false,
     particleCount: 5,
+    particleSize: 1.0,
+    particleShape: 'circle',
+    soundMuted: false,
     showRomaji: true,
     showKanaSmall: true,
   };
@@ -1607,7 +1641,7 @@
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
       beastAcornUnlocked, beastBgUnlocked, announceVersion, infoBadgeVersion, infoRead, particleCount,
-      showRomaji, showKanaSmall };
+      particleSize, particleShape, soundMuted, showRomaji, showKanaSmall };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1626,6 +1660,9 @@
       beastAcornUnlocked = false, beastBgUnlocked = false,
       announceVersion = '', infoBadgeVersion = '', infoRead = false,
       particleCount = 5,
+      particleSize = 1.0,
+      particleShape = 'circle',
+      soundMuted = false,
       showRomaji = true,
       showKanaSmall = true;
 
@@ -1655,6 +1692,7 @@
     } catch(e) { console.warn('野獣先輩効果音読み込み失敗:', e); }
   }
   function playBeastSound() {
+    if (soundMuted) return;
     if (!beastSoundBuffer || !audioCtx) return;
     try { const s = audioCtx.createBufferSource(); s.buffer = beastSoundBuffer; s.connect(audioCtx.destination); s.start(0); } catch(e) {}
   }
@@ -1665,6 +1703,7 @@
     catch(e) { console.warn('音声読み込み失敗:', url, e); return null; }
   }
   function playSound(buffer, fallbackUrl, type) {
+    if (soundMuted) return null;
     if (buffer && audioCtx) {
       try { const s = audioCtx.createBufferSource(); s.buffer = buffer; s.connect(audioCtx.destination); s.start(0); return s; } catch(e) {}
     }
@@ -1682,6 +1721,7 @@
     return null;
   }
   function playBgmLoop() {
+    if (soundMuted) { stopBgm(); return; }
     stopBgm();
     const buffer = soundBuffers.bgm;
     if (buffer && audioCtx) {
@@ -1706,10 +1746,10 @@
     isBgmPlaying = false;
   }
   function getSoundBuffer(type) { return soundBuffers[type] || generateDefaultSound(type); }
-  function playTypedSound() { const buf = getSoundBuffer('typed'); playSound(buf, soundUrls.typed, 'typed'); }
-  function playMissSound() { const buf = getSoundBuffer('miss'); playSound(buf, soundUrls.miss, 'miss'); }
-  function playStartSound() { const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
-  function playResultSound() { const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
+  function playTypedSound() { if (soundMuted) return; const buf = getSoundBuffer('typed'); playSound(buf, soundUrls.typed, 'typed'); }
+  function playMissSound() { if (soundMuted) return; const buf = getSoundBuffer('miss'); playSound(buf, soundUrls.miss, 'miss'); }
+  function playStartSound() { if (soundMuted) return; const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
+  function playResultSound() { if (soundMuted) return; const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
 
   // --- 音声設定 ---
   async function applySoundSetting(type, url) {
@@ -1815,8 +1855,11 @@
   const codeStatus = document.getElementById('code-status');
   const particleSlider = document.getElementById('particle-slider');
   const particleCountDisplay = document.getElementById('particle-count-display');
+  const particleSizeSlider = document.getElementById('particle-size-slider');
+  const particleSizeDisplay = document.getElementById('particle-size-display');
   const toggleRomajiBtn = document.getElementById('toggle-romaji-btn');
   const toggleKanaSmallBtn = document.getElementById('toggle-kana-small-btn');
+  const toggleSoundMuteBtn = document.getElementById('toggle-sound-mute-btn');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -1829,9 +1872,8 @@
   let fireworks = [], villageHouses = [];
   let starryYOffset = 0;
 
-  // ============ 情報バッジ制御（別バージョン管理） ============
+  // ============ 情報バッジ制御 ============
   function updateInfoBadge() {
-    // infoBadgeVersion と INFO_BADGE_VERSION を比較
     if (infoBadgeVersion !== INFO_BADGE_VERSION) {
       infoBadge.classList.remove('hidden');
       infoRead = false;
@@ -1842,52 +1884,32 @@
       infoBadge.classList.add('hidden');
     }
   }
-
   function markInfoAsRead() {
     if (!infoRead) {
       infoRead = true;
-      // 読んだらバージョンを保存
       infoBadgeVersion = INFO_BADGE_VERSION;
       saveData();
       updateInfoBadge();
     }
   }
 
-  // ============ お知らせフレーム制御（別バージョン管理） ============
+  // ============ お知らせフレーム制御 ============
   function updateAnnounceVisibility() {
-    // 保存されているバージョンと最新バージョンが異なる場合は表示
     if (announceVersion !== ANNOUNCE_VERSION) {
       showAnnounce();
     } else {
       hideAnnounce();
     }
   }
+  function showAnnounce() { announceFrame.classList.remove('hidden'); announceOverlay.classList.remove('hidden'); }
+  function hideAnnounce() { announceFrame.classList.add('hidden'); announceOverlay.classList.add('hidden'); }
 
-  function showAnnounce() { 
-    announceFrame.classList.remove('hidden'); 
-    announceOverlay.classList.remove('hidden'); 
-  }
-  function hideAnnounce() { 
-    announceFrame.classList.add('hidden'); 
-    announceOverlay.classList.add('hidden'); 
-  }
-
-  // お知らせを閉じる（「次から表示しない」を押したとき）
-  announceDismiss.addEventListener('click', () => { 
-    announceVersion = ANNOUNCE_VERSION;
-    saveData(); 
-    hideAnnounce();
-  });
-
-  // 単に閉じるだけ（次回も表示される）
-  announceClose.addEventListener('click', () => { 
-    hideAnnounce(); 
-  });
+  announceDismiss.addEventListener('click', () => { announceVersion = ANNOUNCE_VERSION; saveData(); hideAnnounce(); });
+  announceClose.addEventListener('click', () => { hideAnnounce(); });
 
   // ============ 情報モーダル表示 ============
   function renderInfoContent() {
     let html = '';
-    
     html += '<h3>🎪 イベント</h3>';
     INFO_DATA.events.forEach(ev => {
       html += `<div class="event-item">
@@ -1896,7 +1918,6 @@
         <div class="event-desc">${ev.desc}</div>
       </div>`;
     });
-
     html += '<h3>📰 お知らせ</h3>';
     INFO_DATA.notices.forEach(notice => {
       html += `<div class="notice-item">
@@ -1904,7 +1925,6 @@
         ${notice.text}
       </div>`;
     });
-
     html += '<h3>投票</h3>';
     html += `<div style="display:flex;flex-direction:column;gap:8px;margin:4px 0 10px 0;">`;
     INFO_DATA.detailLinks.forEach(link => {
@@ -1917,12 +1937,9 @@
               </a>`;
     });
     html += `</div>`;
-
     html += `<div class="version-info">📌 バージョン ${INFO_DATA.version}（${INFO_DATA.updateDate}更新）</div>`;
-
     infoContent.innerHTML = html;
   }
-
   function openInfoModal() {
     renderInfoContent();
     infoOverlay.classList.add('active');
@@ -2014,13 +2031,11 @@
   function updateFontColor() {
     const skin = ACORN_SKINS[equippedAcorn];
     const fontColor = skin ? skin.fontColor : '#d2b48c';
-    
     kanjiDisplayEl.style.color = fontColor;
     scoreValueEl.style.color = fontColor;
     document.querySelector('.title').style.color = fontColor;
     modalScoreEl.style.color = fontColor;
     document.querySelector('.hanko-score').style.color = fontColor;
-    
     if (equippedAcorn === 'phantom') {
       kanjiDisplayEl.style.textShadow = '0 0 30px rgba(155,89,182,0.6), 0 0 60px rgba(155,89,182,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 30px rgba(155,89,182,0.4), 0 2px 8px rgba(0,0,0,0.5)';
@@ -2038,7 +2053,6 @@
 
   // ============ 表示設定 ============
   function updateDisplaySettings() {
-    // ローマ字の表示/非表示
     if (showRomaji) {
       romajiDisplayEl.classList.remove('hidden');
       toggleRomajiBtn.textContent = 'ローマ字: 表示';
@@ -2050,7 +2064,6 @@
       toggleRomajiBtn.style.borderColor = 'var(--vermillion)';
       toggleRomajiBtn.style.color = 'var(--vermillion)';
     }
-    // ひらがな（小）の表示/非表示
     if (showKanaSmall) {
       kanaSmallEl.classList.remove('hidden');
       toggleKanaSmallBtn.textContent = 'ひらがな: 表示';
@@ -2062,9 +2075,43 @@
       toggleKanaSmallBtn.style.borderColor = 'var(--vermillion)';
       toggleKanaSmallBtn.style.color = 'var(--vermillion)';
     }
+    // 音声無音
+    if (soundMuted) {
+      toggleSoundMuteBtn.textContent = '🔇 音声: 無効';
+      toggleSoundMuteBtn.style.borderColor = 'var(--vermillion)';
+      toggleSoundMuteBtn.style.color = 'var(--vermillion)';
+      document.getElementById('status-sound').textContent = '🔇 全ての音声が無効になっています';
+      document.getElementById('status-sound').className = 'sound-status error';
+    } else {
+      toggleSoundMuteBtn.textContent = '🔊 音声: 有効';
+      toggleSoundMuteBtn.style.borderColor = 'var(--jade)';
+      toggleSoundMuteBtn.style.color = 'var(--jade)';
+      document.getElementById('status-sound').textContent = '🔊 音声が有効です';
+      document.getElementById('status-sound').className = 'sound-status success';
+    }
     document.getElementById('status-display').textContent = 
       'ローマ字: ' + (showRomaji ? '表示' : '非表示') + ' / ひらがな: ' + (showKanaSmall ? '表示' : '非表示');
   }
+
+  // ============ 破片形状ボタン ============
+  document.querySelectorAll('.shape-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const shape = btn.dataset.shape;
+      particleShape = shape;
+      saveData();
+      document.querySelectorAll('.shape-btn').forEach(b => {
+        b.style.borderColor = 'var(--panel-edge)';
+        b.style.background = 'var(--panel)';
+        b.style.color = 'var(--gold-soft)';
+      });
+      btn.style.borderColor = 'var(--gold)';
+      btn.style.background = 'rgba(160,115,70,0.2)';
+      btn.style.color = 'var(--gold-soft)';
+      document.getElementById('status-particle-shape').textContent = '✅ 形状: ' + 
+        ({circle:'丸', square:'四角', star:'星', triangle:'三角', sparkle:'キラ'}[shape] || shape);
+      document.getElementById('status-particle-shape').className = 'sound-status success';
+    });
+  });
 
   // ============ 背景描画システム ============
   function initForest() {
@@ -2267,7 +2314,7 @@
     requestAnimationFrame(drawForest);
   }
 
-  // ============ ★ どんぐり形状描画（拡張） ============
+  // ============ ★ どんぐり形状描画 ============
   function getAcornStyle(skin) {
     const styles = {
       'default': { cap: '#654321', nut: '#a07346', glow: null, particleColors: ['#654321','#a07346','#8B6B3D'] },
@@ -2599,7 +2646,7 @@
     ctx.restore();
   }
 
-  // ============ パーティクル・エフェクト（particleCount対応 + 透明度持続時間延長） ============
+  // ============ ★ パーティクル・エフェクト（粒子サイズ・形状対応） ============
   function createSpecialParticles(x, y, skin) {
     const style = getAcornStyle(skin);
     const colors = style.particleColors;
@@ -2613,46 +2660,62 @@
     const count = Math.max(0, Math.floor(baseCount * multiplier) + Math.floor(Math.random() * 2));
     if (count === 0) return [];
     
+    const shape = particleShape;
+    const sizeScale = particleSize;
+    
     const particles = [];
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2, speed = 2 + Math.random() * 4;
       const color = colors[Math.floor(Math.random() * colors.length)];
-      const type = skin === 'beast' ? 'white' : (Math.random() > 0.6 ? 'star' : (Math.random() > 0.5 ? 'circle' : 'sparkle'));
-      particles.push({ x: x + (Math.random() - 0.5) * 10, y: y + (Math.random() - 0.5) * 10,
-        vx: Math.cos(angle) * speed * (0.5 + Math.random() * 0.5), vy: Math.sin(angle) * speed * (0.5 + Math.random() * 0.5) - 2,
+      const baseSize = 3 + Math.random() * 6;
+      particles.push({ 
+        x: x + (Math.random() - 0.5) * 10, 
+        y: y + (Math.random() - 0.5) * 10,
+        vx: Math.cos(angle) * speed * (0.5 + Math.random() * 0.5), 
+        vy: Math.sin(angle) * speed * (0.5 + Math.random() * 0.5) - 2,
         life: 1.0, 
         decay: 0.003 + Math.random() * 0.006, 
-        size: 3 + Math.random() * 6,
-        color: skin === 'beast' ? '#ffffff' : color, type: type,
-        rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1, hue: Math.random() * 360 });
+        size: baseSize * sizeScale,
+        color: skin === 'beast' ? '#ffffff' : color, 
+        type: (skin === 'beast' || Math.random() > 0.8) ? 'glow' : 'normal',
+        shape: shape,
+        rot: Math.random() * Math.PI * 2, 
+        rotSpeed: (Math.random() - 0.5) * 0.1, 
+        hue: Math.random() * 360 
+      });
     }
+    
+    // 追加の光る粒子（スキン別）
     if (skin === 'phantom') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.2)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
+        const baseSize = 2 + Math.random() * 4;
         particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
-          life: 1.0, decay: 0.003 + Math.random() * 0.005, size: 2 + Math.random() * 4,
+          life: 1.0, decay: 0.003 + Math.random() * 0.005, size: baseSize * sizeScale,
           color: `hsl(280, 100%, 70%)`, type: 'glow',
-          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
+          shape: 'circle', rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
     } else if (skin === 'beast') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.6)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 0.5 + Math.random() * 2;
+        const baseSize = 1 + Math.random() * 3;
         particles.push({ x: x + (Math.random() - 0.5) * 8, y: y + (Math.random() - 0.5) * 8,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 2,
-          life: 1.0, decay: 0.004 + Math.random() * 0.008, size: 1 + Math.random() * 3,
+          life: 1.0, decay: 0.004 + Math.random() * 0.008, size: baseSize * sizeScale,
           color: `rgba(255,255,255,${0.5 + Math.random() * 0.5})`, type: 'glow',
-          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: 0 });
+          shape: 'circle', rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: 0 });
       }
       playBeastSound();
     } else if (skin === 'gold' || skin === 'cosmic') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.4)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
+        const baseSize = 2 + Math.random() * 4;
         particles.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6,
           vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 3,
-          life: 1.0, decay: 0.003 + Math.random() * 0.006, size: 2 + Math.random() * 4,
+          life: 1.0, decay: 0.003 + Math.random() * 0.006, size: baseSize * sizeScale,
           color: `hsl(${Math.random() * 360}, 100%, 70%)`, type: 'glow',
-          rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
+          shape: 'circle', rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
     }
     return particles;
@@ -2697,32 +2760,60 @@
       p.x += p.vx; p.y += p.vy; p.vy += 0.06; p.life -= p.decay; p.rot += p.rotSpeed;
       if(p.life <= 0 || p.y > acornCanvas.height + 50) { specialParticles.splice(i, 1); continue; }
       ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = Math.max(0, p.life);
-      if (p.type === 'star') {
-        ctx.fillStyle = p.color; const s = p.size * 0.5;
-        ctx.beginPath();
-        for (let j = 0; j < 5; j++) {
-          const angle = (j / 5) * Math.PI * 2 - Math.PI / 2;
-          const r = j % 2 === 0 ? s : s * 0.4;
-          if (j === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
-          else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-        }
-        ctx.closePath(); ctx.fill();
-      } else if (p.type === 'glow') {
-        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 0.8);
+      
+      const size = p.size || 4;
+      const shape = p.shape || 'circle';
+      
+      if (p.type === 'glow') {
+        const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, size);
         grad.addColorStop(0, p.color); grad.addColorStop(0.5, p.color); grad.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = grad; 
+        ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI * 2); ctx.fill();
         ctx.shadowColor = p.color; ctx.shadowBlur = 20;
-        ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.6)'; 
+        ctx.beginPath(); ctx.arc(0, 0, size * 0.2, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
-      } else if (p.type === 'sparkle') {
-        ctx.strokeStyle = p.color; ctx.lineWidth = 1.5; const s = p.size * 0.6;
-        ctx.beginPath(); ctx.moveTo(-s, 0); ctx.lineTo(s, 0); ctx.moveTo(0, -s); ctx.lineTo(0, s); ctx.stroke();
-        ctx.beginPath(); const d = s * 0.5; ctx.moveTo(-d, -d); ctx.lineTo(d, d); ctx.moveTo(d, -d); ctx.lineTo(-d, d); ctx.stroke();
-      } else if (p.type === 'white') {
-        ctx.fillStyle = '#ffffff'; ctx.shadowColor = 'rgba(255,255,255,0.5)'; ctx.shadowBlur = 15;
-        ctx.beginPath(); ctx.arc(0, 0, p.size * 0.7, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
       } else {
-        ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = p.color || '#a07346';
+        const s = size * 0.5;
+        
+        switch(shape) {
+          case 'square':
+            ctx.fillRect(-s, -s, s * 2, s * 2);
+            break;
+          case 'star':
+            ctx.beginPath();
+            for (let j = 0; j < 5; j++) {
+              const angle = (j / 5) * Math.PI * 2 - Math.PI / 2;
+              const r = j % 2 === 0 ? s : s * 0.4;
+              if (j === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+              else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+            }
+            ctx.closePath(); ctx.fill();
+            break;
+          case 'triangle':
+            ctx.beginPath();
+            for (let j = 0; j < 3; j++) {
+              const angle = (j / 3) * Math.PI * 2 - Math.PI / 2;
+              if (j === 0) ctx.moveTo(Math.cos(angle) * s, Math.sin(angle) * s);
+              else ctx.lineTo(Math.cos(angle) * s, Math.sin(angle) * s);
+            }
+            ctx.closePath(); ctx.fill();
+            break;
+          case 'sparkle':
+            ctx.strokeStyle = p.color; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(-s, 0); ctx.lineTo(s, 0); 
+            ctx.moveTo(0, -s); ctx.lineTo(0, s); ctx.stroke();
+            ctx.beginPath(); const d = s * 0.5; 
+            ctx.moveTo(-d, -d); ctx.lineTo(d, d); 
+            ctx.moveTo(d, -d); ctx.lineTo(-d, d); ctx.stroke();
+            ctx.fillStyle = p.color;
+            ctx.beginPath(); ctx.arc(0, 0, s * 0.2, 0, Math.PI * 2); ctx.fill();
+            break;
+          default: // circle
+            ctx.beginPath(); ctx.arc(0, 0, s, 0, Math.PI * 2); ctx.fill();
+            break;
+        }
       }
       ctx.restore();
     }
@@ -2862,14 +2953,8 @@
   function renderWord() {
     const w=queue[qIndex];
     if (!w) { queue = buildQueue(TARGET_LEN, isSentenceMode); qIndex = 0; renderWord(); return; }
-    
-    // 上部：ひらがな（小）
     kanaSmallEl.textContent = w.kana;
-    
-    // 中央：漢字（またはひらがな表示切替）
     kanjiDisplayEl.textContent = useKanji ? w.display : w.kana;
-    
-    // 下部：ローマ字
     if(!w.activePaths) { w.activePaths=generateAllCombinations(w.unitChoices); w.currentIndex=0; w.typedKeys=""; }
     let displayStr = w.forcedRomaji;
     if(!displayStr) {
@@ -2883,7 +2968,6 @@
       else if(i===w.typedLength) cls='ch-next';
       return '<span class="'+cls+'">'+ch+'</span>';
     }).join('');
-    
     updateFontColor();
   }
 
@@ -2913,7 +2997,6 @@
       showPopup('やりますね！？');
     }
   }
-
   function tryActivateSentenceMode() {
     if (pendingSentenceMode && !isSentenceMode) {
       isSentenceMode = true; pendingSentenceMode = false;
@@ -3162,9 +3245,26 @@
     });
     particleSlider.value = particleCount;
     particleCountDisplay.textContent = particleCount;
+    particleSizeSlider.value = particleSize;
+    particleSizeDisplay.textContent = particleSize.toFixed(1);
     document.getElementById('status-particle').textContent = '破片の数を調整します（0で非表示）';
     document.getElementById('status-particle').className = 'sound-status';
-    // 表示設定の状態を反映
+    document.getElementById('status-particle-size').textContent = '破片の大きさ（倍率）: ' + particleSize.toFixed(1);
+    document.getElementById('status-particle-size').className = 'sound-status success';
+    // 形状ボタンのハイライト
+    document.querySelectorAll('.shape-btn').forEach(b => {
+      b.style.borderColor = 'var(--panel-edge)';
+      b.style.background = 'var(--panel)';
+      b.style.color = 'var(--gold-soft)';
+      if (b.dataset.shape === particleShape) {
+        b.style.borderColor = 'var(--gold)';
+        b.style.background = 'rgba(160,115,70,0.2)';
+        b.style.color = 'var(--gold-soft)';
+      }
+    });
+    document.getElementById('status-particle-shape').textContent = '✅ 形状: ' + 
+      ({circle:'丸', square:'四角', star:'星', triangle:'三角', sparkle:'キラ'}[particleShape] || particleShape);
+    document.getElementById('status-particle-shape').className = 'sound-status success';
     updateDisplaySettings();
   }
 
@@ -3232,7 +3332,7 @@
   document.getElementById('code-exec-btn').addEventListener('click', (e) => { e.stopPropagation(); executeCodeAuth(); });
   codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); executeCodeAuth(); } });
 
-  // ★ particleCount スライダーイベント
+  // ★ particleCount スライダー
   particleSlider.addEventListener('input', () => {
     particleCount = parseInt(particleSlider.value);
     particleCountDisplay.textContent = particleCount;
@@ -3241,7 +3341,16 @@
     document.getElementById('status-particle').className = 'sound-status success';
   });
 
-  // ★ 表示設定トグルボタン
+  // ★ particleSize スライダー
+  particleSizeSlider.addEventListener('input', () => {
+    particleSize = parseFloat(particleSizeSlider.value);
+    particleSizeDisplay.textContent = particleSize.toFixed(1);
+    saveData();
+    document.getElementById('status-particle-size').textContent = '破片の大きさ（倍率）: ' + particleSize.toFixed(1);
+    document.getElementById('status-particle-size').className = 'sound-status success';
+  });
+
+  // ★ 表示設定トグル
   toggleRomajiBtn.addEventListener('click', () => {
     showRomaji = !showRomaji;
     saveData();
@@ -3249,6 +3358,15 @@
   });
   toggleKanaSmallBtn.addEventListener('click', () => {
     showKanaSmall = !showKanaSmall;
+    saveData();
+    updateDisplaySettings();
+  });
+
+  // ★ 音声無音トグル
+  toggleSoundMuteBtn.addEventListener('click', () => {
+    soundMuted = !soundMuted;
+    if (soundMuted) { stopBgm(); }
+    else if (state === 'waiting' || state === 'playing') { playBgmLoop(); }
     saveData();
     updateDisplaySettings();
   });
@@ -3270,6 +3388,9 @@
       infoBadgeVersion = d.infoBadgeVersion || '';
       infoRead = d.infoRead || false;
       particleCount = d.particleCount || 5;
+      particleSize = d.particleSize || 1.0;
+      particleShape = d.particleShape || 'circle';
+      soundMuted = d.soundMuted || false;
       showRomaji = d.showRomaji !== undefined ? d.showRomaji : true;
       showKanaSmall = d.showKanaSmall !== undefined ? d.showKanaSmall : true;
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
@@ -3281,6 +3402,17 @@
       for (const type of ['typed','miss','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
       stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor(); updateInfoBadge();
       updateDisplaySettings();
+      // 形状ボタンのリセット
+      document.querySelectorAll('.shape-btn').forEach(b => {
+        b.style.borderColor = 'var(--panel-edge)';
+        b.style.background = 'var(--panel)';
+        b.style.color = 'var(--gold-soft)';
+        if (b.dataset.shape === particleShape) {
+          b.style.borderColor = 'var(--gold)';
+          b.style.background = 'rgba(160,115,70,0.2)';
+          b.style.color = 'var(--gold-soft)';
+        }
+      });
     }
   });
 
@@ -3305,7 +3437,7 @@
     }
   });
 
-  // ============ 音声復元（ページ更新時も前回の設定を読み込む） ============
+  // ============ 音声復元 ============
   async function restoreSavedSounds() {
     const types = ['typed','miss','start','result','bgm'];
     for (const type of types) {
@@ -3355,6 +3487,9 @@
     infoBadgeVersion = data.infoBadgeVersion || '';
     infoRead = data.infoRead || false;
     particleCount = data.particleCount || 5;
+    particleSize = data.particleSize || 1.0;
+    particleShape = data.particleShape || 'circle';
+    soundMuted = data.soundMuted || false;
     showRomaji = data.showRomaji !== undefined ? data.showRomaji : true;
     showKanaSmall = data.showKanaSmall !== undefined ? data.showKanaSmall : true;
 
@@ -3388,9 +3523,20 @@
     updateFontColor();
     particleSlider.value = particleCount;
     particleCountDisplay.textContent = particleCount;
+    particleSizeSlider.value = particleSize;
+    particleSizeDisplay.textContent = particleSize.toFixed(1);
+    // 形状ボタンのハイライト
+    document.querySelectorAll('.shape-btn').forEach(b => {
+      b.style.borderColor = 'var(--panel-edge)';
+      b.style.background = 'var(--panel)';
+      b.style.color = 'var(--gold-soft)';
+      if (b.dataset.shape === particleShape) {
+        b.style.borderColor = 'var(--gold)';
+        b.style.background = 'rgba(160,115,70,0.2)';
+        b.style.color = 'var(--gold-soft)';
+      }
+    });
     updateDisplaySettings();
-    
-    // ★ お知らせフレーム（バージョンチェック）
     updateAnnounceVisibility();
   }
 
