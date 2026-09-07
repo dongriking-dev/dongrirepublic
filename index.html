@@ -1220,15 +1220,15 @@
         <div class="sound-status" id="status-display">ローマ字とひらがなの表示/非表示を切り替え</div>
       </div>
 
-      <!-- ====== ★ 音声無音トグル ====== -->
+      <!-- ====== ★ BGM無音トグル（BGMのみ） ====== -->
       <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
-        <label>🔇 音声設定</label>
+        <label>🎵 BGM設定</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
-          <button id="toggle-sound-mute-btn" class="setting-toggle" style="flex:1;min-width:80px;padding:6px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;transition:all 0.2s;">
-            🔊 音声: 有効
+          <button id="toggle-bgm-mute-btn" class="setting-toggle" style="flex:1;min-width:80px;padding:6px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;transition:all 0.2s;">
+            🎵 BGM: 有効
           </button>
         </div>
-        <div class="sound-status" id="status-sound">全ての音声を無効にします</div>
+        <div class="sound-status" id="status-bgm-mute">BGMのみを無効にします（効果音は引き続き再生されます）</div>
       </div>
 
       <div class="setting-group">
@@ -1373,22 +1373,23 @@
   "use strict";
 
   // ============ ★ バージョン情報 ============
-  const ANNOUNCE_VERSION = "v1.2.3";
-  const INFO_BADGE_VERSION = "v1.2.3";
+  const ANNOUNCE_VERSION = "v1.2.4";
+  const INFO_BADGE_VERSION = "v1.2.4";
 
   // ============ 情報コンテンツデータ ============
   const INFO_DATA = {
     events: [
       { date: '2026年9月5日', title: '🎉 サイト公開！', desc: 'どんぐりタイピングがついに公開されました！' },
-      { date: '2026年9月7日', title: '⚙️ 設定追加！', desc: '破片の大きさ・形状、音声無音機能を追加しました！' },
+      { date: '2026年9月7日', title: '⚙️ 設定追加！', desc: '破片の大きさ・形状、BGM無音機能を追加しました！' },
     ],
     notices: [
-      { date: '2026年9月7日', text: '⚙️ 設定に「破片の大きさ」「破片の形状」「音声無音」を追加しました！' },
+      { date: '2026年9月7日', text: '⚙️ 設定に「破片の大きさ」「破片の形状」「BGM無音」を追加しました！効果音は従来通り再生されます。' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
     version: INFO_BADGE_VERSION,
     updateDate: '2026年9月7日',
     detailLinks: [
+      { title: 'どんぐりや背景の取引実装した方がいいと思いますか？', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfMD6Ez3q3nsBIBMWbLzk9SRBucBP9VccpyO8UnYAjl-EaIgg/viewform?usp=publish-editor', desc: '投票終了は9月12日（土曜日）まで' },
       { title: '背景の実績について', url: 'https://docs.google.com/forms/d/e/1FAIpQLSdDtK7NTmDGpWK-c2oAQXaWbZfJOiYoLnTVZIyj5tB3r2OqdA/viewform?usp=publish-editor', desc: '提案終了は無期限' },
     ]
   };
@@ -1427,7 +1428,7 @@
     { kana: "どんぐりきょうわこく", kanji: "どんぐり共和国" }, { kana: "ねじ", kanji: "ネジ" }, { kana: "ほうりつ", kanji: "法律" },
     { kana: "でんき", kanji: "電気" }, { kana: "がす", kanji: "ガス" }, { kana: "すいどう", kanji: "水道" },
     { kana: "じんせい", kanji: "人生" }, { kana: "きょうかしょ", kanji: "教科書" }, { kana: "じゃーじ", kanji: "ジャージ" },
-    { kana: "でんち", kanji: "電池" }, { kana: "りもこん", kanji: "リモコン" }, { kana: "きのえだ", kanji: "木の枝" },{ kana: "えだまめ", kanji: "枝豆" },
+    { kana: "でんち", kanji: "電池" }, { kana: "りもこん", kanji: "リモコン" }, { kana: "てぃっしゅ", kanji: "ティッシュ" },
     { kana: "まくら", kanji: "枕" }, { kana: "せかいちず", kanji: "世界地図" }, { kana: "おしぴん", kanji: "押しピン" },
     { kana: "ぴんせっと", kanji: "ピンセット" }, { kana: "びにーるぶくろ", kanji: "ビニール袋" }, { kana: "えんぴつけずり", kanji: "鉛筆削り" },
     { kana: "かーどげーむ", kanji: "カードゲーム" }, { kana: "じてん", kanji: "辞典" }, { kana: "じてんしゃ", kanji: "自転車" },
@@ -1450,11 +1451,11 @@
     { kana: "ぶかつ", kanji: "部活" }, { kana: "まつり", kanji: "祭り" }, { kana: "やたい", kanji: "屋台" },
     { kana: "からおけ", kanji: "カラオケ" }, { kana: "まいく", kanji: "マイク" }, { kana: "からあげ", kanji: "唐揚げ" },
     { kana: "たこやき", kanji: "たこ焼き" }, { kana: "たこあげ", kanji: "凧揚げ" }, { kana: "ぱっちゅん", kanji: "パッチュン" },
-    { kana: "しゃんぷー", kanji: "シャンプー" }, { kana: "ぺがさす", kanji: "ペガサス" }, { kana: "しょーとすりーぱー", kanji: "ショートスリーパー" },
+    { kana: "しゃんぷー", kanji: "シャンプー" }, { kana: "ぺがさす", kanji: "ペガサス" }, { kana: "しょーとすいーぱー", kanji: "ショートスイーパー" },
     { kana: "どうぶつびょういん", kanji: "動物病院" }, { kana: "びょういん", kanji: "病院" }, { kana: "かーてん", kanji: "カーテン" },
     { kana: "せんぷうき", kanji: "扇風機" }, { kana: "よーろっぱ", kanji: "ヨーロッパ" },{ kana: "いかやき", kanji: "イカ焼き" },{ kana: "さる", kanji: "猿" },
     { kana: "ざるそば", kanji: "ざるそば" },{ kana: "ねこ", kanji: "猫" },{ kana: "たけ", kanji: "竹" },{ kana: "いえ", kanji: "家" },{ kana: "ぞう", kanji: "像" },
-    { kana: "ぐみ", kanji: "グミ" },{ kana: "あいす", kanji: "アイス" },{ kana: "やんきー", kanji: "ヤンキー" },{ kana: "たいたにっく", kanji: "タイタニック" },
+    { kana: "ぐみ", kanji: "グミ" },{ kana: "アイス", kanji: "アイス" },{ kana: "やんきー", kanji: "ヤンキー" },{ kana: "たいたにっく", kanji: "タイタニック" },
     { kana: "ぷらねたりうむ", kanji: "プラネタリウム" },{ kana: "うそ", kanji: "嘘" },{ kana: "あい", kanji: "愛" },{ kana: "ひみつ", kanji: "秘密" },{ kana: "きっく", kanji: "キック" },
     { kana: "すな", kanji: "砂" },{ kana: "あなご", kanji: "アナゴ" },{ kana: "ええんやで", kanji: "ええんやで" },{ kana: "けんさく", kanji: "検索" },{ kana: "ちちのひ", kanji: "父の日" },{ kana: "けいけんち", kanji: "経験値" },
     { kana: "まねきねこ", kanji: "招き猫" },{ kana: "ちょこれーと", kanji: "チョコレート" },{ kana: "どんでんがえし", kanji: "どんでん返し" },
@@ -1591,7 +1592,7 @@
     particleCount: 5,
     particleSize: 1.0,
     particleShape: 'circle',
-    soundMuted: false,
+    bgmMuted: false,
     showRomaji: true,
     showKanaSmall: true,
   };
@@ -1640,7 +1641,7 @@
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
       beastAcornUnlocked, beastBgUnlocked, announceVersion, infoBadgeVersion, infoRead, particleCount,
-      particleSize, particleShape, soundMuted, showRomaji, showKanaSmall };
+      particleSize, particleShape, bgmMuted, showRomaji, showKanaSmall };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1661,7 +1662,7 @@
       particleCount = 5,
       particleSize = 1.0,
       particleShape = 'circle',
-      soundMuted = false,
+      bgmMuted = false,
       showRomaji = true,
       showKanaSmall = true;
 
@@ -1691,7 +1692,6 @@
     } catch(e) { console.warn('野獣先輩効果音読み込み失敗:', e); }
   }
   function playBeastSound() {
-    if (soundMuted) return;
     if (!beastSoundBuffer || !audioCtx) return;
     try { const s = audioCtx.createBufferSource(); s.buffer = beastSoundBuffer; s.connect(audioCtx.destination); s.start(0); } catch(e) {}
   }
@@ -1702,7 +1702,6 @@
     catch(e) { console.warn('音声読み込み失敗:', url, e); return null; }
   }
   function playSound(buffer, fallbackUrl, type) {
-    if (soundMuted) return null;
     if (buffer && audioCtx) {
       try { const s = audioCtx.createBufferSource(); s.buffer = buffer; s.connect(audioCtx.destination); s.start(0); return s; } catch(e) {}
     }
@@ -1720,7 +1719,7 @@
     return null;
   }
   function playBgmLoop() {
-    if (soundMuted) { stopBgm(); return; }
+    if (bgmMuted) { stopBgm(); return; }
     stopBgm();
     const buffer = soundBuffers.bgm;
     if (buffer && audioCtx) {
@@ -1745,10 +1744,10 @@
     isBgmPlaying = false;
   }
   function getSoundBuffer(type) { return soundBuffers[type] || generateDefaultSound(type); }
-  function playTypedSound() { if (soundMuted) return; const buf = getSoundBuffer('typed'); playSound(buf, soundUrls.typed, 'typed'); }
-  function playMissSound() { if (soundMuted) return; const buf = getSoundBuffer('miss'); playSound(buf, soundUrls.miss, 'miss'); }
-  function playStartSound() { if (soundMuted) return; const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
-  function playResultSound() { if (soundMuted) return; const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
+  function playTypedSound() { const buf = getSoundBuffer('typed'); playSound(buf, soundUrls.typed, 'typed'); }
+  function playMissSound() { const buf = getSoundBuffer('miss'); playSound(buf, soundUrls.miss, 'miss'); }
+  function playStartSound() { const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
+  function playResultSound() { const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
 
   // --- 音声設定 ---
   async function applySoundSetting(type, url) {
@@ -1858,7 +1857,7 @@
   const particleSizeDisplay = document.getElementById('particle-size-display');
   const toggleRomajiBtn = document.getElementById('toggle-romaji-btn');
   const toggleKanaSmallBtn = document.getElementById('toggle-kana-small-btn');
-  const toggleSoundMuteBtn = document.getElementById('toggle-sound-mute-btn');
+  const toggleBgmMuteBtn = document.getElementById('toggle-bgm-mute-btn');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -2074,19 +2073,19 @@
       toggleKanaSmallBtn.style.borderColor = 'var(--vermillion)';
       toggleKanaSmallBtn.style.color = 'var(--vermillion)';
     }
-    // 音声無音
-    if (soundMuted) {
-      toggleSoundMuteBtn.textContent = '🔇 音声: 無効';
-      toggleSoundMuteBtn.style.borderColor = 'var(--vermillion)';
-      toggleSoundMuteBtn.style.color = 'var(--vermillion)';
-      document.getElementById('status-sound').textContent = '🔇 全ての音声が無効になっています';
-      document.getElementById('status-sound').className = 'sound-status error';
+    // BGM無音
+    if (bgmMuted) {
+      toggleBgmMuteBtn.textContent = '🎵 BGM: 無効';
+      toggleBgmMuteBtn.style.borderColor = 'var(--vermillion)';
+      toggleBgmMuteBtn.style.color = 'var(--vermillion)';
+      document.getElementById('status-bgm-mute').textContent = '🔇 BGMが無効になっています（効果音は引き続き再生されます）';
+      document.getElementById('status-bgm-mute').className = 'sound-status error';
     } else {
-      toggleSoundMuteBtn.textContent = '🔊 音声: 有効';
-      toggleSoundMuteBtn.style.borderColor = 'var(--jade)';
-      toggleSoundMuteBtn.style.color = 'var(--jade)';
-      document.getElementById('status-sound').textContent = '🔊 音声が有効です';
-      document.getElementById('status-sound').className = 'sound-status success';
+      toggleBgmMuteBtn.textContent = '🎵 BGM: 有効';
+      toggleBgmMuteBtn.style.borderColor = 'var(--jade)';
+      toggleBgmMuteBtn.style.color = 'var(--jade)';
+      document.getElementById('status-bgm-mute').textContent = '🎵 BGMが有効です（効果音も再生されます）';
+      document.getElementById('status-bgm-mute').className = 'sound-status success';
     }
     document.getElementById('status-display').textContent = 
       'ローマ字: ' + (showRomaji ? '表示' : '非表示') + ' / ひらがな: ' + (showKanaSmall ? '表示' : '非表示');
@@ -3052,7 +3051,7 @@
 
   function initGame() {
     state='waiting'; isSentenceMode = false; pendingSentenceMode = false; resetUsedWords();
-    if (soundBuffers.bgm || soundUrls.bgm) { playBgmLoop(); }
+    if (!bgmMuted && (soundBuffers.bgm || soundUrls.bgm)) { playBgmLoop(); }
     acorns=[]; specialParticles=[]; fragments=[];
     for(let i=0;i<MIN_ACORN_COUNT+5;i++) spawnAcornTop();
     startAcornAutoSpawn();
@@ -3361,10 +3360,10 @@
     updateDisplaySettings();
   });
 
-  // ★ 音声無音トグル
-  toggleSoundMuteBtn.addEventListener('click', () => {
-    soundMuted = !soundMuted;
-    if (soundMuted) { stopBgm(); }
+  // ★ BGM無音トグル（BGMのみ）
+  toggleBgmMuteBtn.addEventListener('click', () => {
+    bgmMuted = !bgmMuted;
+    if (bgmMuted) { stopBgm(); }
     else if (state === 'waiting' || state === 'playing') { playBgmLoop(); }
     saveData();
     updateDisplaySettings();
@@ -3389,7 +3388,7 @@
       particleCount = d.particleCount || 5;
       particleSize = d.particleSize || 1.0;
       particleShape = d.particleShape || 'circle';
-      soundMuted = d.soundMuted || false;
+      bgmMuted = d.bgmMuted || false;
       showRomaji = d.showRomaji !== undefined ? d.showRomaji : true;
       showKanaSmall = d.showKanaSmall !== undefined ? d.showKanaSmall : true;
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
@@ -3488,7 +3487,7 @@
     particleCount = data.particleCount || 5;
     particleSize = data.particleSize || 1.0;
     particleShape = data.particleShape || 'circle';
-    soundMuted = data.soundMuted || false;
+    bgmMuted = data.bgmMuted || false;
     showRomaji = data.showRomaji !== undefined ? data.showRomaji : true;
     showKanaSmall = data.showKanaSmall !== undefined ? data.showKanaSmall : true;
 
