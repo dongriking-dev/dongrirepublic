@@ -1071,6 +1071,16 @@
       font-size: clamp(14px, 3vw, 20px) !important;
     }
   }
+  .donguri {
+      position: fixed;
+      right: 2px;
+      bottom: 2px;
+      font-size: 1px; /* 最小レベルのフォントサイズ */
+      line-height: 1;
+      opacity: 0.1;   /* かなり薄く表示（完全には消さずに見えにくく） */
+      user-select: none; /* 誤って選択されにくくする指定 */
+      pointer-events: none; /* クリックなどの判定を無効化 */
+    }
 </style>
 <base target="_blank">
 </head>
@@ -1367,6 +1377,8 @@
   </div>
 
 </div>
+
+<div class="donguri">加藤望歩とはどんぐり国王</div>
 
 <script>
 (function(){
