@@ -1589,26 +1589,27 @@
     'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700', fontFamily: "'Yuji Boku', serif" },
   };
 
-  // --- デフォルトデータ ---
-  const DEFAULT_DATA = {
-    highscore: 0, totalTyped: 0, coins: 0, useKanji: false,
-    equippedBg: 'forest', equippedAcorn: 'default',
-    ownedBg: ['forest'], ownedAcorn: ['default'],
-    unlockedAchievements: [], max10sTyped: 0,
-    soundTyped: '', soundStart: '', soundResult: '', soundBgm: '', soundMiss: '',
-    codeVerified: false, superMode: false, normalMode: false,
-    phantomAcornUnlocked: false, doubleAcornUnlocked: false,
-    beastAcornUnlocked: false, beastBgUnlocked: false,
-    announceVersion: '',
-    infoBadgeVersion: '',
-    infoRead: false,
-    particleCount: 5,
-    particleSize: 1.0,
-    particleShape: 'circle',
-    bgmMuted: false,
-    showRomaji: true,
-    showKanaSmall: true,
-  };
+// ============ デフォルトデータ ============
+const DEFAULT_DATA = {
+  highscore: 0, totalTyped: 0, coins: 0, useKanji: true,  // ★ trueに変更
+  equippedBg: 'forest', equippedAcorn: 'default',
+  ownedBg: ['forest'], ownedAcorn: ['default'],
+  unlockedAchievements: [], max10sTyped: 0,
+  soundTyped: '', soundStart: '', soundResult: '', soundBgm: '', soundMiss: '',
+  codeVerified: false, superMode: false, normalMode: false,
+  phantomAcornUnlocked: false, doubleAcornUnlocked: false,
+  beastAcornUnlocked: false, beastBgUnlocked: false,
+  announceVersion: '',
+  infoBadgeVersion: '',
+  infoRead: false,
+  particleCount: 5,
+  particleSize: 1.0,
+  particleShape: 'circle',
+  bgmMuted: false,
+  showRomaji: true,
+  showKanaSmall: true,
+};
+
 
   // --- デフォルト音声 ---
   function generateDefaultSound(type) {
