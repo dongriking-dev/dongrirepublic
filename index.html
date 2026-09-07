@@ -1075,11 +1075,11 @@
       position: fixed;
       right: 2px;
       bottom: 2px;
-      font-size: 1px; /* 最小レベルのフォントサイズ */
+      font-size: 1px;
       line-height: 1;
-      opacity: 0.1;   /* かなり薄く表示（完全には消さずに見えにくく） */
-      user-select: none; /* 誤って選択されにくくする指定 */
-      pointer-events: none; /* クリックなどの判定を無効化 */
+      opacity: 0.1;
+      user-select: none;
+      pointer-events: none;
     }
 </style>
 <base target="_blank">
@@ -1385,21 +1385,23 @@
   "use strict";
 
   // ============ ★ バージョン情報 ============
-  const ANNOUNCE_VERSION = "v1.2.4";
-  const INFO_BADGE_VERSION = "v1.2.4";
+  const ANNOUNCE_VERSION = "v1.2.5";
+  const INFO_BADGE_VERSION = "v1.2.5";
 
   // ============ 情報コンテンツデータ ============
   const INFO_DATA = {
     events: [
       { date: '2026年9月5日', title: '🎉 サイト公開！', desc: 'どんぐりタイピングがついに公開されました！' },
       { date: '2026年9月7日', title: '⚙️ 設定追加！', desc: '破片の大きさ・形状、BGM無音機能を追加しました！' },
+      { date: '2026年9月8日', title: '🎨 フォント機能追加！', desc: 'どんぐりスキンごとにフォントが大幅に変わるようになりました！' },
     ],
     notices: [
+      { date: '2026年9月8日', text: '🎨 どんぐりスキンを変えるとフォントの雰囲気がガラッと変わるようになりました！お気に入りのどんぐりを探してみてください！' },
       { date: '2026年9月7日', text: '⚙️ 設定に「破片の大きさ」「破片の形状」「BGM無音」を追加しました！効果音は従来通り再生されます。' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
     version: INFO_BADGE_VERSION,
-    updateDate: '2026年9月7日',
+    updateDate: '2026年9月8日',
     detailLinks: [
       { title: '背景の実績について', url: 'https://docs.google.com/forms/d/e/1FAIpQLSdDtK7NTmDGpWK-c2oAQXaWbZfJOiYoLnTVZIyj5tB3r2OqdA/viewform?usp=publish-editor', desc: '提案終了は無期限' },
     ]
@@ -1566,25 +1568,25 @@
     'beast_room': { name: '野獣先輩の部屋', desc: '24歳学生...？', price: 0, priceType: 'none' },
   };
 
-  // ============ ★ どんぐりスキン ============
+  // ============ ★ どんぐりスキン（フォント追加） ============
   const ACORN_SKINS = {
-    'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none', shape: 'normal', fontColor: '#d2b48c' },
-    'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 500, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#6aaa4a' },
-    'gold': { name: '金のどんぐり', desc: '輝く金色のどんぐり', price: 1000, priceType: 'coin', effect: 'sparkle', shape: 'spiky', fontColor: '#ffd700' },
-    'crystal': { name: '水晶どんぐり', desc: '透き通る結晶', price: 2000, priceType: 'coin', effect: 'shine', shape: 'crystal', fontColor: '#8ac4d0' },
-    'flame': { name: '炎のどんぐり', desc: '燃え盛る炎のエフェクト', price: 5000, priceType: 'coin', effect: 'fire', shape: 'flame', fontColor: '#ff6a2a' },
-    'bubble': { name: '泡どんぐり', desc: '緑色の泡が浮かぶ', price: 7000, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#4aaa6a' },
-    'rainbow': { name: 'レインボーどんぐり', desc: '虹色に輝く', price: 10000, priceType: 'coin', effect: 'rainbow', shape: 'rainbow', fontColor: '#ff6bff' },
-    'ice': { name: '氷のどんぐり', desc: '透明な氷のように輝く', price: 12000, priceType: 'coin', effect: 'ice', shape: 'ice', fontColor: '#8ac4e0' },
-    'dark': { name: '闇のどんぐり', desc: '紫色の闇を纏う', price: 15000, priceType: 'coin', effect: 'dark', shape: 'dark', fontColor: '#9a4aaa' },
-    'light': { name: '光のどんぐり', desc: '白く輝く光の粒', price: 17000, priceType: 'coin', effect: 'light', shape: 'light', fontColor: '#f0f0ff' },
-    'cosmic': { name: '宇宙どんぐり', desc: '銀河を映す神秘的な輝き', price: 20000, priceType: 'coin', effect: 'cosmic', shape: 'cosmic', fontColor: '#aa6acc' },
-    'phantom': { name: '幻のどんぐり', desc: '神秘的な紫色の輝きを放つ幻のどんぐり', price: 0, priceType: 'none', effect: 'phantom', shape: 'phantom', fontColor: '#bb66dd' },
-    'double': { name: 'ダブルどんぐり', desc: 'スコアが2倍になるどんぐり', price: 0, priceType: 'none', effect: 'double', shape: 'normal', fontColor: '#ffd700' },
-    'beast': { name: '野獣先輩どんぐり', desc: 'やりますねぇ', price: 0, priceType: 'none', effect: 'beast', shape: 'beast', fontColor: '#ffffff' },
-    'fluffy': { name: 'ふわふわどんぐり', desc: '綿毛のようにふわふわ', price: 30000, priceType: 'coin', effect: 'fluffy', shape: 'fluffy', fontColor: '#ffb6c1' },
-    'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 35000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00' },
-    'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700' },
+    'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none', shape: 'normal', fontColor: '#d2b48c', fontFamily: "'Zen Maru Gothic', sans-serif" },
+    'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 500, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#6aaa4a', fontFamily: "'Zen Maru Gothic', sans-serif" },
+    'gold': { name: '金のどんぐり', desc: '輝く金色のどんぐり', price: 1000, priceType: 'coin', effect: 'sparkle', shape: 'spiky', fontColor: '#ffd700', fontFamily: "'Georgia', serif" },
+    'crystal': { name: '水晶どんぐり', desc: '透き通る結晶', price: 2000, priceType: 'coin', effect: 'shine', shape: 'crystal', fontColor: '#8ac4d0', fontFamily: "'Arial', sans-serif" },
+    'flame': { name: '炎のどんぐり', desc: '燃え盛る炎のエフェクト', price: 5000, priceType: 'coin', effect: 'fire', shape: 'flame', fontColor: '#ff6a2a', fontFamily: "'Impact', sans-serif" },
+    'bubble': { name: '泡どんぐり', desc: '緑色の泡が浮かぶ', price: 7000, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#4aaa6a', fontFamily: "'Rounded Mplus 1c', sans-serif" },
+    'rainbow': { name: 'レインボーどんぐり', desc: '虹色に輝く', price: 10000, priceType: 'coin', effect: 'rainbow', shape: 'rainbow', fontColor: '#ff6bff', fontFamily: "'Comic Sans MS', cursive, sans-serif" },
+    'ice': { name: '氷のどんぐり', desc: '透明な氷のように輝く', price: 12000, priceType: 'coin', effect: 'ice', shape: 'ice', fontColor: '#8ac4e0', fontFamily: "'Meiryo', sans-serif" },
+    'dark': { name: '闇のどんぐり', desc: '紫色の闇を纏う', price: 15000, priceType: 'coin', effect: 'dark', shape: 'dark', fontColor: '#9a4aaa', fontFamily: "'Yu Gothic', sans-serif" },
+    'light': { name: '光のどんぐり', desc: '白く輝く光の粒', price: 17000, priceType: 'coin', effect: 'light', shape: 'light', fontColor: '#f0f0ff', fontFamily: "'Zen Maru Gothic', sans-serif" },
+    'cosmic': { name: '宇宙どんぐり', desc: '銀河を映す神秘的な輝き', price: 20000, priceType: 'coin', effect: 'cosmic', shape: 'cosmic', fontColor: '#aa6acc', fontFamily: "'Zen Maru Gothic', sans-serif" },
+    'phantom': { name: '幻のどんぐり', desc: '神秘的な紫色の輝きを放つ幻のどんぐり', price: 0, priceType: 'none', effect: 'phantom', shape: 'phantom', fontColor: '#bb66dd', fontFamily: "'M PLUS Rounded 1c', 'Comic Sans MS', cursive, sans-serif" },
+    'double': { name: 'ダブルどんぐり', desc: 'スコアが2倍になるどんぐり', price: 0, priceType: 'none', effect: 'double', shape: 'normal', fontColor: '#ffd700', fontFamily: "'Zen Maru Gothic', sans-serif" },
+    'beast': { name: '野獣先輩どんぐり', desc: 'やりますねぇ', price: 0, priceType: 'none', effect: 'beast', shape: 'beast', fontColor: '#ffffff', fontFamily: "'Press Start 2P', 'Courier New', monospace" },
+    'fluffy': { name: 'ふわふわどんぐり', desc: '綿毛のようにふわふわ', price: 30000, priceType: 'coin', effect: 'fluffy', shape: 'fluffy', fontColor: '#ffb6c1', fontFamily: "'Zen Maru Gothic', sans-serif" },
+    'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 35000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00', fontFamily: "'Zen Maru Gothic', sans-serif" },
+    'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700', fontFamily: "'Zen Maru Gothic', sans-serif" },
   };
 
   // --- デフォルトデータ ---
@@ -2002,7 +2004,7 @@
       saveData(); updateAchievementUI(); updateShopUI(); equippedAcorn = 'phantom'; saveData();
       showPopup('🌀 幻のどんぐりを解き放った！');
       const ach = ACHIEVEMENTS['phantom_acorn']; if (ach) showAchievementToast(ach);
-      updatePhantomFont(); updateFontColor();
+      updatePhantomFont(); updateFontColor(); applyFontFamily();
     } else { showPopup('🌀 幻のどんぐりは既に解放されています'); }
   }
   function unlockDoubleAcorn() {
@@ -2060,6 +2062,20 @@
     }
   }
 
+  // ============ ★ フォントファミリー適用関数 ============
+  function applyFontFamily() {
+    const skin = ACORN_SKINS[equippedAcorn];
+    const fontFamily = skin ? skin.fontFamily : "'Zen Maru Gothic', sans-serif";
+    document.body.style.fontFamily = fontFamily;
+    const targets = ['.title', '.tagline', '.hanko-score', '.score-value', '.result-score-num', '.kana-small', '.romaji-display', '.kanji-display'];
+    targets.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.style.fontFamily = fontFamily;
+    });
+    document.querySelectorAll('.nav-btn, .shop-item-btn, .achievement-item, .info-btn, .setting-toggle, .sound-file-btn, .sound-exec-btn, .code-btn, .shop-close-btn, .settings-close-btn, .achievement-close-btn, .info-close-btn, .start-prompt, kbd, .hanko-label, .hanko-sub')
+      .forEach(el => { if (el) el.style.fontFamily = fontFamily; });
+  }
+
   // ============ 表示設定 ============
   function updateDisplaySettings() {
     if (showRomaji) {
@@ -2084,7 +2100,6 @@
       toggleKanaSmallBtn.style.borderColor = 'var(--vermillion)';
       toggleKanaSmallBtn.style.color = 'var(--vermillion)';
     }
-    // BGM無音
     if (bgmMuted) {
       toggleBgmMuteBtn.textContent = '🎵 BGM: 無効';
       toggleBgmMuteBtn.style.borderColor = 'var(--vermillion)';
@@ -2978,6 +2993,7 @@
       return '<span class="'+cls+'">'+ch+'</span>';
     }).join('');
     updateFontColor();
+    applyFontFamily();
   }
 
   function renderHud() {
@@ -3230,9 +3246,17 @@
       const skin = BG_SKINS[id];
       if(skin.priceType === 'coin' && totalTyped >= skin.price) { ownedBg.push(id); equippedBg = id; saveData(); updateShopUI(); highscoreValueEl.textContent = highscore; }
     } else if(type === 'acorn') {
-      if(ownedAcorn.includes(id)) { equippedAcorn = id; saveData(); updateShopUI(); updatePhantomFont(); updateFontColor(); return; }
+      if(ownedAcorn.includes(id)) { 
+        equippedAcorn = id; 
+        saveData(); 
+        updateShopUI(); 
+        updatePhantomFont(); 
+        updateFontColor(); 
+        applyFontFamily();
+        return; 
+      }
       const skin = ACORN_SKINS[id];
-      if(skin.priceType === 'coin' && totalTyped >= skin.price) { ownedAcorn.push(id); equippedAcorn = id; saveData(); updateShopUI(); updatePhantomFont(); updateFontColor(); }
+      if(skin.priceType === 'coin' && totalTyped >= skin.price) { ownedAcorn.push(id); equippedAcorn = id; saveData(); updateShopUI(); updatePhantomFont(); updateFontColor(); applyFontFamily(); }
     }
   }
 
@@ -3260,7 +3284,6 @@
     document.getElementById('status-particle').className = 'sound-status';
     document.getElementById('status-particle-size').textContent = '破片の大きさ（倍率）: ' + particleSize.toFixed(1);
     document.getElementById('status-particle-size').className = 'sound-status success';
-    // 形状ボタンのハイライト
     document.querySelectorAll('.shape-btn').forEach(b => {
       b.style.borderColor = 'var(--panel-edge)';
       b.style.background = 'var(--panel)';
@@ -3341,7 +3364,6 @@
   document.getElementById('code-exec-btn').addEventListener('click', (e) => { e.stopPropagation(); executeCodeAuth(); });
   codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); executeCodeAuth(); } });
 
-  // ★ particleCount スライダー
   particleSlider.addEventListener('input', () => {
     particleCount = parseInt(particleSlider.value);
     particleCountDisplay.textContent = particleCount;
@@ -3350,7 +3372,6 @@
     document.getElementById('status-particle').className = 'sound-status success';
   });
 
-  // ★ particleSize スライダー
   particleSizeSlider.addEventListener('input', () => {
     particleSize = parseFloat(particleSizeSlider.value);
     particleSizeDisplay.textContent = particleSize.toFixed(1);
@@ -3359,7 +3380,6 @@
     document.getElementById('status-particle-size').className = 'sound-status success';
   });
 
-  // ★ 表示設定トグル
   toggleRomajiBtn.addEventListener('click', () => {
     showRomaji = !showRomaji;
     saveData();
@@ -3371,7 +3391,6 @@
     updateDisplaySettings();
   });
 
-  // ★ BGM無音トグル（BGMのみ）
   toggleBgmMuteBtn.addEventListener('click', () => {
     bgmMuted = !bgmMuted;
     if (bgmMuted) { stopBgm(); }
@@ -3411,7 +3430,6 @@
       for (const type of ['typed','miss','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
       stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor(); updateInfoBadge();
       updateDisplaySettings();
-      // 形状ボタンのリセット
       document.querySelectorAll('.shape-btn').forEach(b => {
         b.style.borderColor = 'var(--panel-edge)';
         b.style.background = 'var(--panel)';
@@ -3422,6 +3440,7 @@
           b.style.color = 'var(--gold-soft)';
         }
       });
+      applyFontFamily();
     }
   });
 
@@ -3530,11 +3549,11 @@
     
     checkAchievements();
     updateFontColor();
+    applyFontFamily();
     particleSlider.value = particleCount;
     particleCountDisplay.textContent = particleCount;
     particleSizeSlider.value = particleSize;
     particleSizeDisplay.textContent = particleSize.toFixed(1);
-    // 形状ボタンのハイライト
     document.querySelectorAll('.shape-btn').forEach(b => {
       b.style.borderColor = 'var(--panel-edge)';
       b.style.background = 'var(--panel)';
