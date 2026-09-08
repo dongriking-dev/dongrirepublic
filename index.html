@@ -635,6 +635,67 @@
     color: var(--vermillion);
   }
 
+  /* ---------- ★ 色設定グループ ---------- */
+  .color-setting-group {
+    width: 100%;
+    margin: 8px 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--panel-edge);
+  }
+  .color-setting-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-align: left;
+  }
+  .color-setting-group .color-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .color-setting-group .color-row input[type="color"] {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--panel-edge);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    padding: 2px;
+    flex-shrink: 0;
+  }
+  .color-setting-group .color-row input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  .color-setting-group .color-row input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 6px;
+  }
+  .color-setting-group .color-row .color-hex {
+    font-size: 14px;
+    color: var(--gold-soft);
+    font-family: 'Courier New', monospace;
+    min-width: 60px;
+  }
+  .color-setting-group .color-row .color-preview {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--panel-edge);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+  }
+  .color-setting-group .color-status {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    min-height: 18px;
+  }
+  .color-setting-group .color-status.success {
+    color: var(--jade);
+  }
+
   /* ---------- コード入力エリア ---------- */
   .code-area {
     margin-top: 12px;
@@ -782,7 +843,7 @@
     letter-spacing: 0.08em;
     min-height: 1.8em;
     opacity: 0.7;
-    transition: opacity 0.3s ease;
+    transition: color 0.3s ease, opacity 0.3s ease;
   }
   .kana-small.hidden {
     opacity: 0;
@@ -1070,6 +1131,13 @@
     .romaji-display {
       font-size: clamp(14px, 3vw, 20px) !important;
     }
+    .color-setting-group .color-row {
+      gap: 8px;
+    }
+    .color-setting-group .color-row input[type="color"] {
+      width: 40px;
+      height: 40px;
+    }
   }
   .donguri {
       position: fixed;
@@ -1240,6 +1308,18 @@
         <div class="sound-status" id="status-bgm-mute">BGMのみを無効にします（効果音は引き続き再生されます）</div>
       </div>
 
+      <!-- ====== ★ ひらがな（読み）の色設定 ====== -->
+      <div class="color-setting-group">
+        <label>🎨 ひらがな（読み）の色</label>
+        <div class="color-row">
+          <input type="color" id="kana-color-picker" value="#727c6b">
+          <span class="color-hex" id="kana-color-hex">#727c6b</span>
+          <div class="color-preview" id="kana-color-preview" style="background-color:#727c6b;"></div>
+          <button id="kana-color-reset" style="padding:4px 12px;border-radius:6px;border:1px solid var(--panel-edge);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:12px;">デフォルトに戻す</button>
+        </div>
+        <div class="color-status" id="status-kana-color">色を選択すると即座に反映されます</div>
+      </div>
+
       <div class="setting-group">
         <label>🎵 タイプ音（正解時）</label>
         <div class="sound-row">
@@ -1384,8 +1464,8 @@
   "use strict";
 
   // ============ ★ バージョン情報 ============
-  const ANNOUNCE_VERSION = "v1.2.5";
-  const INFO_BADGE_VERSION = "v1.2.5";
+  const ANNOUNCE_VERSION = "v1.2.6";
+  const INFO_BADGE_VERSION = "v1.2.6";
 
   // ============ 情報コンテンツデータ ============
   const INFO_DATA = {
@@ -1393,14 +1473,16 @@
       { date: '2026年9月5日', title: '🎉 サイト公開！', desc: 'どんぐりタイピングがついに公開されました！' },
       { date: '2026年9月7日', title: '⚙️ 設定追加！', desc: '破片の大きさ・形状、BGM無音機能を追加しました！' },
       { date: '2026年9月8日', title: '🎨 フォント機能追加！', desc: 'どんぐりスキンごとにフォントが大幅に変わるようになりました！' },
+      { date: '2026年9月9日', title: '🎨 色カスタマイズ追加！', desc: 'ひらがな（読み）の色を自分で変更できるようになりました！' },
     ],
     notices: [
+      { date: '2026年9月9日', text: '🎨 設定に「ひらがな（読み）の色」を追加しました！お好みの色にカスタマイズしてタイピングを楽しめます。' },
       { date: '2026年9月8日', text: '🎨 どんぐりスキンを変えるとフォントの雰囲気がガラッと変わるようになりました！お気に入りのどんぐりを探してみてください！' },
       { date: '2026年9月7日', text: '⚙️ 設定に「破片の大きさ」「破片の形状」「BGM無音」を追加しました！効果音は従来通り再生されます。' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
     version: INFO_BADGE_VERSION,
-    updateDate: '2026年9月8日',
+    updateDate: '2026年9月9日',
     detailLinks: [
       { title: '背景の実績について', url: 'https://docs.google.com/forms/d/e/1FAIpQLSdDtK7NTmDGpWK-c2oAQXaWbZfJOiYoLnTVZIyj5tB3r2OqdA/viewform?usp=publish-editor', desc: '提案終了は無期限' },
     ]
@@ -1612,7 +1694,7 @@
 
 // ============ デフォルトデータ ============
 const DEFAULT_DATA = {
-  highscore: 0, totalTyped: 0, coins: 0, useKanji: true,  // ★ trueに変更
+  highscore: 0, totalTyped: 0, coins: 0, useKanji: true,
   equippedBg: 'forest', equippedAcorn: 'default',
   ownedBg: ['forest'], ownedAcorn: ['default'],
   unlockedAchievements: [], max10sTyped: 0,
@@ -1629,6 +1711,7 @@ const DEFAULT_DATA = {
   bgmMuted: false,
   showRomaji: true,
   showKanaSmall: true,
+  kanaColor: '#727c6b',
 };
 
 
@@ -1676,7 +1759,7 @@ const DEFAULT_DATA = {
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
       beastAcornUnlocked, beastBgUnlocked, announceVersion, infoBadgeVersion, infoRead, particleCount,
-      particleSize, particleShape, bgmMuted, showRomaji, showKanaSmall };
+      particleSize, particleShape, bgmMuted, showRomaji, showKanaSmall, kanaColor };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1699,7 +1782,8 @@ const DEFAULT_DATA = {
       particleShape = 'circle',
       bgmMuted = false,
       showRomaji = true,
-      showKanaSmall = true;
+      showKanaSmall = true,
+      kanaColor = '#727c6b';
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -1716,6 +1800,7 @@ const DEFAULT_DATA = {
   let bgmSource = null, isBgmPlaying = false, bgmAudioEl = null;
   let soundAudioEls = { typed: null, start: null, result: null, bgm: null, miss: null };
   let beastSoundBuffer = null;
+  let rainbowSound = null;
 
   async function loadBeastSound() {
     try {
@@ -1730,6 +1815,31 @@ const DEFAULT_DATA = {
     if (!beastSoundBuffer || !audioCtx) return;
     try { const s = audioCtx.createBufferSource(); s.buffer = beastSoundBuffer; s.connect(audioCtx.destination); s.start(0); } catch(e) {}
   }
+  
+  // ★ 67用の音声再生関数
+  function playRainbowSound() {
+    try {
+      if (!rainbowSound) {
+        rainbowSound = new Audio('https://www.myinstants.com/media/sounds/tung-tung-tung-saur-tatata-saur.mp3');
+        rainbowSound.preload = 'auto';
+        rainbowSound.crossOrigin = 'anonymous';
+      }
+      rainbowSound.currentTime = 0;
+      rainbowSound.play().catch(() => {});
+    } catch(e) {
+      console.warn('虹色音声再生エラー:', e);
+    }
+  }
+  
+  function stopRainbowSound() {
+    try {
+      if (rainbowSound) {
+        rainbowSound.pause();
+        rainbowSound.currentTime = 0;
+      }
+    } catch(e) {}
+  }
+
   function initAudio() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); loadBeastSound(); } return audioCtx; }
   async function loadSound(url) {
     if (!url) return null;
@@ -1878,7 +1988,7 @@ const DEFAULT_DATA = {
   const announceDismiss = document.getElementById('announce-dismiss');
   const announceClose = document.getElementById('announce-close');
   const rainbowOverlay = document.getElementById('rainbowOverlay');
-  let rainbowAudio = null, rainbowAudio2 = null, rainbowInterval = null, rainbowTimer = null;
+  let rainbowActive = false;
   const soundTypedInput = document.getElementById('sound-typed');
   const soundMissInput = document.getElementById('sound-miss');
   const soundStartInput = document.getElementById('sound-start');
@@ -1893,6 +2003,11 @@ const DEFAULT_DATA = {
   const toggleRomajiBtn = document.getElementById('toggle-romaji-btn');
   const toggleKanaSmallBtn = document.getElementById('toggle-kana-small-btn');
   const toggleBgmMuteBtn = document.getElementById('toggle-bgm-mute-btn');
+  const kanaColorPicker = document.getElementById('kana-color-picker');
+  const kanaColorHex = document.getElementById('kana-color-hex');
+  const kanaColorPreview = document.getElementById('kana-color-preview');
+  const kanaColorReset = document.getElementById('kana-color-reset');
+  const statusKanaColor = document.getElementById('status-kana-color');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -1904,6 +2019,16 @@ const DEFAULT_DATA = {
   const MIN_ACORN_COUNT = 10;
   let fireworks = [], villageHouses = [];
   let starryYOffset = 0;
+
+  // ============ ひらがな色適用関数 ============
+  function applyKanaColor(color) {
+    kanaSmallEl.style.color = color;
+    kanaSmallEl.style.opacity = '1';
+    kanaColorPreview.style.backgroundColor = color;
+    kanaColorHex.textContent = color;
+    statusKanaColor.textContent = '✅ 色を適用しました: ' + color;
+    statusKanaColor.className = 'color-status success';
+  }
 
   // ============ 情報バッジ制御 ============
   function updateInfoBadge() {
@@ -2088,11 +2213,7 @@ const DEFAULT_DATA = {
   function applyFontFamily() {
     const skin = ACORN_SKINS[equippedAcorn];
     const fontFamily = skin ? skin.fontFamily : "'Zen Maru Gothic', sans-serif";
-    
-    // body全体のフォントを変更（日本語にも反映）
     document.body.style.fontFamily = fontFamily;
-    
-    // 主要なテキスト要素すべてに適用（日本語表示部分も含む）
     const targets = [
       '.title', '.tagline', '.hanko-score', '.score-value', 
       '.result-score-num', '.kana-small', '.romaji-display', '.kanji-display',
@@ -2106,8 +2227,6 @@ const DEFAULT_DATA = {
       const els = document.querySelectorAll(sel);
       els.forEach(el => { if (el) el.style.fontFamily = fontFamily; });
     });
-    
-    // ボタン類にも適用
     document.querySelectorAll('.nav-btn, .shop-item-btn, .achievement-item, .info-btn, .setting-toggle, .sound-file-btn, .sound-exec-btn, .code-btn, .shop-close-btn, .settings-close-btn, .achievement-close-btn, .info-close-btn')
       .forEach(el => { if (el) el.style.fontFamily = fontFamily; });
   }
@@ -3030,6 +3149,7 @@ const DEFAULT_DATA = {
     }).join('');
     updateFontColor();
     applyFontFamily();
+    applyKanaColor(kanaColor);
   }
 
   function renderHud() {
@@ -3067,24 +3187,16 @@ const DEFAULT_DATA = {
   }
 
   // ===== 虹色エフェクト =====
-  function startRainbowEffect() {
-    if (rainbowOverlay.classList.contains('active')) return;
-    rainbowOverlay.classList.add('active');
-    if (!rainbowAudio) { rainbowAudio = new Audio('https://www.myinstants.com/media/sounds/dance-la-rat.mp3'); rainbowAudio.loop = true; rainbowAudio.crossOrigin = 'anonymous'; }
-    if (!rainbowAudio2) { rainbowAudio2 = new Audio('https://www.myinstants.com/media/sounds/montagem-xonada-ultra-bom-boox.mp3'); rainbowAudio2.loop = true; rainbowAudio2.crossOrigin = 'anonymous'; }
-    rainbowAudio.volume = 0.8; rainbowAudio2.volume = 0.8;
-    try { rainbowAudio.play().catch(() => {}); rainbowAudio2.play().catch(() => {}); } catch(e) {}
-    if (rainbowInterval) clearInterval(rainbowInterval);
-    rainbowInterval = setInterval(() => { rainbowOverlay.style.opacity = (Math.random() * 0.5 + 0.3).toString(); }, 80);
-    if (rainbowTimer) clearTimeout(rainbowTimer);
-    rainbowTimer = setTimeout(() => { stopRainbowEffect(); }, 10000);
-  }
-  function stopRainbowEffect() {
-    rainbowOverlay.classList.remove('active'); rainbowOverlay.style.opacity = '';
-    if (rainbowInterval) { clearInterval(rainbowInterval); rainbowInterval = null; }
-    if (rainbowTimer) { clearTimeout(rainbowTimer); rainbowTimer = null; }
-    if (rainbowAudio) { try { rainbowAudio.pause(); rainbowAudio.currentTime = 0; } catch(e) {} }
-    if (rainbowAudio2) { try { rainbowAudio2.pause(); rainbowAudio2.currentTime = 0; } catch(e) {} }
+  function toggleRainbowEffect() {
+    if (rainbowActive) {
+      rainbowActive = false;
+      rainbowOverlay.classList.remove('active');
+      stopRainbowSound();
+    } else {
+      rainbowActive = true;
+      rainbowOverlay.classList.add('active');
+      playRainbowSound();
+    }
   }
 
   // ===== コード認証 =====
@@ -3333,6 +3445,11 @@ const DEFAULT_DATA = {
     document.getElementById('status-particle-shape').textContent = '✅ 形状: ' + 
       ({circle:'丸', square:'四角', star:'星', triangle:'三角', sparkle:'キラ'}[particleShape] || particleShape);
     document.getElementById('status-particle-shape').className = 'sound-status success';
+    kanaColorPicker.value = kanaColor;
+    kanaColorHex.textContent = kanaColor;
+    kanaColorPreview.style.backgroundColor = kanaColor;
+    statusKanaColor.textContent = '✅ 現在の色: ' + kanaColor;
+    statusKanaColor.className = 'color-status success';
     updateDisplaySettings();
   }
 
@@ -3340,10 +3457,8 @@ const DEFAULT_DATA = {
     const input = codeInput.value.trim();
     if (!input) { codeStatus.textContent = '❌ パスワードを入力してください'; codeStatus.className = 'code-status error'; return; }
     if (input === '67') {
-      startRainbowEffect();
-      const audio = new Audio('https://www.myinstants.com/media/sounds/dance-la-rat.mp3');
-      audio.play();
-      codeStatus.textContent = '🌈 虹色エフェクト発動！ (10秒間)';
+      toggleRainbowEffect();
+      codeStatus.textContent = rainbowActive ? '🌈 虹色エフェクト発動！' : '🌙 虹色エフェクト停止';
       codeStatus.className = 'code-status success';
       codeInput.value = ''; return;
     }
@@ -3373,6 +3488,24 @@ const DEFAULT_DATA = {
   document.getElementById('settings-open-btn').addEventListener('click', () => { updateSettingsUI(); settingsOverlay.classList.add('active'); });
   document.getElementById('settings-close-btn').addEventListener('click', () => { settingsOverlay.classList.remove('active'); });
   settingsOverlay.addEventListener('click', (e) => { if(e.target === settingsOverlay) settingsOverlay.classList.remove('active'); });
+
+  // ===== ひらがな色設定イベント =====
+  kanaColorPicker.addEventListener('input', (e) => {
+    const color = e.target.value;
+    kanaColor = color;
+    applyKanaColor(color);
+    saveData();
+  });
+
+  kanaColorReset.addEventListener('click', () => {
+    const defaultColor = '#727c6b';
+    kanaColor = defaultColor;
+    kanaColorPicker.value = defaultColor;
+    applyKanaColor(defaultColor);
+    saveData();
+    statusKanaColor.textContent = '✅ デフォルトの色に戻しました: ' + defaultColor;
+    statusKanaColor.className = 'color-status success';
+  });
 
   document.querySelectorAll('.sound-exec-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => { e.stopPropagation(); const type = btn.dataset.sound; const input = document.getElementById('sound-' + type); const url = input.value.trim(); await applySoundSetting(type, url); });
@@ -3457,6 +3590,7 @@ const DEFAULT_DATA = {
       bgmMuted = d.bgmMuted || false;
       showRomaji = d.showRomaji !== undefined ? d.showRomaji : true;
       showKanaSmall = d.showKanaSmall !== undefined ? d.showKanaSmall : true;
+      kanaColor = d.kanaColor || '#727c6b';
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -3464,7 +3598,9 @@ const DEFAULT_DATA = {
       soundAudioEls = { typed: null, start: null, result: null, bgm: null, miss: null };
       soundUrls = { typed: '', start: '', result: '', bgm: '', miss: '' };
       for (const type of ['typed','miss','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
-      stopBgm(); updateShopUI(); updateAnnounceVisibility(); stopRainbowEffect(); updateFontColor(); updateInfoBadge();
+      stopBgm(); updateShopUI(); updateAnnounceVisibility(); 
+      if (rainbowActive) toggleRainbowEffect();
+      updateFontColor(); updateInfoBadge();
       updateDisplaySettings();
       document.querySelectorAll('.shape-btn').forEach(b => {
         b.style.borderColor = 'var(--panel-edge)';
@@ -3477,6 +3613,7 @@ const DEFAULT_DATA = {
         }
       });
       applyFontFamily();
+      applyKanaColor(kanaColor);
     }
   });
 
@@ -3556,6 +3693,7 @@ const DEFAULT_DATA = {
     bgmMuted = data.bgmMuted || false;
     showRomaji = data.showRomaji !== undefined ? data.showRomaji : true;
     showKanaSmall = data.showKanaSmall !== undefined ? data.showKanaSmall : true;
+    kanaColor = data.kanaColor || '#727c6b';
 
     soundTypedInput.value = soundTyped;
     soundMissInput.value = soundMiss;
@@ -3602,6 +3740,7 @@ const DEFAULT_DATA = {
     });
     updateDisplaySettings();
     updateAnnounceVisibility();
+    applyKanaColor(kanaColor);
   }
 
   init();
