@@ -1813,6 +1813,10 @@ const DEFAULT_DATA = {
       toastTimeout = null, isSentenceMode = false, usedWords = [],
       pendingSentenceMode = false;
 
+  // --- 実績トースト用キュー ---
+  let achievementToastQueue = [];
+  let isAchievementToastShowing = false;
+
   // --- Audio ---
   let audioCtx = null;
   let soundBuffers = { typed: null, start: null, result: null, bgm: null, miss: null };
@@ -2128,16 +2132,45 @@ const DEFAULT_DATA = {
   function checkAchievements() {
     let newUnlocked = [];
     for (const [id, ach] of Object.entries(ACHIEVEMENTS)) {
-      if (!unlockedAchievements.includes(id) && ach.check()) { unlockedAchievements.push(id); newUnlocked.push(ach); }
+      if (!unlockedAchievements.includes(id) && ach.check()) { 
+        unlockedAchievements.push(id); 
+        newUnlocked.push(ach); 
+      }
     }
-    if (newUnlocked.length > 0) { saveData(); const last = newUnlocked[newUnlocked.length - 1]; showAchievementToast(last); updateAchievementUI(); }
+    if (newUnlocked.length > 0) { 
+      saveData(); 
+      // キューに追加（逆順にして最後のものが最初に表示されるように）
+      for (let i = newUnlocked.length - 1; i >= 0; i--) {
+        achievementToastQueue.push(newUnlocked[i]);
+      }
+      processAchievementQueue();
+      updateAchievementUI(); 
+    }
   }
+
+  // 実績トーストをキューで順次表示
+  function processAchievementQueue() {
+    if (isAchievementToastShowing || achievementToastQueue.length === 0) return;
+    isAchievementToastShowing = true;
+    const ach = achievementToastQueue.shift();
+    showAchievementToast(ach);
+  }
+
   function showAchievementToast(ach) {
-    toastName.textContent = ach.name; toastDesc.textContent = ach.desc;
+    toastName.textContent = ach.name; 
+    toastDesc.textContent = ach.desc;
     toastEl.classList.add('show');
     clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => { toastEl.classList.remove('show'); }, 4000);
+    toastTimeout = setTimeout(() => { 
+      toastEl.classList.remove('show');
+      isAchievementToastShowing = false;
+      // 次の実績があれば表示
+      if (achievementToastQueue.length > 0) {
+        setTimeout(processAchievementQueue, 300);
+      }
+    }, 2500);
   }
+
   function updateAchievementUI() {
     const total = Object.keys(ACHIEVEMENTS).length;
     achUnlockedCount.textContent = unlockedAchievements.length;
@@ -2170,7 +2203,10 @@ const DEFAULT_DATA = {
       if (!ownedAcorn.includes('phantom')) ownedAcorn.push('phantom');
       saveData(); updateAchievementUI(); updateShopUI(); equippedAcorn = 'phantom'; saveData();
       showPopup('🌀 幻のどんぐりを解き放った！');
-      const ach = ACHIEVEMENTS['phantom_acorn']; if (ach) showAchievementToast(ach);
+      const ach = ACHIEVEMENTS['phantom_acorn']; if (ach) { 
+        achievementToastQueue.push(ach);
+        processAchievementQueue();
+      }
       updatePhantomFont(); updateFontColor(); applyFontFamily();
     } else { showPopup('🌀 幻のどんぐりは既に解放されています'); }
   }
@@ -2181,7 +2217,10 @@ const DEFAULT_DATA = {
       if (!ownedAcorn.includes('double')) ownedAcorn.push('double');
       saveData(); updateAchievementUI(); updateShopUI();
       showPopup('🔮 ダブルどんぐりを解き放った！（スコア2倍）');
-      const ach = ACHIEVEMENTS['double_acorn']; if (ach) showAchievementToast(ach);
+      const ach = ACHIEVEMENTS['double_acorn']; if (ach) { 
+        achievementToastQueue.push(ach);
+        processAchievementQueue();
+      }
     } else { showPopup('🔮 ダブルどんぐりは既に解放されています'); }
   }
   function unlockBeastAcorn() {
@@ -2191,7 +2230,10 @@ const DEFAULT_DATA = {
       if (!ownedAcorn.includes('beast')) ownedAcorn.push('beast');
       saveData(); updateAchievementUI(); updateShopUI();
       showPopup('🐻 野獣先輩どんぐりを解き放った！');
-      const ach = ACHIEVEMENTS['beast_acorn']; if (ach) showAchievementToast(ach);
+      const ach = ACHIEVEMENTS['beast_acorn']; if (ach) { 
+        achievementToastQueue.push(ach);
+        processAchievementQueue();
+      }
     } else { showPopup('🐻 野獣先輩どんぐりは既に解放されています'); }
   }
   function unlockBeastBg() {
