@@ -1020,6 +1020,133 @@
     pointer-events: none;
   }
 
+  /* ---------- ★ 特別ギフトフレーム ---------- */
+  #gift-frame {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(90%, 560px);
+    max-height: 90vh;
+    background: var(--panel);
+    border: 2px solid #ff6b6b;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255,107,107,0.2);
+    z-index: 600;
+    padding: 28px 32px 24px;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: auto;
+    backdrop-filter: blur(6px);
+  }
+  #gift-frame.hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+    pointer-events: none;
+  }
+  #gift-frame .close-area {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  #gift-frame .close-area button {
+    background: transparent;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  #gift-frame .close-area button:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+    background: rgba(255,107,107,0.1);
+  }
+  #gift-frame .content {
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.9;
+    text-align: center;
+  }
+  #gift-frame .content .apology {
+    font-size: clamp(28px, 6vw, 40px);
+    font-weight: 800;
+    color: #ff6b6b;
+    text-shadow: 0 0 20px rgba(255,107,107,0.3);
+    letter-spacing: 0.1em;
+    margin: 8px 0 16px 0;
+  }
+  #gift-frame .content .apology-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  #gift-frame .gift-btn-area {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0 4px 0;
+  }
+  #gift-frame .gift-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    border: none;
+    color: white;
+    padding: 14px 36px;
+    border-radius: 12px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    letter-spacing: 0.05em;
+  }
+  #gift-frame .gift-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(255,107,107,0.6);
+  }
+  #gift-frame .gift-btn:active {
+    transform: scale(0.98);
+  }
+  #gift-frame .gift-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  #gift-frame .gift-result {
+    font-size: 15px;
+    color: var(--gold-soft);
+    min-height: 30px;
+    margin-top: 8px;
+    font-weight: 700;
+  }
+  #gift-frame .gift-result.success {
+    color: #6aaa4a;
+    animation: giftPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes giftPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .gift-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 599;
+    transition: opacity 0.3s ease;
+  }
+  .gift-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* ===== 虹色エフェクト用 ===== */
   .rainbow-overlay {
     position: fixed;
@@ -1119,6 +1246,13 @@
     #announce-frame .content h2 {
       font-size: 20px;
     }
+    #gift-frame {
+      padding: 20px 18px;
+      width: 95%;
+    }
+    #gift-frame .content .apology {
+      font-size: 24px;
+    }
     .rainbow-overlay .rainbow-text {
       font-size: clamp(32px, 10vw, 48px);
     }
@@ -1174,7 +1308,7 @@
       opacity: 0.1;
       user-select: none;
       pointer-events: none;
-    }
+  }
 </style>
 <base target="_blank">
 </head>
@@ -1204,6 +1338,22 @@
       <p>最新版をプレイするには必ずサイトを更新しなければなりません。毎日更新してプレイしてください。</p>
       <p>情報のところもアプデごとに変更していくので是非ご確認ください。<br>
       <p>byどんぐり国王</p>
+    </div>
+  </div>
+
+  <!-- ★ 特別ギフトフレーム（初回のみ） -->
+  <div id="gift-overlay" class="gift-overlay hidden"></div>
+  <div id="gift-frame" class="hidden">
+    <div class="close-area">
+      <button id="gift-close">閉じる</button>
+    </div>
+    <div class="content">
+      <div class="apology">申し訳ございません</div>
+      <div class="apology-sub">日頃のご愛顧に感謝を込めて、特別などんぐりを無料で差し上げます。</div>
+      <div class="gift-btn-area">
+        <button class="gift-btn" id="gift-claim-btn">🌰 特別などんぐりを受け取る</button>
+      </div>
+      <div class="gift-result" id="gift-result"></div>
     </div>
   </div>
 
@@ -1505,6 +1655,7 @@
   // ============ ★ バージョン情報 ============
   const ANNOUNCE_VERSION = "v1.2.6";
   const INFO_BADGE_VERSION = "v1.2.6";
+  const GIFT_VERSION = "v1.0.0"; // ★ 特別ギフトのバージョン（フレーム表示済み判定用）
 
   // ============ 情報コンテンツデータ ============
   const INFO_DATA = {
@@ -1786,6 +1937,8 @@
     'fluffy': { name: 'ふわふわどんぐり', desc: '綿毛のようにふわふわ', price: 30000, priceType: 'coin', effect: 'fluffy', shape: 'fluffy', fontColor: '#ffb6c1', fontFamily: "'Kaisei Decol', serif" },
     'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 35000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00', fontFamily: "'Chokokutai', sans-serif" },
     'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700', fontFamily: "'Yuji Boku', serif" },
+    // ★ 特別ギフトどんぐり（ショップには表示されない）
+    'gift_secret': { name: '特別などんぐり', desc: '申し訳ございませんの証', price: 0, priceType: 'none', effect: 'gift', shape: 'gift', fontColor: '#ff6b6b', fontFamily: "'Yuji Syuku', serif" },
   };
 
   // ============ デフォルトデータ ============
@@ -1808,11 +1961,14 @@
     showRomaji: true,
     showKanaSmall: true,
     kanaColor: '#727c6b',
-    // ★ 効果音オンオフ（デフォルトON）
     seTypedEnabled: true,
     seMissEnabled: true,
     seStartEnabled: true,
     seResultEnabled: true,
+    // ★ 特別ギフト関連
+    giftVersion: '',
+    giftClaimed: false,
+    giftClaimedDate: '',
   };
 
   // --- デフォルト音声 ---
@@ -1860,7 +2016,8 @@
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
       beastAcornUnlocked, beastBgUnlocked, announceVersion, infoBadgeVersion, infoRead, particleCount,
       particleSize, particleShape, bgmMuted, showRomaji, showKanaSmall, kanaColor,
-      seTypedEnabled, seMissEnabled, seStartEnabled, seResultEnabled };
+      seTypedEnabled, seMissEnabled, seStartEnabled, seResultEnabled,
+      giftVersion, giftClaimed, giftClaimedDate };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1885,11 +2042,14 @@
       showRomaji = true,
       showKanaSmall = true,
       kanaColor = '#727c6b',
-      // ★ 効果音オンオフ
       seTypedEnabled = true,
       seMissEnabled = true,
       seStartEnabled = true,
-      seResultEnabled = true;
+      seResultEnabled = true,
+      // ★ 特別ギフト
+      giftVersion = '',
+      giftClaimed = false,
+      giftClaimedDate = '';
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -1926,7 +2086,6 @@
     try { const s = audioCtx.createBufferSource(); s.buffer = beastSoundBuffer; s.connect(audioCtx.destination); s.start(0); } catch(e) {}
   }
   
-  // ★ 67用の音声再生関数
   function playRainbowSound() {
     try {
       if (!rainbowSound) {
@@ -1957,7 +2116,6 @@
     catch(e) { console.warn('音声読み込み失敗:', url, e); return null; }
   }
   function playSound(buffer, fallbackUrl, type) {
-    // ★ 効果音オンオフチェック
     if (type === 'typed' && !seTypedEnabled) return null;
     if (type === 'miss' && !seMissEnabled) return null;
     if (type === 'start' && !seStartEnabled) return null;
@@ -2124,12 +2282,17 @@
   const kanaColorPreview = document.getElementById('kana-color-preview');
   const kanaColorReset = document.getElementById('kana-color-reset');
   const statusKanaColor = document.getElementById('status-kana-color');
-  // ★ 効果音トグルボタン
   const toggleSeTyped = document.getElementById('toggle-se-typed');
   const toggleSeMiss = document.getElementById('toggle-se-miss');
   const toggleSeStart = document.getElementById('toggle-se-start');
   const toggleSeResult = document.getElementById('toggle-se-result');
   const statusSe = document.getElementById('status-se');
+  // ★ ギフト関連DOM
+  const giftFrame = document.getElementById('gift-frame');
+  const giftOverlay = document.getElementById('gift-overlay');
+  const giftClose = document.getElementById('gift-close');
+  const giftClaimBtn = document.getElementById('gift-claim-btn');
+  const giftResult = document.getElementById('gift-result');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -2186,6 +2349,67 @@
 
   announceDismiss.addEventListener('click', () => { announceVersion = ANNOUNCE_VERSION; saveData(); hideAnnounce(); });
   announceClose.addEventListener('click', () => { hideAnnounce(); });
+
+  // ============ ★ 特別ギフトフレーム制御 ============
+  function updateGiftVisibility() {
+    if (giftVersion !== GIFT_VERSION && !giftClaimed) {
+      showGift();
+    } else {
+      hideGift();
+    }
+  }
+  function showGift() {
+    giftFrame.classList.remove('hidden');
+    giftOverlay.classList.remove('hidden');
+  }
+  function hideGift() {
+    giftFrame.classList.add('hidden');
+    giftOverlay.classList.add('hidden');
+  }
+  function claimGift() {
+    if (giftClaimed) {
+      giftResult.textContent = '✅ すでに受け取り済みです';
+      giftResult.className = 'gift-result success';
+      return;
+    }
+    // ★ 特別などんぐりを付与
+    if (!ownedAcorn.includes('gift_secret')) {
+      ownedAcorn.push('gift_secret');
+    }
+    // ★ 実績解除（もしあれば）
+    if (!unlockedAchievements.includes('gift_received')) {
+      unlockedAchievements.push('gift_received');
+    }
+    giftClaimed = true;
+    giftClaimedDate = new Date().toLocaleDateString('ja-JP');
+    saveData();
+    updateShopUI();
+    updateAchievementUI();
+    giftResult.textContent = '🌰 特別などんぐり「申し訳ございませんの証」を受け取りました！';
+    giftResult.className = 'gift-result success';
+    giftClaimBtn.disabled = true;
+    giftClaimBtn.textContent = '✅ 受け取り済み';
+    showPopup('🌰 特別などんぐりを獲得！');
+    setTimeout(() => {
+      hideGift();
+    }, 1500);
+  }
+  giftClose.addEventListener('click', () => {
+    // 閉じたら二度と表示しない
+    if (giftVersion !== GIFT_VERSION) {
+      giftVersion = GIFT_VERSION;
+      saveData();
+    }
+    hideGift();
+  });
+  giftClaimBtn.addEventListener('click', claimGift);
+  giftOverlay.addEventListener('click', () => {
+    if (giftVersion !== GIFT_VERSION) {
+      giftVersion = GIFT_VERSION;
+      saveData();
+    }
+    hideGift();
+  });
 
   // ============ 情報モーダル表示 ============
   function renderInfoContent() {
@@ -2360,6 +2584,9 @@
     } else if (equippedAcorn === 'rainbow') {
       kanjiDisplayEl.style.textShadow = '0 0 20px rgba(255,100,255,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,100,255,0.2), 0 2px 8px rgba(0,0,0,0.5)';
+    } else if (equippedAcorn === 'gift_secret') {
+      kanjiDisplayEl.style.textShadow = '0 0 20px rgba(255,107,107,0.4)';
+      document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,107,107,0.3), 0 2px 8px rgba(0,0,0,0.5)';
     } else {
       kanjiDisplayEl.style.textShadow = 'none';
       document.querySelector('.title').style.textShadow = '0 2px 8px rgba(0,0,0,0.5)';
@@ -2427,7 +2654,6 @@
     }
     document.getElementById('status-display').textContent = 
       'ローマ字: ' + (showRomaji ? '表示' : '非表示') + ' / ひらがな: ' + (showKanaSmall ? '表示' : '非表示');
-    // ★ 効果音トグルの表示更新
     updateSeToggleUI();
   }
 
@@ -2696,6 +2922,7 @@
       'fluffy': { cap: '#e8a0b0', nut: '#ffb6c1', glow: 'rgba(255,182,193,0.4)', particleColors: ['#ffb6c1','#ffc0cb','#ffd1dc'] },
       'spiky': { cap: '#8B5A00', nut: '#ff8c00', glow: 'rgba(255,140,0,0.4)', particleColors: ['#ff8c00','#ffa500','#ffb347'] },
       'star': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.4)', particleColors: ['#ffd700','#ffec8b','#fff8dc'] },
+      'gift_secret': { cap: '#8a2a2a', nut: '#ff6b6b', glow: 'rgba(255,107,107,0.5)', particleColors: ['#ff6b6b','#ff8e8e','#ffb3b3'] },
     };
     return styles[skin] || styles['default'];
   }
@@ -2725,6 +2952,29 @@
     ctx.scale(scale, scale);
 
     switch(shape) {
+      case 'gift':
+        // 特別などんぐり：ハート型
+        ctx.fillStyle = style.nut;
+        ctx.shadowColor = 'rgba(255,107,107,0.5)'; ctx.shadowBlur = 25;
+        ctx.beginPath();
+        const s = size * 0.9;
+        ctx.moveTo(0, s * 0.3);
+        ctx.bezierCurveTo(-s * 1.2, -s * 0.6, -s * 0.4, -s * 1.2, 0, -s * 0.4);
+        ctx.bezierCurveTo(s * 0.4, -s * 1.2, s * 1.2, -s * 0.6, 0, s * 0.3);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = style.cap; ctx.shadowBlur = 15;
+        ctx.beginPath(); ctx.arc(0, -s * 0.1, s * 0.5, Math.PI, Math.PI * 2); ctx.fill();
+        // キラキラ
+        ctx.shadowBlur = 0;
+        for (let i = 0; i < 4; i++) {
+          const angle = a.bubblePhase + i * 1.57;
+          const dist = s * 1.4 + Math.sin(a.bubblePhase * 0.5 + i) * 3;
+          ctx.fillStyle = `rgba(255,200,200,${0.3 + Math.sin(a.bubblePhase + i) * 0.2})`;
+          ctx.beginPath();
+          ctx.arc(Math.cos(angle) * dist, Math.sin(angle) * dist * 0.5 - s * 0.1, 2 + Math.sin(a.bubblePhase + i * 1.5) * 1.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        break;
       case 'spiky':
         ctx.fillStyle = style.nut;
         ctx.shadowColor = style.glow || 'rgba(255,140,0,0.3)'; ctx.shadowBlur = 15;
@@ -2969,7 +3219,7 @@
       ctx.restore(); return;
     }
 
-    const specialShapes = ['spiky', 'bubble', 'fluffy', 'crystal', 'star', 'ice', 'dark', 'light', 'cosmic'];
+    const specialShapes = ['spiky', 'bubble', 'fluffy', 'crystal', 'star', 'ice', 'dark', 'light', 'cosmic', 'gift'];
     if (specialShapes.includes(shape)) {
       drawAcornShape(ctx, a, style, 0, 0, 1);
     } else {
@@ -3017,6 +3267,7 @@
     if (skin === 'phantom') multiplier = 0.4;
     else if (skin === 'beast') multiplier = 0.4;
     else if (skin === 'gold' || skin === 'cosmic') multiplier = 0.6;
+    else if (skin === 'gift_secret') multiplier = 1.5;
     else multiplier = 0.6;
     
     const count = Math.max(0, Math.floor(baseCount * multiplier) + Math.floor(Math.random() * 2));
@@ -3078,6 +3329,17 @@
           color: `hsl(${Math.random() * 360}, 100%, 70%)`, type: 'glow',
           shape: 'circle', rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: Math.random() * 360 });
       }
+    } else if (skin === 'gift_secret') {
+      for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.8)); i++) {
+        const angle = Math.random() * Math.PI * 2, speed = 1.5 + Math.random() * 3.5;
+        const baseSize = 3 + Math.random() * 5;
+        const shapeChoice = Math.random() > 0.5 ? 'star' : 'circle';
+        particles.push({ x: x + (Math.random() - 0.5) * 8, y: y + (Math.random() - 0.5) * 8,
+          vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 4,
+          life: 1.0, decay: 0.004 + Math.random() * 0.006, size: baseSize * sizeScale,
+          color: `rgba(255,107,107,${0.6 + Math.random() * 0.4})`, type: 'glow',
+          shape: shapeChoice, rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1, hue: Math.random() * 360 });
+      }
     }
     return particles;
   }
@@ -3088,14 +3350,14 @@
       const a = acorns.splice(index, 1)[0];
       const currentX = a.x + Math.sin(a.wobble) * 3, currentY = a.y + 15, skin = a.skin;
       const style = getAcornStyle(skin), colors = style.particleColors;
-      const capColor = skin === 'beast' ? '#8B6B3D' : (colors[0] || '#654321');
+      const capColor = skin === 'beast' ? '#8B6B3D' : (skin === 'gift_secret' ? '#8a2a2a' : (colors[0] || '#654321'));
       
       fragments.push({ x: currentX, y: currentY, vx: (Math.random() - 0.5) * 6, vy: -4 - Math.random() * 3,
         rot: Math.random() * Math.PI, vrot: (Math.random() - 0.5) * 0.2, type: 'cap', alpha: 1, color: capColor });
       fragments.push({ x: currentX + (Math.random()-0.5)*8, y: currentY + 8,
         vx: (Math.random()-0.5)*8, vy: -2 - Math.random()*5,
         rot: Math.random() * Math.PI, vrot: (Math.random()-0.5)*0.3, type: 'nut', alpha: 1,
-        color: skin === 'beast' ? '#1a2a4a' : (colors[0] || '#a07346') });
+        color: skin === 'beast' ? '#1a2a4a' : (skin === 'gift_secret' ? '#ff6b6b' : (colors[0] || '#a07346')) });
       
       const specials = createSpecialParticles(currentX, currentY, skin);
       specialParticles.push(...specials);
@@ -3549,13 +3811,15 @@
     for(const [id, skin] of Object.entries(ACORN_SKINS)) {
       if (id === 'double' && !doubleAcornUnlocked) continue;
       if (id === 'beast' && !beastAcornUnlocked) continue;
+      // ★ 特別ギフトどんぐりはショップに表示しない（所持している場合のみ表示）
+      if (id === 'gift_secret' && !ownedAcorn.includes('gift_secret')) continue;
       const owned = ownedAcorn.includes(id), equipped = equippedAcorn === id;
       const canBuy = (skin.priceType === 'coin' && totalTyped >= skin.price) || skin.priceType === 'none';
-      const priceLabel = skin.priceType === 'none' ? '初期' : '📝'+skin.price+'字';
+      const priceLabel = skin.priceType === 'none' ? (id === 'gift_secret' ? '特別' : '初期') : '📝'+skin.price+'字';
       const isPhantom = id === 'phantom';
-      const displayName = isPhantom ? '🌀 ' + skin.name : skin.name;
-      const shapeIcon = { 'normal':'🌰','spiky':'⚡','bubble':'🫧','fluffy':'☁️','crystal':'💎','star':'⭐','ice':'❄️','dark':'🌑','light':'☀️','cosmic':'🌌','phantom':'🌀','beast':'🐻','rainbow':'🌈','flame':'🔥' }[skin.shape] || '🌰';
-      html += `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" style="${(isPhantom && owned) ? 'border-color: var(--phantom); background: rgba(155,89,182,0.15);' : ''}">
+      const displayName = isPhantom ? '🌀 ' + skin.name : (id === 'gift_secret' ? '💝 ' + skin.name : skin.name);
+      const shapeIcon = { 'normal':'🌰','spiky':'⚡','bubble':'🫧','fluffy':'☁️','crystal':'💎','star':'⭐','ice':'❄️','dark':'🌑','light':'☀️','cosmic':'🌌','phantom':'🌀','beast':'🐻','rainbow':'🌈','flame':'🔥','gift':'💝' }[skin.shape] || '🌰';
+      html += `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" style="${(isPhantom && owned) ? 'border-color: var(--phantom); background: rgba(155,89,182,0.15);' : ''}${(id === 'gift_secret' && owned) ? 'border-color: #ff6b6b; background: rgba(255,107,107,0.1);' : ''}">
         <div class="shop-item-info"><div class="shop-item-name">${shapeIcon} ${displayName} ${equipped?' ✅':''}</div>
         <div class="shop-item-desc">${skin.desc}</div></div>
         <div class="shop-item-price">${priceLabel}</div>
@@ -3799,6 +4063,9 @@
       seMissEnabled = d.seMissEnabled !== undefined ? d.seMissEnabled : true;
       seStartEnabled = d.seStartEnabled !== undefined ? d.seStartEnabled : true;
       seResultEnabled = d.seResultEnabled !== undefined ? d.seResultEnabled : true;
+      giftVersion = d.giftVersion || '';
+      giftClaimed = d.giftClaimed || false;
+      giftClaimedDate = d.giftClaimedDate || '';
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -3806,7 +4073,7 @@
       soundAudioEls = { typed: null, start: null, result: null, bgm: null, miss: null };
       soundUrls = { typed: '', start: '', result: '', bgm: '', miss: '' };
       for (const type of ['typed','miss','start','result','bgm']) { const buf = generateDefaultSound(type); if (buf) soundBuffers[type] = buf; }
-      stopBgm(); updateShopUI(); updateAnnounceVisibility(); 
+      stopBgm(); updateShopUI(); updateAnnounceVisibility(); updateGiftVisibility();
       if (rainbowActive) toggleRainbowEffect();
       updateFontColor(); updateInfoBadge();
       updateDisplaySettings();
@@ -3823,12 +4090,25 @@
       applyFontFamily();
       applyKanaColor(kanaColor);
       updateSeToggleUI();
+      // ギフトボタンをリセット
+      giftClaimBtn.disabled = false;
+      giftClaimBtn.textContent = '🌰 特別などんぐりを受け取る';
+      giftResult.textContent = '';
+      giftResult.className = 'gift-result';
     }
   });
 
   hankoBadge.addEventListener('click', () => { updateShopUI(); shopOverlay.classList.add('active'); });
 
   document.addEventListener('keydown', (e) => {
+    // ギフトフレーム表示中はキー操作を無効化（Spaceでゲームが始まらないように）
+    if (!giftFrame.classList.contains('hidden')) {
+      if (e.key === 'Escape' || e.code === 'Space') {
+        e.preventDefault();
+        giftClose.click();
+      }
+      return;
+    }
     if(shopOverlay.classList.contains('active') || settingsOverlay.classList.contains('active') || achievementOverlay.classList.contains('active') || infoOverlay.classList.contains('active')) {
       if(e.key === 'Escape') { e.preventDefault(); shopOverlay.classList.remove('active'); settingsOverlay.classList.remove('active'); achievementOverlay.classList.remove('active'); infoOverlay.classList.remove('active'); }
       return;
@@ -3907,6 +4187,9 @@
     seMissEnabled = data.seMissEnabled !== undefined ? data.seMissEnabled : true;
     seStartEnabled = data.seStartEnabled !== undefined ? data.seStartEnabled : true;
     seResultEnabled = data.seResultEnabled !== undefined ? data.seResultEnabled : true;
+    giftVersion = data.giftVersion || '';
+    giftClaimed = data.giftClaimed || false;
+    giftClaimedDate = data.giftClaimedDate || '';
 
     soundTypedInput.value = soundTyped;
     soundMissInput.value = soundMiss;
@@ -3953,8 +4236,17 @@
     });
     updateDisplaySettings();
     updateAnnounceVisibility();
+    updateGiftVisibility();
     applyKanaColor(kanaColor);
     updateSeToggleUI();
+    // ギフト未受け取りならボタンを有効に
+    if (giftClaimed) {
+      giftClaimBtn.disabled = true;
+      giftClaimBtn.textContent = '✅ 受け取り済み';
+    } else {
+      giftClaimBtn.disabled = false;
+      giftClaimBtn.textContent = '🌰 特別などんぐりを受け取る';
+    }
   }
 
   init();
