@@ -1064,6 +1064,32 @@
     100% { transform: scale(1.1); opacity: 0.9; }
   }
 
+  /* ===== ★ 追加: サウンドオンオフトグル ===== */
+  .sound-toggle-btn {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--panel-edge);
+    background: var(--panel);
+    color: var(--gold-soft);
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sound-toggle-btn.on {
+    border-color: var(--jade);
+    color: var(--jade);
+  }
+  .sound-toggle-btn.off {
+    border-color: var(--vermillion);
+    color: var(--vermillion);
+  }
+  .sound-toggle-btn:hover {
+    opacity: 0.8;
+  }
+
   @media (max-width:480px){
     .hud{ margin-bottom:24px; }
     .word-stage{ padding:32px 16px; }
@@ -1307,6 +1333,18 @@
           </button>
         </div>
         <div class="sound-status" id="status-bgm-mute">BGMのみを無効にします（効果音は引き続き再生されます）</div>
+      </div>
+
+      <!-- ====== ★ 効果音オンオフ（タイプ・ミス・スタート・リザルト） ====== -->
+      <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
+        <label>🔊 効果音オンオフ</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
+          <button id="toggle-se-typed" class="sound-toggle-btn on" style="flex:1;min-width:70px;">タイプ音: ON</button>
+          <button id="toggle-se-miss" class="sound-toggle-btn on" style="flex:1;min-width:70px;">ミス音: ON</button>
+          <button id="toggle-se-start" class="sound-toggle-btn on" style="flex:1;min-width:70px;">スタート音: ON</button>
+          <button id="toggle-se-result" class="sound-toggle-btn on" style="flex:1;min-width:70px;">リザルト音: ON</button>
+        </div>
+        <div class="sound-status" id="status-se">各効果音のオン/オフを切り替えます（BGMは別設定）</div>
       </div>
 
       <!-- ====== ★ ひらがな（読み）の色設定 ====== -->
@@ -1750,28 +1788,32 @@
     'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700', fontFamily: "'Yuji Boku', serif" },
   };
 
-// ============ デフォルトデータ ============
-const DEFAULT_DATA = {
-  highscore: 0, totalTyped: 0, coins: 0, useKanji: true,
-  equippedBg: 'forest', equippedAcorn: 'default',
-  ownedBg: ['forest'], ownedAcorn: ['default'],
-  unlockedAchievements: [], max10sTyped: 0,
-  soundTyped: '', soundStart: '', soundResult: '', soundBgm: '', soundMiss: '',
-  codeVerified: false, superMode: false, normalMode: false,
-  phantomAcornUnlocked: false, doubleAcornUnlocked: false,
-  beastAcornUnlocked: false, beastBgUnlocked: false,
-  announceVersion: '',
-  infoBadgeVersion: '',
-  infoRead: false,
-  particleCount: 5,
-  particleSize: 1.0,
-  particleShape: 'circle',
-  bgmMuted: false,
-  showRomaji: true,
-  showKanaSmall: true,
-  kanaColor: '#727c6b',
-};
-
+  // ============ デフォルトデータ ============
+  const DEFAULT_DATA = {
+    highscore: 0, totalTyped: 0, coins: 0, useKanji: true,
+    equippedBg: 'forest', equippedAcorn: 'default',
+    ownedBg: ['forest'], ownedAcorn: ['default'],
+    unlockedAchievements: [], max10sTyped: 0,
+    soundTyped: '', soundStart: '', soundResult: '', soundBgm: '', soundMiss: '',
+    codeVerified: false, superMode: false, normalMode: false,
+    phantomAcornUnlocked: false, doubleAcornUnlocked: false,
+    beastAcornUnlocked: false, beastBgUnlocked: false,
+    announceVersion: '',
+    infoBadgeVersion: '',
+    infoRead: false,
+    particleCount: 5,
+    particleSize: 1.0,
+    particleShape: 'circle',
+    bgmMuted: false,
+    showRomaji: true,
+    showKanaSmall: true,
+    kanaColor: '#727c6b',
+    // ★ 効果音オンオフ（デフォルトON）
+    seTypedEnabled: true,
+    seMissEnabled: true,
+    seStartEnabled: true,
+    seResultEnabled: true,
+  };
 
   // --- デフォルト音声 ---
   function generateDefaultSound(type) {
@@ -1817,7 +1859,8 @@ const DEFAULT_DATA = {
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
       codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
       beastAcornUnlocked, beastBgUnlocked, announceVersion, infoBadgeVersion, infoRead, particleCount,
-      particleSize, particleShape, bgmMuted, showRomaji, showKanaSmall, kanaColor };
+      particleSize, particleShape, bgmMuted, showRomaji, showKanaSmall, kanaColor,
+      seTypedEnabled, seMissEnabled, seStartEnabled, seResultEnabled };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -1841,7 +1884,12 @@ const DEFAULT_DATA = {
       bgmMuted = false,
       showRomaji = true,
       showKanaSmall = true,
-      kanaColor = '#727c6b';
+      kanaColor = '#727c6b',
+      // ★ 効果音オンオフ
+      seTypedEnabled = true,
+      seMissEnabled = true,
+      seStartEnabled = true,
+      seResultEnabled = true;
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -1909,6 +1957,12 @@ const DEFAULT_DATA = {
     catch(e) { console.warn('音声読み込み失敗:', url, e); return null; }
   }
   function playSound(buffer, fallbackUrl, type) {
+    // ★ 効果音オンオフチェック
+    if (type === 'typed' && !seTypedEnabled) return null;
+    if (type === 'miss' && !seMissEnabled) return null;
+    if (type === 'start' && !seStartEnabled) return null;
+    if (type === 'result' && !seResultEnabled) return null;
+    
     if (buffer && audioCtx) {
       try { const s = audioCtx.createBufferSource(); s.buffer = buffer; s.connect(audioCtx.destination); s.start(0); return s; } catch(e) {}
     }
@@ -2070,6 +2124,12 @@ const DEFAULT_DATA = {
   const kanaColorPreview = document.getElementById('kana-color-preview');
   const kanaColorReset = document.getElementById('kana-color-reset');
   const statusKanaColor = document.getElementById('status-kana-color');
+  // ★ 効果音トグルボタン
+  const toggleSeTyped = document.getElementById('toggle-se-typed');
+  const toggleSeMiss = document.getElementById('toggle-se-miss');
+  const toggleSeStart = document.getElementById('toggle-se-start');
+  const toggleSeResult = document.getElementById('toggle-se-result');
+  const statusSe = document.getElementById('status-se');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -2177,7 +2237,6 @@ const DEFAULT_DATA = {
     }
     if (newUnlocked.length > 0) { 
       saveData(); 
-      // キューに追加（逆順にして最後のものが最初に表示されるように）
       for (let i = newUnlocked.length - 1; i >= 0; i--) {
         achievementToastQueue.push(newUnlocked[i]);
       }
@@ -2186,7 +2245,6 @@ const DEFAULT_DATA = {
     }
   }
 
-  // 実績トーストをキューで順次表示
   function processAchievementQueue() {
     if (isAchievementToastShowing || achievementToastQueue.length === 0) return;
     isAchievementToastShowing = true;
@@ -2202,7 +2260,6 @@ const DEFAULT_DATA = {
     toastTimeout = setTimeout(() => { 
       toastEl.classList.remove('show');
       isAchievementToastShowing = false;
-      // 次の実績があれば表示
       if (achievementToastQueue.length > 0) {
         setTimeout(processAchievementQueue, 300);
       }
@@ -2370,6 +2427,32 @@ const DEFAULT_DATA = {
     }
     document.getElementById('status-display').textContent = 
       'ローマ字: ' + (showRomaji ? '表示' : '非表示') + ' / ひらがな: ' + (showKanaSmall ? '表示' : '非表示');
+    // ★ 効果音トグルの表示更新
+    updateSeToggleUI();
+  }
+
+  // ============ ★ 効果音トグルUI更新 ============
+  function updateSeToggleUI() {
+    const toggles = [
+      { btn: toggleSeTyped, enabled: seTypedEnabled, label: 'タイプ音' },
+      { btn: toggleSeMiss, enabled: seMissEnabled, label: 'ミス音' },
+      { btn: toggleSeStart, enabled: seStartEnabled, label: 'スタート音' },
+      { btn: toggleSeResult, enabled: seResultEnabled, label: 'リザルト音' }
+    ];
+    toggles.forEach(({ btn, enabled, label }) => {
+      if (!btn) return;
+      btn.textContent = label + ': ' + (enabled ? 'ON' : 'OFF');
+      btn.className = 'sound-toggle-btn ' + (enabled ? 'on' : 'off');
+    });
+    if (statusSe) {
+      statusSe.textContent = 
+        'タイプ音: ' + (seTypedEnabled ? 'ON' : 'OFF') + ' / ' +
+        'ミス音: ' + (seMissEnabled ? 'ON' : 'OFF') + ' / ' +
+        'スタート音: ' + (seStartEnabled ? 'ON' : 'OFF') + ' / ' +
+        'リザルト音: ' + (seResultEnabled ? 'ON' : 'OFF');
+      statusSe.className = 'sound-status ' + 
+        (seTypedEnabled && seMissEnabled && seStartEnabled && seResultEnabled ? 'success' : '');
+    }
   }
 
   // ============ 破片形状ボタン ============
@@ -2964,7 +3047,6 @@ const DEFAULT_DATA = {
       });
     }
     
-    // 追加の光る粒子（スキン別）
     if (skin === 'phantom') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.2)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
@@ -3089,7 +3171,7 @@ const DEFAULT_DATA = {
             ctx.fillStyle = p.color;
             ctx.beginPath(); ctx.arc(0, 0, s * 0.2, 0, Math.PI * 2); ctx.fill();
             break;
-          default: // circle
+          default:
             ctx.beginPath(); ctx.arc(0, 0, s, 0, Math.PI * 2); ctx.fill();
             break;
         }
@@ -3607,6 +3689,28 @@ const DEFAULT_DATA = {
     statusKanaColor.className = 'color-status success';
   });
 
+  // ★ 効果音トグルイベント
+  toggleSeTyped.addEventListener('click', () => {
+    seTypedEnabled = !seTypedEnabled;
+    saveData();
+    updateSeToggleUI();
+  });
+  toggleSeMiss.addEventListener('click', () => {
+    seMissEnabled = !seMissEnabled;
+    saveData();
+    updateSeToggleUI();
+  });
+  toggleSeStart.addEventListener('click', () => {
+    seStartEnabled = !seStartEnabled;
+    saveData();
+    updateSeToggleUI();
+  });
+  toggleSeResult.addEventListener('click', () => {
+    seResultEnabled = !seResultEnabled;
+    saveData();
+    updateSeToggleUI();
+  });
+
   document.querySelectorAll('.sound-exec-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => { e.stopPropagation(); const type = btn.dataset.sound; const input = document.getElementById('sound-' + type); const url = input.value.trim(); await applySoundSetting(type, url); });
   });
@@ -3691,6 +3795,10 @@ const DEFAULT_DATA = {
       showRomaji = d.showRomaji !== undefined ? d.showRomaji : true;
       showKanaSmall = d.showKanaSmall !== undefined ? d.showKanaSmall : true;
       kanaColor = d.kanaColor || '#727c6b';
+      seTypedEnabled = d.seTypedEnabled !== undefined ? d.seTypedEnabled : true;
+      seMissEnabled = d.seMissEnabled !== undefined ? d.seMissEnabled : true;
+      seStartEnabled = d.seStartEnabled !== undefined ? d.seStartEnabled : true;
+      seResultEnabled = d.seResultEnabled !== undefined ? d.seResultEnabled : true;
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -3714,6 +3822,7 @@ const DEFAULT_DATA = {
       });
       applyFontFamily();
       applyKanaColor(kanaColor);
+      updateSeToggleUI();
     }
   });
 
@@ -3794,6 +3903,10 @@ const DEFAULT_DATA = {
     showRomaji = data.showRomaji !== undefined ? data.showRomaji : true;
     showKanaSmall = data.showKanaSmall !== undefined ? data.showKanaSmall : true;
     kanaColor = data.kanaColor || '#727c6b';
+    seTypedEnabled = data.seTypedEnabled !== undefined ? data.seTypedEnabled : true;
+    seMissEnabled = data.seMissEnabled !== undefined ? data.seMissEnabled : true;
+    seStartEnabled = data.seStartEnabled !== undefined ? data.seStartEnabled : true;
+    seResultEnabled = data.seResultEnabled !== undefined ? data.seResultEnabled : true;
 
     soundTypedInput.value = soundTyped;
     soundMissInput.value = soundMiss;
@@ -3841,6 +3954,7 @@ const DEFAULT_DATA = {
     updateDisplaySettings();
     updateAnnounceVisibility();
     applyKanaColor(kanaColor);
+    updateSeToggleUI();
   }
 
   init();
