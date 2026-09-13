@@ -1588,7 +1588,22 @@
         </div>
       </div>
 
-            <div style="display:flex;justify-content:space-between;width:100%;padding:8px 0 4px 0;border-top:1px solid var(--panel-edge);margin-top:8px;">
+      <!-- ★ 新規: データ保存 / ロード セクション -->
+      <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
+        <label>💾 データの保存 / 読み込み</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
+          <button id="save-data-file-btn" class="setting-toggle" style="flex:1;min-width:100px;padding:8px 12px;border-radius:6px;border:1px solid var(--gold);background:var(--panel);color:var(--gold-soft);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;transition:all 0.2s;">
+            📥 ファイルにデータを保存
+          </button>
+          <button id="load-data-file-btn" class="setting-toggle" style="flex:1;min-width:100px;padding:8px 12px;border-radius:6px;border:1px solid var(--jade);background:var(--panel);color:var(--jade);cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;font-size:13px;transition:all 0.2s;">
+            📤 ファイルをロード
+          </button>
+          <input type="file" id="load-data-file-input" accept=".donguri,.json,application/json" style="display:none;">
+        </div>
+        <div class="sound-status" id="status-data-file">端末を変えてもファイルがあればデータを復元できます</div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;width:100%;padding:8px 0 4px 0;border-top:1px solid var(--panel-edge);margin-top:8px;">
         <span class="setting-label">タイピング詳細</span>
         <a href="https://donguridetail.noel-k27.workers.dev" target="_blank" 
            style="color:var(--gold-soft);text-decoration:underline;font-size:14px;transition:color 0.2s;"
@@ -1661,7 +1676,7 @@
   // ============ ★ バージョン情報 ============
   const ANNOUNCE_VERSION = "v1.2.6";
   const INFO_BADGE_VERSION = "v1.2.6";
-  const GIFT_VERSION = "v1.0.0"; // ★ 特別ギフトのバージョン（フレーム表示済み判定用）
+  const GIFT_VERSION = "v1.0.0";
 
   // ============ 情報コンテンツデータ ============
   const INFO_DATA = {
@@ -1670,15 +1685,17 @@
       { date: '2026年9月7日', title: '⚙️ 設定追加！', desc: '破片の大きさ・形状、BGM無音機能を追加しました！' },
       { date: '2026年9月8日', title: '🎨 フォント機能追加！', desc: 'どんぐりスキンごとにフォントが大幅に変わるようになりました！' },
       { date: '2026年9月9日', title: '🎨 色カスタマイズ追加！', desc: 'ひらがな（読み）の色を自分で変更できるようになりました！' },
+      { date: '2026年9月10日', title: '💾 データ保存機能追加！', desc: 'ファイルにデータを保存・ロードできるようになりました！' },
     ],
     notices: [
+      { date: '2026年9月10日', text: '💾 設定に「ファイルにデータを保存」「ファイルをロード」を追加！端末を変えてもファイルがあれば復元できます。' },
       { date: '2026年9月9日', text: '🎨 設定に「ひらがな（読み）の色」を追加しました！お好みの色にカスタマイズしてタイピングを楽しめます。' },
       { date: '2026年9月8日', text: '🎨 どんぐりスキンを変えるとフォントの雰囲気がガラッと変わるようになりました！お気に入りのどんぐりを探してみてください！' },
       { date: '2026年9月7日', text: '⚙️ 設定に「破片の大きさ」「破片の形状」「BGM無音」を追加しました！効果音は従来通り再生されます。' },
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
     version: INFO_BADGE_VERSION,
-    updateDate: '2026年9月9日',
+    updateDate: '2026年9月10日',
     detailLinks: [
       { title: '背景の実績について', url: 'https://docs.google.com/forms/d/e/1FAIpQLSdDtK7NTmDGpWK-c2oAQXaWbZfJOiYoLnTVZIyj5tB3r2OqdA/viewform?usp=publish-editor', desc: '提案終了は無期限' },
     ]
@@ -1924,7 +1941,7 @@
     'beast_room': { name: '野獣先輩の部屋', desc: '24歳学生...？', price: 0, priceType: 'none' },
   };
 
-  // ============ ★ どんぐりスキン（多彩なフォント設定） ============
+  // ============ どんぐりスキン ============
   const ACORN_SKINS = {
     'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none', shape: 'normal', fontColor: '#d2b48c', fontFamily: "'Zen Maru Gothic', sans-serif" },
     'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 500, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#6aaa4a', fontFamily: "'Kosugi Maru', sans-serif" },
@@ -1943,7 +1960,6 @@
     'fluffy': { name: 'ふわふわどんぐり', desc: '綿毛のようにふわふわ', price: 30000, priceType: 'coin', effect: 'fluffy', shape: 'fluffy', fontColor: '#ffb6c1', fontFamily: "'Kaisei Decol', serif" },
     'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 35000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00', fontFamily: "'Chokokutai', sans-serif" },
     'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700', fontFamily: "'Yuji Boku', serif" },
-    // ★ 特別ギフトどんぐり（ショップには表示されない）
     'gift_secret': { name: '特別などんぐり', desc: '申し訳ございません', price: 0, priceType: 'none', effect: 'gift', shape: 'gift', fontColor: '#ff6b6b', fontFamily: "'Yuji Syuku', serif" },
   };
 
@@ -1971,13 +1987,12 @@
     seMissEnabled: true,
     seStartEnabled: true,
     seResultEnabled: true,
-    // ★ 特別ギフト関連
     giftVersion: '',
     giftClaimed: false,
     giftClaimedDate: '',
   };
 
-  // --- デフォルト音声 ---
+  // --- デフォルト音声生成 ---
   function generateDefaultSound(type) {
     if (!audioCtx) return null;
     try {
@@ -2015,7 +2030,7 @@
     } catch(e) { return null; }
   }
 
-  // --- localStorage ---
+  // --- データ保存・ロード（localStorage） ---
   function saveData() {
     const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
@@ -2052,7 +2067,6 @@
       seMissEnabled = true,
       seStartEnabled = true,
       seResultEnabled = true,
-      // ★ 特別ギフト
       giftVersion = '',
       giftClaimed = false,
       giftClaimedDate = '';
@@ -2065,7 +2079,6 @@
       toastTimeout = null, isSentenceMode = false, usedWords = [],
       pendingSentenceMode = false;
 
-  // --- 実績トースト用キュー ---
   let achievementToastQueue = [];
   let isAchievementToastShowing = false;
 
@@ -2299,6 +2312,11 @@
   const giftClose = document.getElementById('gift-close');
   const giftClaimBtn = document.getElementById('gift-claim-btn');
   const giftResult = document.getElementById('gift-result');
+  // ★ データ保存/ロード DOM
+  const saveDataFileBtn = document.getElementById('save-data-file-btn');
+  const loadDataFileBtn = document.getElementById('load-data-file-btn');
+  const loadDataFileInput = document.getElementById('load-data-file-input');
+  const statusDataFile = document.getElementById('status-data-file');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -2378,11 +2396,9 @@
       giftResult.className = 'gift-result success';
       return;
     }
-    // ★ 特別などんぐりを付与
     if (!ownedAcorn.includes('gift_secret')) {
       ownedAcorn.push('gift_secret');
     }
-    // ★ 実績解除（もしあれば）
     if (!unlockedAchievements.includes('gift_received')) {
       unlockedAchievements.push('gift_received');
     }
@@ -2401,7 +2417,6 @@
     }, 1500);
   }
   giftClose.addEventListener('click', () => {
-    // 閉じたら二度と表示しない
     if (giftVersion !== GIFT_VERSION) {
       giftVersion = GIFT_VERSION;
       saveData();
@@ -2572,7 +2587,7 @@
     else { document.body.classList.remove('phantom-font'); }
   }
 
-  // ============ ★ フォントカラー適用関数 ============
+  // ============ フォントカラー適用関数 ============
   function updateFontColor() {
     const skin = ACORN_SKINS[equippedAcorn];
     const fontColor = skin ? skin.fontColor : '#d2b48c';
@@ -2599,7 +2614,7 @@
     }
   }
 
-  // ============ ★ フォントファミリー適用関数（日本語も大幅変更） ============
+  // ============ フォントファミリー適用関数 ============
   function applyFontFamily() {
     const skin = ACORN_SKINS[equippedAcorn];
     const fontFamily = skin ? skin.fontFamily : "'Zen Maru Gothic', sans-serif";
@@ -2663,7 +2678,7 @@
     updateSeToggleUI();
   }
 
-  // ============ ★ 効果音トグルUI更新 ============
+  // ============ 効果音トグルUI更新 ============
   function updateSeToggleUI() {
     const toggles = [
       { btn: toggleSeTyped, enabled: seTypedEnabled, label: 'タイプ音' },
@@ -2908,7 +2923,7 @@
     requestAnimationFrame(drawForest);
   }
 
-  // ============ ★ どんぐり形状描画 ============
+  // ============ どんぐり形状描画 ============
   function getAcornStyle(skin) {
     const styles = {
       'default': { cap: '#654321', nut: '#a07346', glow: null, particleColors: ['#654321','#a07346','#8B6B3D'] },
@@ -2949,7 +2964,6 @@
       variation: 0.8 + Math.random() * 0.4 });
   }
 
-  // ★ 形状別描画関数
   function drawAcornShape(ctx, a, style, x, y, scale) {
     const shape = a.shape || 'normal';
     const size = 10 * scale;
@@ -2959,7 +2973,6 @@
 
     switch(shape) {
       case 'gift':
-        // 特別などんぐり：ハート型
         ctx.fillStyle = style.nut;
         ctx.shadowColor = 'rgba(255,107,107,0.5)'; ctx.shadowBlur = 25;
         ctx.beginPath();
@@ -2970,7 +2983,6 @@
         ctx.closePath(); ctx.fill();
         ctx.fillStyle = style.cap; ctx.shadowBlur = 15;
         ctx.beginPath(); ctx.arc(0, -s * 0.1, s * 0.5, Math.PI, Math.PI * 2); ctx.fill();
-        // キラキラ
         ctx.shadowBlur = 0;
         for (let i = 0; i < 4; i++) {
           const angle = a.bubblePhase + i * 1.57;
@@ -3264,7 +3276,7 @@
     ctx.restore();
   }
 
-  // ============ ★ パーティクル・エフェクト（粒子サイズ・形状対応） ============
+  // ============ パーティクル・エフェクト ============
   function createSpecialParticles(x, y, skin) {
     const style = getAcornStyle(skin);
     const colors = style.particleColors;
@@ -3817,7 +3829,6 @@
     for(const [id, skin] of Object.entries(ACORN_SKINS)) {
       if (id === 'double' && !doubleAcornUnlocked) continue;
       if (id === 'beast' && !beastAcornUnlocked) continue;
-      // ★ 特別ギフトどんぐりはショップに表示しない（所持している場合のみ表示）
       if (id === 'gift_secret' && !ownedAcorn.includes('gift_secret')) continue;
       const owned = ownedAcorn.includes(id), equipped = equippedAcorn === id;
       const canBuy = (skin.priceType === 'coin' && totalTyped >= skin.price) || skin.priceType === 'none';
@@ -3903,6 +3914,8 @@
     statusKanaColor.textContent = '✅ 現在の色: ' + kanaColor;
     statusKanaColor.className = 'color-status success';
     updateDisplaySettings();
+    statusDataFile.textContent = '端末を変えてもファイルがあればデータを復元できます';
+    statusDataFile.className = 'sound-status';
   }
 
   function executeCodeAuth() {
@@ -3924,6 +3937,107 @@
     codeInput.value = '';
   }
 
+  // ============ ファイル保存 / ロード ============
+  function saveDataToFile() {
+    const data = {
+      highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
+      unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
+      codeVerified, superMode, normalMode, phantomAcornUnlocked, doubleAcornUnlocked,
+      beastAcornUnlocked, beastBgUnlocked, announceVersion, infoBadgeVersion, infoRead, particleCount,
+      particleSize, particleShape, bgmMuted, showRomaji, showKanaSmall, kanaColor,
+      seTypedEnabled, seMissEnabled, seStartEnabled, seResultEnabled,
+      giftVersion, giftClaimed, giftClaimedDate,
+      _exportedAt: new Date().toISOString(),
+      _app: 'donguri-typing'
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `donguri_save_${new Date().toISOString().slice(0,10)}.donguri`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    statusDataFile.textContent = '✅ ファイルに保存しました！';
+    statusDataFile.className = 'sound-status success';
+    setTimeout(() => { statusDataFile.textContent = '端末を変えてもファイルがあればデータを復元できます'; statusDataFile.className = 'sound-status'; }, 3000);
+  }
+
+  function loadDataFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data || typeof data !== 'object') throw new Error('無効なデータ形式');
+        
+        highscore = data.highscore ?? highscore;
+        totalTyped = data.totalTyped ?? totalTyped;
+        coins = data.coins ?? coins;
+        useKanji = data.useKanji ?? useKanji;
+        equippedBg = data.equippedBg ?? equippedBg;
+        equippedAcorn = data.equippedAcorn ?? equippedAcorn;
+        ownedBg = data.ownedBg ?? ownedBg;
+        ownedAcorn = data.ownedAcorn ?? ownedAcorn;
+        unlockedAchievements = data.unlockedAchievements ?? unlockedAchievements;
+        max10sTyped = data.max10sTyped ?? max10sTyped;
+        soundTyped = data.soundTyped ?? soundTyped;
+        soundStart = data.soundStart ?? soundStart;
+        soundResult = data.soundResult ?? soundResult;
+        soundBgm = data.soundBgm ?? soundBgm;
+        soundMiss = data.soundMiss ?? soundMiss;
+        codeVerified = data.codeVerified ?? codeVerified;
+        superMode = data.superMode ?? superMode;
+        normalMode = data.normalMode ?? normalMode;
+        phantomAcornUnlocked = data.phantomAcornUnlocked ?? phantomAcornUnlocked;
+        doubleAcornUnlocked = data.doubleAcornUnlocked ?? doubleAcornUnlocked;
+        beastAcornUnlocked = data.beastAcornUnlocked ?? beastAcornUnlocked;
+        beastBgUnlocked = data.beastBgUnlocked ?? beastBgUnlocked;
+        announceVersion = data.announceVersion ?? announceVersion;
+        infoBadgeVersion = data.infoBadgeVersion ?? infoBadgeVersion;
+        infoRead = data.infoRead ?? infoRead;
+        particleCount = data.particleCount ?? particleCount;
+        particleSize = data.particleSize ?? particleSize;
+        particleShape = data.particleShape ?? particleShape;
+        bgmMuted = data.bgmMuted ?? bgmMuted;
+        showRomaji = data.showRomaji ?? showRomaji;
+        showKanaSmall = data.showKanaSmall ?? showKanaSmall;
+        kanaColor = data.kanaColor ?? kanaColor;
+        seTypedEnabled = data.seTypedEnabled ?? seTypedEnabled;
+        seMissEnabled = data.seMissEnabled ?? seMissEnabled;
+        seStartEnabled = data.seStartEnabled ?? seStartEnabled;
+        seResultEnabled = data.seResultEnabled ?? seResultEnabled;
+        giftVersion = data.giftVersion ?? giftVersion;
+        giftClaimed = data.giftClaimed ?? giftClaimed;
+        giftClaimedDate = data.giftClaimedDate ?? giftClaimedDate;
+
+        // 再適用
+        highscoreValueEl.textContent = highscore;
+        updateTotalTypedDisplay();
+        settingDisplayBtn.textContent = useKanji ? "漢字" : "ひらがな";
+        updateSettingsUI();
+        updateAchievementUI();
+        updateShopUI();
+        updatePhantomFont();
+        updateFontColor();
+        applyFontFamily();
+        applyKanaColor(kanaColor);
+        updateAnnounceVisibility();
+        updateGiftVisibility();
+        updateInfoBadge();
+        updateSeToggleUI();
+        saveData();
+        statusDataFile.textContent = '✅ データをロードしました！';
+        statusDataFile.className = 'sound-status success';
+        setTimeout(() => { statusDataFile.textContent = '端末を変えてもファイルがあればデータを復元できます'; statusDataFile.className = 'sound-status'; }, 3000);
+      } catch(err) {
+        statusDataFile.textContent = '❌ ファイルの読み込みに失敗: ' + err.message;
+        statusDataFile.className = 'sound-status error';
+      }
+    };
+    reader.readAsText(file);
+  }
+
   // ============ イベントリスナー ============
   document.getElementById('info-open-btn').addEventListener('click', (e) => { e.stopPropagation(); openInfoModal(); });
   document.getElementById('info-close-btn').addEventListener('click', () => { infoOverlay.classList.remove('active'); });
@@ -3941,7 +4055,16 @@
   document.getElementById('settings-close-btn').addEventListener('click', () => { settingsOverlay.classList.remove('active'); });
   settingsOverlay.addEventListener('click', (e) => { if(e.target === settingsOverlay) settingsOverlay.classList.remove('active'); });
 
-  // ===== ひらがな色設定イベント =====
+  // ファイル保存 / ロード
+  saveDataFileBtn.addEventListener('click', saveDataToFile);
+  loadDataFileBtn.addEventListener('click', () => { loadDataFileInput.click(); });
+  loadDataFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) loadDataFromFile(file);
+    e.target.value = '';
+  });
+
+  // ひらがな色設定
   kanaColorPicker.addEventListener('input', (e) => {
     const color = e.target.value;
     kanaColor = color;
@@ -3959,27 +4082,11 @@
     statusKanaColor.className = 'color-status success';
   });
 
-  // ★ 効果音トグルイベント
-  toggleSeTyped.addEventListener('click', () => {
-    seTypedEnabled = !seTypedEnabled;
-    saveData();
-    updateSeToggleUI();
-  });
-  toggleSeMiss.addEventListener('click', () => {
-    seMissEnabled = !seMissEnabled;
-    saveData();
-    updateSeToggleUI();
-  });
-  toggleSeStart.addEventListener('click', () => {
-    seStartEnabled = !seStartEnabled;
-    saveData();
-    updateSeToggleUI();
-  });
-  toggleSeResult.addEventListener('click', () => {
-    seResultEnabled = !seResultEnabled;
-    saveData();
-    updateSeToggleUI();
-  });
+  // 効果音トグル
+  toggleSeTyped.addEventListener('click', () => { seTypedEnabled = !seTypedEnabled; saveData(); updateSeToggleUI(); });
+  toggleSeMiss.addEventListener('click', () => { seMissEnabled = !seMissEnabled; saveData(); updateSeToggleUI(); });
+  toggleSeStart.addEventListener('click', () => { seStartEnabled = !seStartEnabled; saveData(); updateSeToggleUI(); });
+  toggleSeResult.addEventListener('click', () => { seResultEnabled = !seResultEnabled; saveData(); updateSeToggleUI(); });
 
   document.querySelectorAll('.sound-exec-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => { e.stopPropagation(); const type = btn.dataset.sound; const input = document.getElementById('sound-' + type); const url = input.value.trim(); await applySoundSetting(type, url); });
@@ -4023,16 +4130,8 @@
     document.getElementById('status-particle-size').className = 'sound-status success';
   });
 
-  toggleRomajiBtn.addEventListener('click', () => {
-    showRomaji = !showRomaji;
-    saveData();
-    updateDisplaySettings();
-  });
-  toggleKanaSmallBtn.addEventListener('click', () => {
-    showKanaSmall = !showKanaSmall;
-    saveData();
-    updateDisplaySettings();
-  });
+  toggleRomajiBtn.addEventListener('click', () => { showRomaji = !showRomaji; saveData(); updateDisplaySettings(); });
+  toggleKanaSmallBtn.addEventListener('click', () => { showKanaSmall = !showKanaSmall; saveData(); updateDisplaySettings(); });
 
   toggleBgmMuteBtn.addEventListener('click', () => {
     bgmMuted = !bgmMuted;
@@ -4096,23 +4195,20 @@
       applyFontFamily();
       applyKanaColor(kanaColor);
       updateSeToggleUI();
-      // ギフトボタンをリセット
       giftClaimBtn.disabled = false;
       giftClaimBtn.textContent = '🌰 特別などんぐりを受け取る';
       giftResult.textContent = '';
       giftResult.className = 'gift-result';
+      statusDataFile.textContent = '端末を変えてもファイルがあればデータを復元できます';
+      statusDataFile.className = 'sound-status';
     }
   });
 
   hankoBadge.addEventListener('click', () => { updateShopUI(); shopOverlay.classList.add('active'); });
 
   document.addEventListener('keydown', (e) => {
-    // ギフトフレーム表示中はキー操作を無効化（Spaceでゲームが始まらないように）
     if (!giftFrame.classList.contains('hidden')) {
-      if (e.key === 'Escape' || e.code === 'Space') {
-        e.preventDefault();
-        giftClose.click();
-      }
+      if (e.key === 'Escape' || e.code === 'Space') { e.preventDefault(); giftClose.click(); }
       return;
     }
     if(shopOverlay.classList.contains('active') || settingsOverlay.classList.contains('active') || achievementOverlay.classList.contains('active') || infoOverlay.classList.contains('active')) {
@@ -4245,7 +4341,6 @@
     updateGiftVisibility();
     applyKanaColor(kanaColor);
     updateSeToggleUI();
-    // ギフト未受け取りならボタンを有効に
     if (giftClaimed) {
       giftClaimBtn.disabled = true;
       giftClaimBtn.textContent = '✅ 受け取り済み';
@@ -4253,6 +4348,8 @@
       giftClaimBtn.disabled = false;
       giftClaimBtn.textContent = '🌰 特別などんぐりを受け取る';
     }
+    statusDataFile.textContent = '端末を変えてもファイルがあればデータを復元できます';
+    statusDataFile.className = 'sound-status';
   }
 
   init();
