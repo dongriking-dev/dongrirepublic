@@ -1297,6 +1297,7 @@
     padding: 20px 20px 0;
     border: 2px solid var(--panel-edge);
     margin-bottom: 16px;
+    cursor: pointer;
   }
   .tree-ground {
     position: absolute;
@@ -1334,37 +1335,25 @@
     transform: translateX(-50%);
     text-align: center;
     transition: all 1s ease;
+    cursor: pointer;
   }
-  .tree-plant .seed {
-    font-size: 48px;
-    display: block;
-  }
-  .tree-plant .sprout {
-    font-size: 56px;
-    display: block;
-  }
-  .tree-plant .small-tree {
-    font-size: 72px;
-    display: block;
-  }
-  .tree-plant .medium-tree {
-    font-size: 100px;
-    display: block;
-  }
-  .tree-plant .full-tree {
-    font-size: 140px;
-    display: block;
-  }
-  .tree-plant .fruit-tree {
-    font-size: 140px;
-    display: block;
-  }
+  .tree-plant .seed { font-size: 48px; display: block; }
+  .tree-plant .sprout { font-size: 56px; display: block; }
+  .tree-plant .small-tree { font-size: 72px; display: block; }
+  .tree-plant .medium-tree { font-size: 100px; display: block; }
+  .tree-plant .full-tree { font-size: 140px; display: block; }
+  .tree-plant .fruit-tree { font-size: 140px; display: block; }
   .tree-plant .fruit {
     position: absolute;
     top: -10px;
     right: -10px;
     font-size: 32px;
     animation: fruitPop 1.5s ease-in-out infinite alternate;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .tree-plant .fruit:hover {
+    transform: scale(1.3) !important;
   }
   @keyframes fruitPop {
     0% { transform: scale(1) rotate(-5deg); }
@@ -1510,6 +1499,91 @@
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+  }
+
+  /* ===== ★ 収穫報酬ポップアップ ===== */
+  #reward-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: var(--panel);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    padding: 32px 40px;
+    z-index: 700;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 60px rgba(255,215,0,0.3);
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 90%;
+    min-width: 280px;
+  }
+  #reward-popup.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  #reward-popup .reward-icon {
+    font-size: 64px;
+    margin-bottom: 8px;
+    display: block;
+    animation: rewardBounce 0.6s ease;
+  }
+  @keyframes rewardBounce {
+    0% { transform: scale(0) rotate(-180deg); }
+    60% { transform: scale(1.3) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  #reward-popup .reward-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold-soft);
+    margin-bottom: 6px;
+  }
+  #reward-popup .reward-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--achievement-gold);
+    margin-bottom: 6px;
+  }
+  #reward-popup .reward-desc {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  #reward-popup .reward-close {
+    background: var(--gold);
+    border: none;
+    color: var(--ink);
+    padding: 10px 28px;
+    border-radius: 8px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  #reward-popup .reward-close:hover {
+    opacity: 0.8;
+  }
+  #reward-popup .reward-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  #reward-popup .reward-list-item {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    border-left: 3px solid var(--achievement-gold);
   }
 
   @media (max-width:480px){
@@ -1664,6 +1738,14 @@
       </div>
       <div class="gift-result" id="gift-result"></div>
     </div>
+  </div>
+
+  <!-- ★ 収穫報酬ポップアップ -->
+  <div id="reward-popup">
+    <span class="reward-icon" id="reward-icon">🎁</span>
+    <div class="reward-title" id="reward-title">収穫！</div>
+    <div class="reward-list" id="reward-list"></div>
+    <button class="reward-close" id="reward-close-btn">OK</button>
   </div>
 
   <!-- Achievement Toast -->
@@ -2018,8 +2100,8 @@
   "use strict";
 
   // ============ ★ バージョン情報 ============
-  const ANNOUNCE_VERSION = "v1.2.6";
-  const INFO_BADGE_VERSION = "v1.2.6";
+  const ANNOUNCE_VERSION = "v1.3.0";
+  const INFO_BADGE_VERSION = "v1.3.0";
   const GIFT_VERSION = "v1.0.0";
 
   // ============ 情報コンテンツデータ ============
@@ -2031,8 +2113,10 @@
       { date: '2026年9月9日', title: '🎨 色カスタマイズ追加！', desc: 'ひらがな（読み）の色を自分で変更できるようになりました！' },
       { date: '2026年9月10日', title: '💾 データ保存機能追加！', desc: 'ファイルにデータを保存・ロードできるようになりました！' },
       { date: '2026年9月11日', title: '🌱 育成機能追加！', desc: 'どんぐりの木を育てられるようになりました！' },
+      { date: '2026年9月12日', title: '🌰 収穫システム追加！', desc: '実ったどんぐりをタップすると新しいスキンや背景、実績が解除されます！' },
     ],
     notices: [
+      { date: '2026年9月12日', text: '🌰 木に実ったどんぐりをタップすると、新しいどんぐりスキン・背景・実績がランダムで解除されます！' },
       { date: '2026年9月11日', text: '🌱 情報ボタンの下に「育てる」ボタンを追加しました！毎日200文字打って水やりすると、現実時間で1週間ごとに木が成長します。' },
       { date: '2026年9月10日', text: '💾 設定に「ファイルにデータを保存」「ファイルをロード」を追加！端末を変えてもファイルがあれば復元できます。' },
       { date: '2026年9月9日', text: '🎨 設定に「ひらがな（読み）の色」を追加しました！お好みの色にカスタマイズしてタイピングを楽しめます。' },
@@ -2041,7 +2125,7 @@
       { date: '2026年9月5日', text: '📢 不具合報告フォームを開設しました。追加させたい言葉や単語、何かあれば設定にあるリンクからお願いします！' },
     ],
     version: INFO_BADGE_VERSION,
-    updateDate: '2026年9月11日',
+    updateDate: '2026年9月12日',
     detailLinks: [
       { title: '背景の実績について', url: 'https://docs.google.com/forms/d/e/1FAIpQLSdDtK7NTmDGpWK-c2oAQXaWbZfJOiYoLnTVZIyj5tB3r2OqdA/viewform?usp=publish-editor', desc: '提案終了は無期限' },
     ]
@@ -2276,6 +2360,16 @@
     'tree_full': { id: 'tree_full', name: '大樹', desc: '木が完全に成長した', icon: '🌲', check: () => treePhase >= 5 },
     'tree_fruit': { id: 'tree_fruit', name: '実り', desc: 'どんぐりが実った', icon: '🌰', check: () => treePhase >= 6 },
     'tree_master': { id: 'tree_master', name: 'どんぐりマスター', desc: 'どんぐりの木を収穫した', icon: '👑', check: () => treeHarvested },
+    // ★ 収穫報酬実績
+    'harvest_1': { id: 'harvest_1', name: '初収穫', desc: '初めてどんぐりを収穫した', icon: '🌰', check: () => harvestCount >= 1 },
+    'harvest_5': { id: 'harvest_5', name: '収穫の達人', desc: '5回収穫した', icon: '🧺', check: () => harvestCount >= 5 },
+    'harvest_10': { id: 'harvest_10', name: 'どんぐり農家', desc: '10回収穫した', icon: '🏡', check: () => harvestCount >= 10 },
+    'harvest_30': { id: 'harvest_30', name: 'どんぐり王', desc: '30回収穫した', icon: '👑', check: () => harvestCount >= 30 },
+    'reward_skin': { id: 'reward_skin', name: '新しいどんぐり', desc: '収穫で新しいどんぐりスキンを獲得', icon: '🎁', check: () => rewardSkinCount >= 1 },
+    'reward_bg': { id: 'reward_bg', name: '新しい景色', desc: '収穫で新しい背景を獲得', icon: '🖼️', check: () => rewardBgCount >= 1 },
+    'reward_rare': { id: 'reward_rare', name: 'レア報酬', desc: 'レアな報酬を獲得', icon: '💎', check: () => rewardRareCount >= 1 },
+    'all_skins': { id: 'all_skins', name: 'どんぐりコンプリート', desc: '全てのどんぐりスキンを集めた', icon: '🌟', check: () => Object.keys(ACORN_SKINS).every(id => ownedAcorn.includes(id)) },
+    'all_bgs': { id: 'all_bgs', name: '背景コンプリート', desc: '全ての背景を集めた', icon: '🌈', check: () => Object.keys(BG_SKINS).every(id => ownedBg.includes(id)) },
   };
 
   // --- 背景設定 ---
@@ -2314,12 +2408,42 @@
     'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 35000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00', fontFamily: "'Chokokutai', sans-serif" },
     'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700', fontFamily: "'Yuji Boku', serif" },
     'gift_secret': { name: '特別などんぐり', desc: '申し訳ございません', price: 0, priceType: 'none', effect: 'gift', shape: 'gift', fontColor: '#ff6b6b', fontFamily: "'Yuji Syuku', serif" },
+  // ★ 収穫限定・完全新規どんぐり（ショップ非売品）
+  'new_moon': { name: '月のどんぐり', desc: '月明かりのように淡く輝く収穫限定どんぐり', price: 0, priceType: 'none', effect: 'moon', shape: 'crescent', fontColor: '#e0e0ff', fontFamily: "'Shippori Mincho B1', serif" },
+  'new_sun': { name: '太陽のどんぐり', desc: '太陽のように燃える収穫限定どんぐり', price: 0, priceType: 'none', effect: 'sun', shape: 'sun', fontColor: '#ffb300', fontFamily: "'Train One', cursive" },
+  'new_sakura': { name: '桜のどんぐり', desc: '桜の花びらが舞う収穫限定どんぐり', price: 0, priceType: 'none', effect: 'sakura', shape: 'sakura', fontColor: '#ffb7c5', fontFamily: "'Kaisei Decol', serif" },
+  'new_snow': { name: '雪のどんぐり', desc: '結晶のように冷たい収穫限定どんぐり', price: 0, priceType: 'none', effect: 'snow', shape: 'snow', fontColor: '#cceeff', fontFamily: "'Kiwi Maru', sans-serif" },
+  'new_thunder': { name: '雷のどんぐり', desc: '電気が走る収穫限定どんぐり', price: 0, priceType: 'none', effect: 'thunder', shape: 'thunder', fontColor: '#fff176', fontFamily: "'Chokokutai', sans-serif" },
+  'new_ocean': { name: '海のどんぐり', desc: '波がきらめく収穫限定どんぐり', price: 0, priceType: 'none', effect: 'ocean', shape: 'ocean', fontColor: '#4fc3f7', fontFamily: "'Yusei Magic', sans-serif" },
+  'new_forest': { name: '森のどんぐり', desc: '葉っぱが生い茂る収穫限定どんぐり', price: 0, priceType: 'none', effect: 'forest', shape: 'forest', fontColor: '#81c784', fontFamily: "'Kosugi Maru', sans-serif" },
+  'new_galaxy': { name: '銀河のどんぐり', desc: '星屑が渦を巻く収穫限定どんぐり', price: 0, priceType: 'none', effect: 'galaxy', shape: 'galaxy', fontColor: '#b39ddb', fontFamily: "'DotGothic16', sans-serif" },
+  'new_diamond': { name: 'ダイヤのどんぐり', desc: '完璧に輝く収穫限定どんぐり', price: 0, priceType: 'none', effect: 'diamond', shape: 'diamond', fontColor: '#b2ebf2', fontFamily: "'Noto Serif JP', serif" },
+  'new_phoenix': { name: '不死鳥のどんぐり', desc: '炎から蘇る収穫限定どんぐり', price: 0, priceType: 'none', effect: 'phoenix', shape: 'phoenix', fontColor: '#ff7043', fontFamily: "'RocknRoll One', sans-serif" },
+  'new_dragon': { name: '竜のどんぐり', desc: '竜の鱗が輝く収穫限定どんぐり', price: 0, priceType: 'none', effect: 'dragon', shape: 'dragon', fontColor: '#66bb6a', fontFamily: "'Reggae One', cursive" },
+  'new_angel': { name: '天使のどんぐり', desc: '聖なる光を放つ収穫限定どんぐり', price: 0, priceType: 'none', effect: 'angel', shape: 'angel', fontColor: '#fff9c4', fontFamily: "'Yuji Syuku', serif" },
+  'new_demon': { name: '悪魔のどんぐり', desc: '闇のオーラを纏う収穫限定どんぐり', price: 0, priceType: 'none', effect: 'demon', shape: 'demon', fontColor: '#ba68c8', fontFamily: "'Zen Old Mincho', serif" },
+  'new_rainbow_crystal': { name: '虹晶どんぐり', desc: '虹色の結晶の収穫限定どんぐり', price: 0, priceType: 'none', effect: 'rainbow_crystal', shape: 'rainbow_crystal', fontColor: '#ff80ab', fontFamily: "'M PLUS Rounded 1c', cursive, sans-serif" },
+  'new_void': { name: '虚空のどんぐり', desc: 'すべてを飲み込む収穫限定どんぐり', price: 0, priceType: 'none', effect: 'void', shape: 'void', fontColor: '#7e57c2', fontFamily: "'Zen Kaku Gothic New', sans-serif" },
+  'new_prism': { name: 'プリズムどんぐり', desc: '光を7色に分ける収穫限定どんぐり', price: 0, priceType: 'none', effect: 'prism', shape: 'prism', fontColor: '#80deea', fontFamily: "'Kaisei HarunoUmi', serif" },
+  'new_meteor': { name: '流星のどんぐり', desc: '尾を引いて落ちる収穫限定どんぐり', price: 0, priceType: 'none', effect: 'meteor', shape: 'meteor', fontColor: '#ffab91', fontFamily: "'Stick', sans-serif" },
+  'new_blossom': { name: '花霞のどんぐり', desc: '花びらが舞い散る収穫限定どんぐり', price: 0, priceType: 'none', effect: 'blossom', shape: 'blossom', fontColor: '#f8bbd0', fontFamily: "'Kaisei Decol', serif" },
+  'new_mist': { name: '霧のどんぐり', desc: '幻想的な霧の収穫限定どんぐり', price: 0, priceType: 'none', effect: 'mist', shape: 'mist', fontColor: '#cfd8dc', fontFamily: "'Shippori Mincho B1', serif" },
+  'new_aurora': { name: '極光のどんぐり', desc: '極光が揺らめく収穫限定どんぐり', price: 0, priceType: 'none', effect: 'aurora', shape: 'aurora', fontColor: '#80cbc4', fontFamily: "'Yuji Boku', serif" },
+};
+
+  // ★ 収穫限定背景
+  const HARVEST_BG_SKINS = {
+    'harvest_forest': { name: '収穫の森', desc: '収穫でしか手に入らない特別な森', price: 0, priceType: 'none' },
+    'harvest_night': { name: '収穫の夜', desc: '収穫でしか手に入らない特別な夜', price: 0, priceType: 'none' },
+    'harvest_aurora': { name: '収穫のオーロラ', desc: '収穫でしか手に入らない特別なオーロラ', price: 0, priceType: 'none' },
+    'harvest_sakura': { name: '収穫の桜', desc: '収穫でしか手に入らない特別な桜', price: 0, priceType: 'none' },
+    'harvest_ocean': { name: '収穫の海', desc: '収穫でしか手に入らない特別な海', price: 0, priceType: 'none' },
   };
 
   // ============ 育成システム定数 ============
-  const TREE_WATER_PER_DAY = 200;      // 1日に必要なタイピング文字数
-  const TREE_WATER_PER_WEEK = 7;       // 1週間に必要な日数
-  const TREE_PHASE_DAYS = 7;           // 各フェーズに必要な日数（1週間）
+  const TREE_WATER_PER_DAY = 200;
+  const TREE_WATER_PER_WEEK = 7;
+  const TREE_PHASE_DAYS = 7;
   const TREE_PHASES = [
     { id: 0, name: '未植樹', icon: '', desc: 'どんぐりを植えよう' },
     { id: 1, name: 'どんぐりを植えた', icon: '🌰', desc: '土に埋めた。水やりをしよう' },
@@ -2327,7 +2451,7 @@
     { id: 3, name: '若木', icon: '🌿', desc: '少し大きくなった' },
     { id: 4, name: '成長期', icon: '🌳', desc: 'しっかりしてきた' },
     { id: 5, name: '大樹', icon: '🌲', desc: '完全に成長した' },
-    { id: 6, name: '実り', icon: '🌰', desc: 'どんぐりが実った！' },
+    { id: 6, name: '実り', icon: '🌰', desc: 'どんぐりが実った！タップして収穫しよう' },
   ];
 
   // ============ デフォルトデータ ============
@@ -2366,6 +2490,12 @@
     treePlantedDate: '',
     treeHarvested: false,
     treeLastGrowthDate: '',
+    // ★ 収穫報酬データ
+    harvestCount: 0,
+    rewardSkinCount: 0,
+    rewardBgCount: 0,
+    rewardRareCount: 0,
+    lastHarvestDate: '',
   };
 
   // --- デフォルト音声生成 ---
@@ -2416,7 +2546,8 @@
       seTypedEnabled, seMissEnabled, seStartEnabled, seResultEnabled,
       giftVersion, giftClaimed, giftClaimedDate,
       treePlanted, treePhase, treeDailyWater, treeWaterDays, treeLastWaterDate,
-      treePlantedDate, treeHarvested, treeLastGrowthDate };
+      treePlantedDate, treeHarvested, treeLastGrowthDate,
+      harvestCount, rewardSkinCount, rewardBgCount, rewardRareCount, lastHarvestDate };
     try { localStorage.setItem('donguri_data', JSON.stringify(data)); } catch(e) {}
   }
   function loadData() {
@@ -2456,7 +2587,13 @@
       treeLastWaterDate = '',
       treePlantedDate = '',
       treeHarvested = false,
-      treeLastGrowthDate = '';
+      treeLastGrowthDate = '',
+      // ★ 収穫報酬
+      harvestCount = 0,
+      rewardSkinCount = 0,
+      rewardBgCount = 0,
+      rewardRareCount = 0,
+      lastHarvestDate = '';
 
   // --- ゲーム状態 ---
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
@@ -2714,6 +2851,12 @@
   const treeStatus = document.getElementById('tree-status');
   const treeActions = document.getElementById('tree-actions');
   const treeCloseBtn = document.getElementById('tree-close-btn');
+  // ★ 収穫報酬 DOM
+  const rewardPopup = document.getElementById('reward-popup');
+  const rewardIcon = document.getElementById('reward-icon');
+  const rewardTitle = document.getElementById('reward-title');
+  const rewardList = document.getElementById('reward-list');
+  const rewardCloseBtn = document.getElementById('reward-close-btn');
 
   // --- Canvas ---
   const forestCanvas = document.getElementById('forest-canvas');
@@ -2980,7 +3123,7 @@
 
   // ============ 幻のどんぐりフォント適用 ============
   function updatePhantomFont() {
-    if (equippedAcorn === 'phantom') { document.body.classList.add('phantom-font'); }
+    if (equippedAcorn === 'phantom' || equippedAcorn === 'harvest_phantom') { document.body.classList.add('phantom-font'); }
     else { document.body.classList.remove('phantom-font'); }
   }
 
@@ -2993,13 +3136,13 @@
     document.querySelector('.title').style.color = fontColor;
     modalScoreEl.style.color = fontColor;
     document.querySelector('.hanko-score').style.color = fontColor;
-    if (equippedAcorn === 'phantom') {
+    if (equippedAcorn === 'phantom' || equippedAcorn === 'harvest_phantom') {
       kanjiDisplayEl.style.textShadow = '0 0 30px rgba(155,89,182,0.6), 0 0 60px rgba(155,89,182,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 30px rgba(155,89,182,0.4), 0 2px 8px rgba(0,0,0,0.5)';
-    } else if (equippedAcorn === 'gold') {
+    } else if (equippedAcorn === 'gold' || equippedAcorn === 'harvest_gold') {
       kanjiDisplayEl.style.textShadow = '0 0 20px rgba(255,215,0,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,215,0,0.2), 0 2px 8px rgba(0,0,0,0.5)';
-    } else if (equippedAcorn === 'rainbow') {
+    } else if (equippedAcorn === 'rainbow' || equippedAcorn === 'harvest_rainbow') {
       kanjiDisplayEl.style.textShadow = '0 0 20px rgba(255,100,255,0.3)';
       document.querySelector('.title').style.textShadow = '0 0 20px rgba(255,100,255,0.2), 0 2px 8px rgba(0,0,0,0.5)';
     } else if (equippedAcorn === 'gift_secret') {
@@ -3029,7 +3172,7 @@
       const els = document.querySelectorAll(sel);
       els.forEach(el => { if (el) el.style.fontFamily = fontFamily; });
     });
-    document.querySelectorAll('.nav-btn, .shop-item-btn, .achievement-item, .info-btn, .setting-toggle, .sound-file-btn, .sound-exec-btn, .code-btn, .shop-close-btn, .settings-close-btn, .achievement-close-btn, .info-close-btn, .tree-btn, .tree-close-btn, .tree-actions button')
+    document.querySelectorAll('.nav-btn, .shop-item-btn, .achievement-item, .info-btn, .setting-toggle, .sound-file-btn, .sound-exec-btn, .code-btn, .shop-close-btn, .settings-close-btn, .achievement-close-btn, .info-close-btn, .tree-btn, .tree-close-btn, .tree-actions button, .reward-close')
       .forEach(el => { if (el) el.style.fontFamily = fontFamily; });
   }
 
@@ -3175,6 +3318,11 @@
       case 'waterfall': colors = ['#0a1a0a','#1a3a1a','#2a5a2a']; break;
       case 'desert': colors = ['#1a0a0a','#3a2a0a','#5a3a0a']; break;
       case 'starry': colors = ['#050510','#0a0a25','#0a0a3a']; break;
+      case 'harvest_forest': colors = ['#0d1a0a','#1a2a15','#2a3a1a']; break;
+      case 'harvest_night': colors = ['#050510','#0a0a1a','#0a0a2a']; break;
+      case 'harvest_aurora': colors = ['#0a0a1a','#1a0a3a','#0a2a3a']; break;
+      case 'harvest_sakura': colors = ['#1a0a1a','#3a1a2a','#5a2a3a']; break;
+      case 'harvest_ocean': colors = ['#0a1a2a','#0d2a4a','#1a4a6a']; break;
       default: colors = ['#0d120a','#182215'];
     }
     const bgGrad = fCtx.createLinearGradient(0, 0, 0, forestCanvas.height);
@@ -3303,7 +3451,7 @@
       fCtx.lineTo(forestCanvas.width * 0.75, forestCanvas.height); fCtx.lineTo(forestCanvas.width * 0.3, forestCanvas.height); fCtx.fill(); fCtx.restore();
     }
 
-    if(equippedBg === 'starry') {
+    if(equippedBg === 'starry' || equippedBg === 'harvest_night') {
       fCtx.save(); starryYOffset += 0.5;
       for(let i = 0; i < 100; i++) {
         const x = ((i * 137.5) % forestCanvas.width);
@@ -3341,6 +3489,32 @@
       'spiky': { cap: '#8B5A00', nut: '#ff8c00', glow: 'rgba(255,140,0,0.4)', particleColors: ['#ff8c00','#ffa500','#ffb347'] },
       'star': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.4)', particleColors: ['#ffd700','#ffec8b','#fff8dc'] },
       'gift_secret': { cap: '#8a2a2a', nut: '#ff6b6b', glow: 'rgba(255,107,107,0.5)', particleColors: ['#ff6b6b','#ff8e8e','#ffb3b3'] },
+      'harvest_gold': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.5)', particleColors: ['#ffd700','#ffaa00','#ffcc33'] },
+      'harvest_rainbow': { cap: '#ff6b6b', nut: '#ffd93d', glow: 'rgba(255,100,100,0.4)', particleColors: ['#ff6b6b','#ffd93d','#6bcfff','#ff6bff'] },
+      'harvest_phantom': { cap: '#4a1a6a', nut: '#8a4aaa', glow: 'rgba(155,89,182,0.7)', particleColors: ['#8a4aaa','#bb66dd','#6a2a8a','#dd88ff'] },
+      'harvest_cosmic': { cap: '#1a0a3a', nut: '#4a1a6a', glow: 'rgba(74,26,106,0.6)', particleColors: ['#4a1a6a','#8a3aaa','#1a0a3a','#aa6acc'] },
+      'harvest_star': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.5)', particleColors: ['#ffd700','#ffec8b','#fff8dc'] },
+    // ... 既存 ...
+    'new_moon': { cap: '#5c6bc0', nut: '#e0e0ff', glow: 'rgba(224,224,255,0.5)', particleColors: ['#e0e0ff','#c5cae9','#9fa8da'] },
+    'new_sun': { cap: '#e65100', nut: '#ffb300', glow: 'rgba(255,179,0,0.6)', particleColors: ['#ffb300','#ffca28','#ffe082'] },
+    'new_sakura': { cap: '#c2185b', nut: '#ffb7c5', glow: 'rgba(255,183,197,0.5)', particleColors: ['#ffb7c5','#f8bbd0','#fce4ec'] },
+    'new_snow': { cap: '#4fc3f7', nut: '#cceeff', glow: 'rgba(204,238,255,0.6)', particleColors: ['#cceeff','#e1f5fe','#b3e5fc'] },
+    'new_thunder': { cap: '#f9a825', nut: '#fff176', glow: 'rgba(255,241,118,0.7)', particleColors: ['#fff176','#ffee58','#fdd835'] },
+    'new_ocean': { cap: '#0277bd', nut: '#4fc3f7', glow: 'rgba(79,195,247,0.5)', particleColors: ['#4fc3f7','#81d4fa','#b3e5fc'] },
+    'new_forest': { cap: '#2e7d32', nut: '#81c784', glow: 'rgba(129,199,132,0.5)', particleColors: ['#81c784','#a5d6a7','#c8e6c9'] },
+    'new_galaxy': { cap: '#4527a0', nut: '#b39ddb', glow: 'rgba(179,157,219,0.6)', particleColors: ['#b39ddb','#9575cd','#7e57c2'] },
+    'new_diamond': { cap: '#00838f', nut: '#b2ebf2', glow: 'rgba(178,235,242,0.7)', particleColors: ['#b2ebf2','#80deea','#4dd0e1'] },
+    'new_phoenix': { cap: '#bf360c', nut: '#ff7043', glow: 'rgba(255,112,67,0.6)', particleColors: ['#ff7043','#ff8a65','#ffab91'] },
+    'new_dragon': { cap: '#1b5e20', nut: '#66bb6a', glow: 'rgba(102,187,106,0.5)', particleColors: ['#66bb6a','#81c784','#a5d6a7'] },
+    'new_angel': { cap: '#f9a825', nut: '#fff9c4', glow: 'rgba(255,249,196,0.7)', particleColors: ['#fff9c4','#fff59d','#fff176'] },
+    'new_demon': { cap: '#4a148c', nut: '#ba68c8', glow: 'rgba(186,104,200,0.6)', particleColors: ['#ba68c8','#ce93d8','#e1bee7'] },
+    'new_rainbow_crystal': { cap: '#c2185b', nut: '#ff80ab', glow: 'rgba(255,128,171,0.6)', particleColors: ['#ff80ab','#ff4081','#f50057','#ffd54f'] },
+    'new_void': { cap: '#311b92', nut: '#7e57c2', glow: 'rgba(126,87,194,0.7)', particleColors: ['#7e57c2','#673ab7','#5e35b1'] },
+    'new_prism': { cap: '#00695c', nut: '#80deea', glow: 'rgba(128,222,234,0.6)', particleColors: ['#80deea','#4dd0e1','#26c6da'] },
+    'new_meteor': { cap: '#d84315', nut: '#ffab91', glow: 'rgba(255,171,145,0.6)', particleColors: ['#ffab91','#ff8a65','#ff7043'] },
+    'new_blossom': { cap: '#ad1457', nut: '#f8bbd0', glow: 'rgba(248,187,208,0.6)', particleColors: ['#f8bbd0','#f48fb1','#f06292'] },
+    'new_mist': { cap: '#546e7a', nut: '#cfd8dc', glow: 'rgba(207,216,220,0.5)', particleColors: ['#cfd8dc','#b0bec5','#90a4ae'] },
+    'new_aurora': { cap: '#00695c', nut: '#80cbc4', glow: 'rgba(128,203,196,0.6)', particleColors: ['#80cbc4','#4db6ac','#26a69a'] },
     };
     return styles[skin] || styles['default'];
   }
@@ -3540,7 +3714,7 @@
     ctx.translate(currentX, currentY);
     ctx.scale(a.scale * a.variation, a.scale * a.variation);
 
-    if (a.skin === 'phantom') {
+    if (a.skin === 'phantom' || a.skin === 'harvest_phantom') {
       a.hue = (a.hue + 0.5) % 360; const hue = (a.hue + 240) % 360;
       ctx.shadowColor = `hsl(${hue}, 80%, 60%)`; ctx.shadowBlur = 40;
       const grad = ctx.createRadialGradient(-3, 5, 2, 0, 8, 14);
@@ -3573,7 +3747,7 @@
       ctx.restore(); return;
     }
 
-    if (a.skin === 'rainbow') {
+    if (a.skin === 'rainbow' || a.skin === 'harvest_rainbow') {
       a.hue = (a.hue + 0.8) % 360;
       const hue1 = a.hue, hue2 = (a.hue + 60) % 360, hue3 = (a.hue + 120) % 360;
       const grad = ctx.createRadialGradient(-4, 6, 2, 0, 10, 14);
@@ -3659,7 +3833,7 @@
           ctx.beginPath(); ctx.arc(Math.cos(angle) * radius * 0.5, -5 + Math.sin(angle) * radius * 0.3, 4 + Math.sin(a.bubblePhase + i*2) * 1.5, 0, Math.PI*2); ctx.fill();
         }
       }
-      if (a.skin === 'cosmic') {
+      if (a.skin === 'cosmic' || a.skin === 'harvest_cosmic') {
         a.bubblePhase += 0.03;
         for (let i = 0; i < 8; i++) {
           const angle = a.bubblePhase + i * 0.8, dist = 6 + Math.sin(a.bubblePhase * 0.3 + i * 1.1) * 5;
@@ -3679,9 +3853,9 @@
     const colors = style.particleColors;
     let baseCount = particleCount;
     let multiplier = 1;
-    if (skin === 'phantom') multiplier = 0.4;
+    if (skin === 'phantom' || skin === 'harvest_phantom') multiplier = 0.4;
     else if (skin === 'beast') multiplier = 0.4;
-    else if (skin === 'gold' || skin === 'cosmic') multiplier = 0.6;
+    else if (skin === 'gold' || skin === 'cosmic' || skin === 'harvest_gold' || skin === 'harvest_cosmic') multiplier = 0.6;
     else if (skin === 'gift_secret') multiplier = 1.5;
     else multiplier = 0.6;
     
@@ -3713,7 +3887,7 @@
       });
     }
     
-    if (skin === 'phantom') {
+    if (skin === 'phantom' || skin === 'harvest_phantom') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.2)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
         const baseSize = 2 + Math.random() * 4;
@@ -3734,7 +3908,7 @@
           shape: 'circle', rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.05, hue: 0 });
       }
       playBeastSound();
-    } else if (skin === 'gold' || skin === 'cosmic') {
+    } else if (skin === 'gold' || skin === 'cosmic' || skin === 'harvest_gold' || skin === 'harvest_cosmic') {
       for (let i = 0; i < Math.max(0, Math.floor(particleCount * 0.4)); i++) {
         const angle = Math.random() * Math.PI * 2, speed = 1 + Math.random() * 3;
         const baseSize = 2 + Math.random() * 4;
@@ -4225,19 +4399,33 @@
         </button>
       </div>`;
     }
+    // ★ 収穫限定背景
+    for(const [id, skin] of Object.entries(HARVEST_BG_SKINS)) {
+      const owned = ownedBg.includes(id), equipped = equippedBg === id;
+      if (!owned) continue;
+      html += `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" style="border-color:#ffd700;background:rgba(255,215,0,0.08);">
+        <div class="shop-item-info"><div class="shop-item-name">✨ ${skin.name} ${equipped?' ✅':''}</div>
+        <div class="shop-item-desc">${skin.desc}</div></div>
+        <div class="shop-item-price">収穫限定</div>
+        <button class="shop-item-btn ${equipped?'equip-btn':owned?'owned-btn':''}" data-type="bg" data-id="${id}">
+          ${equipped ? '装備中' : '装備'}
+        </button>
+      </div>`;
+    }
     html += '</div>';
     html += '<div class="shop-section-title">🌰 どんぐりスキン</div><div class="shop-items">';
     for(const [id, skin] of Object.entries(ACORN_SKINS)) {
       if (id === 'double' && !doubleAcornUnlocked) continue;
       if (id === 'beast' && !beastAcornUnlocked) continue;
       if (id === 'gift_secret' && !ownedAcorn.includes('gift_secret')) continue;
+      if (id.startsWith('harvest_') && !ownedAcorn.includes(id)) continue;
       const owned = ownedAcorn.includes(id), equipped = equippedAcorn === id;
       const canBuy = (skin.priceType === 'coin' && totalTyped >= skin.price) || skin.priceType === 'none';
-      const priceLabel = skin.priceType === 'none' ? (id === 'gift_secret' ? '特別' : '初期') : '📝'+skin.price+'字';
-      const isPhantom = id === 'phantom';
-      const displayName = isPhantom ? '🌀 ' + skin.name : (id === 'gift_secret' ? '💝 ' + skin.name : skin.name);
+      const priceLabel = skin.priceType === 'none' ? (id === 'gift_secret' ? '特別' : (id.startsWith('harvest_') ? '収穫限定' : '初期')) : '📝'+skin.price+'字';
+      const isPhantom = id === 'phantom' || id === 'harvest_phantom';
+      const displayName = isPhantom ? '🌀 ' + skin.name : (id === 'gift_secret' ? '💝 ' + skin.name : (id.startsWith('harvest_') ? '✨ ' + skin.name : skin.name));
       const shapeIcon = { 'normal':'🌰','spiky':'⚡','bubble':'🫧','fluffy':'☁️','crystal':'💎','star':'⭐','ice':'❄️','dark':'🌑','light':'☀️','cosmic':'🌌','phantom':'🌀','beast':'🐻','rainbow':'🌈','flame':'🔥','gift':'💝' }[skin.shape] || '🌰';
-      html += `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" style="${(isPhantom && owned) ? 'border-color: var(--phantom); background: rgba(155,89,182,0.15);' : ''}${(id === 'gift_secret' && owned) ? 'border-color: #ff6b6b; background: rgba(255,107,107,0.1);' : ''}">
+      html += `<div class="shop-item ${owned?'owned':''} ${equipped?'equipped':''}" style="${(isPhantom && owned) ? 'border-color: var(--phantom); background: rgba(155,89,182,0.15);' : ''}${(id === 'gift_secret' && owned) ? 'border-color: #ff6b6b; background: rgba(255,107,107,0.1);' : ''}${(id.startsWith('harvest_') && owned) ? 'border-color: #ffd700; background: rgba(255,215,0,0.08);' : ''}">
         <div class="shop-item-info"><div class="shop-item-name">${shapeIcon} ${displayName} ${equipped?' ✅':''}</div>
         <div class="shop-item-desc">${skin.desc}</div></div>
         <div class="shop-item-price">${priceLabel}</div>
@@ -4256,7 +4444,7 @@
     if(type === 'bg') {
       if(ownedBg.includes(id)) { equippedBg = id; saveData(); updateShopUI(); return; }
       const skin = BG_SKINS[id];
-      if(skin.priceType === 'coin' && totalTyped >= skin.price) { ownedBg.push(id); equippedBg = id; saveData(); updateShopUI(); highscoreValueEl.textContent = highscore; }
+      if(skin && skin.priceType === 'coin' && totalTyped >= skin.price) { ownedBg.push(id); equippedBg = id; saveData(); updateShopUI(); highscoreValueEl.textContent = highscore; }
     } else if(type === 'acorn') {
       if(ownedAcorn.includes(id)) { 
         equippedAcorn = id; 
@@ -4268,7 +4456,7 @@
         return; 
       }
       const skin = ACORN_SKINS[id];
-      if(skin.priceType === 'coin' && totalTyped >= skin.price) { ownedAcorn.push(id); equippedAcorn = id; saveData(); updateShopUI(); updatePhantomFont(); updateFontColor(); applyFontFamily(); }
+      if(skin && skin.priceType === 'coin' && totalTyped >= skin.price) { ownedAcorn.push(id); equippedAcorn = id; saveData(); updateShopUI(); updatePhantomFont(); updateFontColor(); applyFontFamily(); }
     }
   }
 
@@ -4350,6 +4538,7 @@
       giftVersion, giftClaimed, giftClaimedDate,
       treePlanted, treePhase, treeDailyWater, treeWaterDays, treeLastWaterDate,
       treePlantedDate, treeHarvested, treeLastGrowthDate,
+      harvestCount, rewardSkinCount, rewardBgCount, rewardRareCount, lastHarvestDate,
       _exportedAt: new Date().toISOString(),
       _app: 'donguri-typing'
     };
@@ -4422,6 +4611,12 @@
         treePlantedDate = data.treePlantedDate ?? treePlantedDate;
         treeHarvested = data.treeHarvested ?? treeHarvested;
         treeLastGrowthDate = data.treeLastGrowthDate ?? treeLastGrowthDate;
+        // ★ 収穫報酬
+        harvestCount = data.harvestCount ?? harvestCount;
+        rewardSkinCount = data.rewardSkinCount ?? rewardSkinCount;
+        rewardBgCount = data.rewardBgCount ?? rewardBgCount;
+        rewardRareCount = data.rewardRareCount ?? rewardRareCount;
+        lastHarvestDate = data.lastHarvestDate ?? lastHarvestDate;
 
         // 再適用
         highscoreValueEl.textContent = highscore;
@@ -4456,11 +4651,9 @@
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
-  // 日付をまたいだら水やりカウントをリセット
   function resetDailyWaterIfNeeded() {
     const today = todayStr();
     if (treeLastWaterDate !== today) {
-      // 前日の水やりが200文字以上なら記録（既に記録済みならスキップ）
       if (treeDailyWater >= TREE_WATER_PER_DAY && !treeWaterDays.includes(treeLastWaterDate) && treeLastWaterDate) {
         treeWaterDays.push(treeLastWaterDate);
       }
@@ -4470,18 +4663,17 @@
     }
   }
 
-  // 成長フェーズを更新
   function updateTreeGrowth() {
     if (!treePlanted) return;
     resetDailyWaterIfNeeded();
     const totalDays = treeWaterDays.length;
     let newPhase = 1;
-    if (totalDays >= TREE_PHASE_DAYS * 4) newPhase = 6; // 実り
-    else if (totalDays >= TREE_PHASE_DAYS * 3) newPhase = 5; // 大樹
-    else if (totalDays >= TREE_PHASE_DAYS * 2) newPhase = 4; // 成長期
-    else if (totalDays >= TREE_PHASE_DAYS * 1) newPhase = 3; // 若木
-    else if (totalDays >= 1) newPhase = 2; // 芽
-    else newPhase = 1; // 植えただけ
+    if (totalDays >= TREE_PHASE_DAYS * 4) newPhase = 6;
+    else if (totalDays >= TREE_PHASE_DAYS * 3) newPhase = 5;
+    else if (totalDays >= TREE_PHASE_DAYS * 2) newPhase = 4;
+    else if (totalDays >= TREE_PHASE_DAYS * 1) newPhase = 3;
+    else if (totalDays >= 1) newPhase = 2;
+    else newPhase = 1;
     if (newPhase > treePhase) {
       treePhase = newPhase;
       treeLastGrowthDate = todayStr();
@@ -4491,7 +4683,123 @@
     }
   }
 
-  // 育成UI描画
+  // ★ 収穫処理
+  function harvestAcorn() {
+    if (!treePlanted || treePhase < 6) return;
+    if (treeHarvested) return;
+    treeHarvested = true;
+    harvestCount++;
+    lastHarvestDate = todayStr();
+
+    // 報酬抽選
+    const rewards = [];
+    const allAcornIds = Object.keys(ACORN_SKINS).filter(id => !ownedAcorn.includes(id));
+    const allBgIds = Object.keys(BG_SKINS).filter(id => !ownedBg.includes(id) && id !== 'beast_room');
+    const harvestBgIds = Object.keys(HARVEST_BG_SKINS).filter(id => !ownedBg.includes(id));
+    const harvestAcornIds = Object.keys(ACORN_SKINS).filter(id => id.startsWith('harvest_') && !ownedAcorn.includes(id));
+
+    // レア度判定
+    const roll = Math.random();
+    let rewardCount = 1;
+    if (roll < 0.05) rewardCount = 3; // 5%で3個
+    else if (roll < 0.2) rewardCount = 2; // 15%で2個
+
+    for (let i = 0; i < rewardCount; i++) {
+      const r = Math.random();
+      // レア報酬判定
+      if (r < 0.1) {
+        // レア: 収穫限定スキン or 背景
+        const rarePool = [...harvestAcornIds, ...harvestBgIds];
+        if (rarePool.length > 0) {
+          const pick = rarePool[Math.floor(Math.random() * rarePool.length)];
+          if (pick.startsWith('harvest_') && ACORN_SKINS[pick]) {
+            ownedAcorn.push(pick);
+            rewards.push({ type: 'acorn', id: pick, name: ACORN_SKINS[pick].name, icon: '✨', rare: true });
+            rewardSkinCount++;
+            rewardRareCount++;
+          } else if (HARVEST_BG_SKINS[pick]) {
+            ownedBg.push(pick);
+            rewards.push({ type: 'bg', id: pick, name: HARVEST_BG_SKINS[pick].name, icon: '🖼️', rare: true });
+            rewardBgCount++;
+            rewardRareCount++;
+          }
+        } else if (allAcornIds.length > 0) {
+          const pick = allAcornIds[Math.floor(Math.random() * allAcornIds.length)];
+          ownedAcorn.push(pick);
+          rewards.push({ type: 'acorn', id: pick, name: ACORN_SKINS[pick].name, icon: '🌰', rare: false });
+          rewardSkinCount++;
+        } else if (allBgIds.length > 0) {
+          const pick = allBgIds[Math.floor(Math.random() * allBgIds.length)];
+          ownedBg.push(pick);
+          rewards.push({ type: 'bg', id: pick, name: BG_SKINS[pick].name, icon: '🖼️', rare: false });
+          rewardBgCount++;
+        }
+      } else if (r < 0.4) {
+        // 背景
+        const pool = allBgIds.length > 0 ? allBgIds : harvestBgIds;
+        if (pool.length > 0) {
+          const pick = pool[Math.floor(Math.random() * pool.length)];
+          if (BG_SKINS[pick]) {
+            ownedBg.push(pick);
+            rewards.push({ type: 'bg', id: pick, name: BG_SKINS[pick].name, icon: '🖼️', rare: false });
+            rewardBgCount++;
+          } else if (HARVEST_BG_SKINS[pick]) {
+            ownedBg.push(pick);
+            rewards.push({ type: 'bg', id: pick, name: HARVEST_BG_SKINS[pick].name, icon: '🖼️', rare: true });
+            rewardBgCount++;
+            rewardRareCount++;
+          }
+        }
+      } else {
+        // どんぐりスキン
+        const pool = allAcornIds.length > 0 ? allAcornIds : harvestAcornIds;
+        if (pool.length > 0) {
+          const pick = pool[Math.floor(Math.random() * pool.length)];
+          if (ACORN_SKINS[pick]) {
+            ownedAcorn.push(pick);
+            rewards.push({ type: 'acorn', id: pick, name: ACORN_SKINS[pick].name, icon: '🌰', rare: false });
+            rewardSkinCount++;
+          }
+        }
+      }
+    }
+
+    // 報酬が何もない場合のフォールバック
+    if (rewards.length === 0) {
+      // コインやスコアボーナス
+      coins += 100;
+      rewards.push({ type: 'coin', id: 'coin', name: 'どんぐりコイン ×100', icon: '🪙', rare: false });
+    }
+
+    saveData();
+    updateShopUI();
+    updateAchievementUI();
+    checkAchievements();
+
+    // ポップアップ表示
+    showRewardPopup(rewards);
+  }
+
+  function showRewardPopup(rewards) {
+    rewardList.innerHTML = '';
+    let hasRare = false;
+    rewards.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'reward-list-item';
+      if (r.rare) { div.style.borderLeftColor = '#ff6bff'; hasRare = true; }
+      div.innerHTML = `<span style="font-size:20px;">${r.icon}</span><span>${r.name}</span>${r.rare ? '<span style="margin-left:auto;color:#ff6bff;font-weight:700;">レア</span>' : ''}`;
+      rewardList.appendChild(div);
+    });
+    rewardIcon.textContent = hasRare ? '💎' : '🎁';
+    rewardTitle.textContent = hasRare ? 'レア報酬獲得！' : '収穫！';
+    rewardPopup.classList.add('show');
+  }
+
+  rewardCloseBtn.addEventListener('click', () => {
+    rewardPopup.classList.remove('show');
+  });
+
+  // ============ 育成UI描画 ============
   function renderTreeUI() {
     resetDailyWaterIfNeeded();
     updateTreeGrowth();
@@ -4510,7 +4818,6 @@
       }
     }
 
-    // 植物描画
     let plantHtml = '';
     if (!treePlanted) {
       plantHtml = '';
@@ -4522,13 +4829,23 @@
         case 3: plantHtml = '<span class="small-tree">🌿</span>'; break;
         case 4: plantHtml = '<span class="medium-tree">🌳</span>'; break;
         case 5: plantHtml = '<span class="full-tree">🌲</span>'; break;
-        case 6: plantHtml = '<span class="fruit-tree">🌳</span><span class="fruit">🌰</span>'; break;
+        case 6: plantHtml = '<span class="fruit-tree">🌳</span><span class="fruit" id="tree-fruit">🌰</span>'; break;
         default: plantHtml = '<span class="seed">🌰</span>';
       }
     }
     treePlant.innerHTML = plantHtml;
 
-    // ステータス描画
+    // 実りフェーズならどんぐりをタップ可能に
+    const fruitEl = document.getElementById('tree-fruit');
+    if (fruitEl && treePhase >= 6 && !treeHarvested) {
+      fruitEl.style.cursor = 'pointer';
+      fruitEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        harvestAcorn();
+        renderTreeUI();
+      });
+    }
+
     let statusHtml = '';
     if (!treePlanted) {
       statusHtml = `
@@ -4556,7 +4873,6 @@
     }
     treeStatus.innerHTML = statusHtml;
 
-    // アクションボタン
     let actionsHtml = '';
     if (!treePlanted) {
       actionsHtml = `<button class="plant-btn" id="tree-plant-btn">🌰 どんぐりを植える</button>`;
@@ -4566,7 +4882,7 @@
         <button class="water-btn" id="tree-water-btn" ${wateredToday ? 'disabled' : ''}>
           💧 ${wateredToday ? '今日の水やり完了' : '水やりする（タイピングへ）'}
         </button>
-        ${treePhase >= 6 && !treeHarvested ? `<button class="harvest-btn" id="tree-harvest-btn">🌰 収穫する</button>` : ''}
+        ${treePhase >= 6 && !treeHarvested ? `<div style="color:var(--gold-soft);font-size:14px;text-align:center;width:100%;">🌰 実ったどんぐりをタップして収穫しよう！</div>` : ''}
         ${treeHarvested ? `<div style="color:var(--gold-soft);font-size:14px;text-align:center;width:100%;">✅ 収穫済み！また植え直せます</div>` : ''}
       `;
       if (treeHarvested) {
@@ -4575,7 +4891,6 @@
     }
     treeActions.innerHTML = actionsHtml;
 
-    // イベントリスナー
     const plantBtn = document.getElementById('tree-plant-btn');
     if (plantBtn) plantBtn.addEventListener('click', () => {
       treePlanted = true;
@@ -4595,22 +4910,11 @@
     const waterBtn = document.getElementById('tree-water-btn');
     if (waterBtn && !waterBtn.disabled) waterBtn.addEventListener('click', () => {
       treeOverlay.classList.remove('active');
-      // ゲーム開始
       if (state === 'menu' || state === 'result') {
         if (resultOverlay.classList.contains('active')) resultOverlay.classList.remove('active');
         initGame();
         showPopup('💧 200文字打って水やりしよう！');
       }
-    });
-
-    const harvestBtn = document.getElementById('tree-harvest-btn');
-    if (harvestBtn) harvestBtn.addEventListener('click', () => {
-      treeHarvested = true;
-      treePhase = 6;
-      saveData();
-      checkAchievements();
-      renderTreeUI();
-      showPopup('🌰 どんぐりを収穫した！');
     });
 
     const replantBtn = document.getElementById('tree-replant-btn');
@@ -4654,7 +4958,6 @@
   document.getElementById('settings-close-btn').addEventListener('click', () => { settingsOverlay.classList.remove('active'); });
   settingsOverlay.addEventListener('click', (e) => { if(e.target === settingsOverlay) settingsOverlay.classList.remove('active'); });
 
-  // ファイル保存 / ロード
   saveDataFileBtn.addEventListener('click', saveDataToFile);
   loadDataFileBtn.addEventListener('click', () => { loadDataFileInput.click(); });
   loadDataFileInput.addEventListener('change', (e) => {
@@ -4663,7 +4966,6 @@
     e.target.value = '';
   });
 
-  // ひらがな色設定
   kanaColorPicker.addEventListener('input', (e) => {
     const color = e.target.value;
     kanaColor = color;
@@ -4681,7 +4983,6 @@
     statusKanaColor.className = 'color-status success';
   });
 
-  // 効果音トグル
   toggleSeTyped.addEventListener('click', () => { seTypedEnabled = !seTypedEnabled; saveData(); updateSeToggleUI(); });
   toggleSeMiss.addEventListener('click', () => { seMissEnabled = !seMissEnabled; saveData(); updateSeToggleUI(); });
   toggleSeStart.addEventListener('click', () => { seStartEnabled = !seStartEnabled; saveData(); updateSeToggleUI(); });
@@ -4770,15 +5071,9 @@
       giftVersion = d.giftVersion || '';
       giftClaimed = d.giftClaimed || false;
       giftClaimedDate = d.giftClaimedDate || '';
-      // ★ 育成データ
-      treePlanted = false;
-      treePhase = 0;
-      treeDailyWater = 0;
-      treeWaterDays = [];
-      treeLastWaterDate = '';
-      treePlantedDate = '';
-      treeHarvested = false;
-      treeLastGrowthDate = '';
+      treePlanted = false; treePhase = 0; treeDailyWater = 0; treeWaterDays = [];
+      treeLastWaterDate = ''; treePlantedDate = ''; treeHarvested = false; treeLastGrowthDate = '';
+      harvestCount = 0; rewardSkinCount = 0; rewardBgCount = 0; rewardRareCount = 0; lastHarvestDate = '';
       highscoreValueEl.textContent='0'; updateTotalTypedDisplay();
       settingDisplayBtn.textContent='ひらがな'; settingsOverlay.classList.remove('active');
       updateSettingsUI(); saveData(); updateAchievementUI();
@@ -4809,12 +5104,16 @@
       giftResult.className = 'gift-result';
       statusDataFile.textContent = '端末を変えてもファイルがあればデータを復元できます';
       statusDataFile.className = 'sound-status';
+      renderTreeUI();
     }
   });
 
   hankoBadge.addEventListener('click', () => { updateShopUI(); shopOverlay.classList.add('active'); });
 
   document.addEventListener('keydown', (e) => {
+    if (!rewardPopup.classList.contains('show')) {} else {
+      if (e.key === 'Escape' || e.code === 'Space') { e.preventDefault(); rewardPopup.classList.remove('show'); return; }
+    }
     if (!giftFrame.classList.contains('hidden')) {
       if (e.key === 'Escape' || e.code === 'Space') { e.preventDefault(); giftClose.click(); }
       return;
@@ -4900,7 +5199,6 @@
     giftVersion = data.giftVersion || '';
     giftClaimed = data.giftClaimed || false;
     giftClaimedDate = data.giftClaimedDate || '';
-    // ★ 育成データ
     treePlanted = data.treePlanted || false;
     treePhase = data.treePhase || 0;
     treeDailyWater = data.treeDailyWater || 0;
@@ -4909,6 +5207,11 @@
     treePlantedDate = data.treePlantedDate || '';
     treeHarvested = data.treeHarvested || false;
     treeLastGrowthDate = data.treeLastGrowthDate || '';
+    harvestCount = data.harvestCount || 0;
+    rewardSkinCount = data.rewardSkinCount || 0;
+    rewardBgCount = data.rewardBgCount || 0;
+    rewardRareCount = data.rewardRareCount || 0;
+    lastHarvestDate = data.lastHarvestDate || '';
 
     soundTypedInput.value = soundTyped;
     soundMissInput.value = soundMiss;
@@ -4967,9 +5270,9 @@
     }
     statusDataFile.textContent = '端末を変えてもファイルがあればデータを復元できます';
     statusDataFile.className = 'sound-status';
-    // 育成初期化
     resetDailyWaterIfNeeded();
     updateTreeGrowth();
+    renderTreeUI();
   }
 
   init();
