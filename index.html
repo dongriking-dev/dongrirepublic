@@ -62,19 +62,16 @@
   .screen{ width:100%; max-width:640px; padding:32px; display:flex; flex-direction:column; align-items:center; text-align:center; }
   .hidden{ display:none !important; }
 
-  /* ---------- Forest Background Canvas Layer ---------- */
   #forest-canvas {
     position: fixed; inset: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 10;
   }
 
-  /* ---------- Acorn particles canvas layer ---------- */
   #acorn-canvas {
     position: fixed; inset: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 150;
   }
 
-  /* ---------- Hanko highscore badge ---------- */
   .hanko{
     position:fixed; top:20px; left:20px;
     width:94px; height:94px;
@@ -102,7 +99,6 @@
     font-size:9px; color:var(--muted); margin-top:2px;
   }
 
-  /* ---------- 情報ボタン（最高記録の下） ---------- */
   .info-btn-wrapper {
     position: fixed;
     top: 118px;
@@ -159,7 +155,6 @@
     pointer-events: none;
   }
 
-  /* ---------- 育成ボタン ---------- */
   .tree-btn-wrapper {
     position: fixed;
     top: 166px;
@@ -216,7 +211,6 @@
     pointer-events: none;
   }
 
-  /* ---------- Top Navigation ---------- */
   .top-nav{
     position:fixed; top:20px; right:20px;
     display:flex; gap:10px; z-index:50;
@@ -251,7 +245,6 @@
     color: var(--ink);
   }
 
-  /* ---------- Achievement Toast ---------- */
   #achievement-toast {
     position: fixed; top: 80px; right: 20px;
     background: var(--panel);
@@ -283,7 +276,6 @@
     opacity: 0.8;
   }
 
-  /* ---------- Achievement Modal ---------- */
   #achievement-overlay {
     position: fixed; inset: 0;
     background: rgba(20, 24, 18, 0.92);
@@ -405,7 +397,6 @@
     color: var(--text);
   }
 
-  /* ---------- Shop/Setting Modal Overlay ---------- */
   #shop-overlay, #settings-overlay, #info-overlay, #tree-overlay {
     position: fixed; inset: 0;
     background: rgba(20, 24, 18, 0.92);
@@ -510,7 +501,6 @@
     color: var(--text);
   }
 
-  /* ---------- 情報モーダル内コンテンツ ---------- */
   .info-content {
     color: var(--text);
     font-size: 15px;
@@ -567,7 +557,6 @@
     padding-top: 10px;
   }
 
-  /* ---------- 設定項目 ---------- */
   .setting-group {
     width: 100%;
     margin: 4px 0;
@@ -697,7 +686,7 @@
     color: var(--vermillion);
   }
 
-  /* ---------- ★ 色設定グループ ---------- */
+
   .color-setting-group {
     width: 100%;
     margin: 8px 0;
@@ -758,7 +747,6 @@
     color: var(--jade);
   }
 
-  /* ---------- コード入力エリア ---------- */
   .code-area {
     margin-top: 12px;
     padding-top: 12px;
@@ -810,7 +798,6 @@
   .code-area .code-status.success { color: var(--jade); }
   .code-area .code-status.error { color: var(--vermillion); }
 
-  /* ---------- Menu ---------- */
   .menu-center{ display:flex; flex-direction:column; align-items:center; gap:20px; width:100%; z-index:20; position:relative; }
   .title{
     font-size:clamp(34px,7vw,52px);
@@ -857,7 +844,7 @@
     font-weight:700;
   }
 
-  /* ---------- Game ---------- */
+
   #game-screen{ max-width:720px; z-index:20; position:relative; }
   .hud{
     width:100%; display:flex; justify-content:space-between; align-items:flex-start;
@@ -890,7 +877,6 @@
     75%{ transform:translateX(6px); }
   }
 
-  /* --- 新しいレイアウト --- */
   .word-display-area {
     display: flex;
     flex-direction: column;
@@ -943,7 +929,6 @@
   .popup.show{ opacity:1; transform:translate(-50%,-140%); }
   .esc-hint{ margin-top:26px; font-size:12px; color:var(--muted); letter-spacing:0.04em; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 
-  /* ---------- Result Modal ---------- */
   #result-overlay {
     position: fixed; inset: 0;
     background: rgba(20, 24, 18, 0.85);
@@ -985,7 +970,7 @@
     font-family:'Zen Maru Gothic', sans-serif; font-size:13px; color:var(--muted);
   }
 
-  /* ---------- お知らせフレーム ---------- */
+
   #announce-frame {
     position: fixed;
     top: 50%;
@@ -1082,7 +1067,6 @@
     pointer-events: none;
   }
 
-  /* ---------- ★ 特別ギフトフレーム ---------- */
   #gift-frame {
     position: fixed;
     top: 50%;
@@ -1209,7 +1193,7 @@
     pointer-events: none;
   }
 
-  /* ===== 虹色エフェクト用 ===== */
+
   .rainbow-overlay {
     position: fixed;
     inset: 0;
@@ -1253,7 +1237,7 @@
     100% { transform: scale(1.1); opacity: 0.9; }
   }
 
-  /* ===== ★ 追加: サウンドオンオフトグル ===== */
+
   .sound-toggle-btn {
     padding: 4px 10px;
     border-radius: 6px;
@@ -1279,7 +1263,7 @@
     opacity: 0.8;
   }
 
-  /* ===== 育成モーダル ===== */
+
   .tree-card {
     max-width: 560px;
   }
@@ -1501,7 +1485,7 @@
     box-shadow: none;
   }
 
-  /* ===== ★ 収穫報酬ポップアップ ===== */
+
   #reward-popup {
     position: fixed;
     top: 50%;
@@ -1700,16 +1684,16 @@
 <body>
 <div id="app">
 
-  <!-- Forest Background Canvas -->
+
   <canvas id="forest-canvas"></canvas>
   <canvas id="acorn-canvas"></canvas>
 
-  <!-- 虹色オーバーレイ -->
+
   <div class="rainbow-overlay" id="rainbowOverlay">
     <span class="rainbow-text">ドーパミン補給中</span>
   </div>
 
-  <!-- お知らせフレーム -->
+
   <div id="announce-overlay" class="announce-overlay"></div>
   <div id="announce-frame">
     <div class="close-area">
@@ -1724,7 +1708,7 @@
     </div>
   </div>
 
-  <!-- ★ 特別ギフトフレーム（初回のみ） -->
+
   <div id="gift-overlay" class="gift-overlay hidden"></div>
   <div id="gift-frame" class="hidden">
     <div class="close-area">
@@ -1740,7 +1724,7 @@
     </div>
   </div>
 
-  <!-- ★ 収穫報酬ポップアップ -->
+
   <div id="reward-popup">
     <span class="reward-icon" id="reward-icon">🎁</span>
     <div class="reward-title" id="reward-title">収穫！</div>
@@ -1748,7 +1732,7 @@
     <button class="reward-close" id="reward-close-btn">OK</button>
   </div>
 
-  <!-- Achievement Toast -->
+
   <div id="achievement-toast">
     <div class="toast-title">🏆 実績解除</div>
     <div class="toast-name" id="toast-name">実績名</div>
@@ -1761,7 +1745,7 @@
     <span class="hanko-sub" id="total-typed-display">入力:0字</span>
   </div>
 
-  <!-- 情報ボタン（最高記録の下） -->
+
   <div class="info-btn-wrapper" id="info-btn-wrapper">
     <button class="info-btn" id="info-open-btn">
       📢 情報
@@ -1769,7 +1753,7 @@
     </button>
   </div>
 
-  <!-- 育成ボタン（情報の下） -->
+
   <div class="tree-btn-wrapper" id="tree-btn-wrapper">
     <button class="tree-btn" id="tree-open-btn">
       🌱 育てる
@@ -1783,7 +1767,7 @@
     <button id="settings-open-btn" class="nav-btn">⚙️</button>
   </div>
 
-  <!-- Achievement Modal -->
+ 
   <div id="achievement-overlay">
     <div class="achievement-card">
       <h2 class="achievement-title">🏆 実績一覧</h2>
@@ -1796,7 +1780,7 @@
     </div>
   </div>
 
-  <!-- Shop Modal -->
+
   <div id="shop-overlay">
     <div class="shop-card">
       <h2 class="shop-title">🏪 どんぐりショップ</h2>
@@ -1810,18 +1794,18 @@
     </div>
   </div>
 
-  <!-- Info Modal -->
+
   <div id="info-overlay">
     <div class="info-card">
       <h2 class="info-title">📢 お知らせ & イベント情報</h2>
       <div class="info-content" id="info-content">
-        <!-- JSで動的に生成 -->
+
       </div>
       <button id="info-close-btn" class="info-close-btn">閉じる</button>
     </div>
   </div>
 
-  <!-- ★ 育成モーダル -->
+
   <div id="tree-overlay">
     <div class="tree-card">
       <h2 class="tree-title">🌳 どんぐりの木を育てよう</h2>
@@ -1833,25 +1817,25 @@
         <div class="tree-cloud"></div>
         <div class="tree-ground"></div>
         <div class="tree-plant" id="tree-plant">
-          <!-- JSで描画 -->
+    
         </div>
       </div>
       <div class="tree-status" id="tree-status">
-        <!-- JSで描画 -->
+  
       </div>
       <div class="tree-actions" id="tree-actions">
-        <!-- JSで描画 -->
+      
       </div>
       <button id="tree-close-btn" class="tree-close-btn">閉じる</button>
     </div>
   </div>
 
-  <!-- Settings Modal -->
+
   <div id="settings-overlay">
     <div class="settings-card">
       <h2 class="settings-title">⚙️ 設定</h2>
       
-      <!-- ====== ★ どんぐりの破片量スライダー ====== -->
+      
       <div class="setting-group">
         <label>💫 どんぐりの破片量</label>
         <div class="sound-row">
@@ -1861,7 +1845,7 @@
         <div class="sound-status" id="status-particle">破片の数を調整します（0で非表示）</div>
       </div>
 
-      <!-- ====== ★ どんぐりの破片サイズ ====== -->
+     
       <div class="setting-group">
         <label>📏 破片の大きさ</label>
         <div class="sound-row">
@@ -1871,7 +1855,7 @@
         <div class="sound-status" id="status-particle-size">破片の大きさを調整します（倍率）</div>
       </div>
 
-      <!-- ====== ★ どんぐりの破片形状 ====== -->
+  
       <div class="setting-group">
         <label>🔷 破片の形状</label>
         <div class="sound-row" style="gap:6px;flex-wrap:wrap;">
@@ -1884,7 +1868,7 @@
         <div class="sound-status" id="status-particle-shape">破片の形状を変更します</div>
       </div>
 
-      <!-- ====== ★ 表示設定 ====== -->
+
       <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
         <label>📖 表示設定</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
@@ -1898,7 +1882,7 @@
         <div class="sound-status" id="status-display">ローマ字とひらがなの表示/非表示を切り替え</div>
       </div>
 
-      <!-- ====== ★ BGM無音トグル（BGMのみ） ====== -->
+   
       <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
         <label>🎵 BGM設定</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
@@ -1909,7 +1893,7 @@
         <div class="sound-status" id="status-bgm-mute">BGMのみを無効にします（効果音は引き続き再生されます）</div>
       </div>
 
-      <!-- ====== ★ 効果音オンオフ（タイプ・ミス・スタート・リザルト） ====== -->
+   
       <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
         <label>🔊 効果音オンオフ</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
@@ -1921,7 +1905,7 @@
         <div class="sound-status" id="status-se">各効果音のオン/オフを切り替えます（BGMは別設定）</div>
       </div>
 
-      <!-- ====== ★ ひらがな（読み）の色設定 ====== -->
+
       <div class="color-setting-group">
         <label>🎨 ひらがな（読み）の色</label>
         <div class="color-row">
@@ -1993,7 +1977,7 @@
         <div class="sound-status" id="status-bgm"></div>
       </div>
 
-      <!-- コード入力エリア -->
+ 
       <div class="code-area">
         <label>🔐 コード入力（超厳重）</label>
         <div class="code-row">
@@ -2014,7 +1998,7 @@
         </div>
       </div>
 
-      <!-- ★ 新規: データ保存 / ロード セクション -->
+ 
       <div class="setting-group" style="margin-top:8px;border-top:1px solid var(--panel-edge);padding-top:12px;">
         <label>💾 データの保存 / 読み込み</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px;width:100%;">
@@ -2080,7 +2064,7 @@
     <p class="esc-hint">Esc で中断</p>
   </section>
 
-  <!-- Result Modal -->
+  
   <div id="result-overlay">
     <div class="result-card">
       <h2 class="result-title">結果発表</h2>
@@ -2125,7 +2109,7 @@
     ]
   };
 
-  // ============ 単語データ ============
+
   const WORD_POOL = [
     { kana: "あさ", kanji: "朝" }, { kana: "ひる", kanji: "昼" }, { kana: "よる", kanji: "夜" },
     { kana: "がっこう", kanji: "学校" }, { kana: "せんせい", kanji: "先生" }, { kana: "がくせい", kanji: "学生" },
@@ -2239,7 +2223,7 @@
     { kana: "ろんそうちゅう", kanji: "論争厨" },{ kana: "ちゅうにびょう", kanji: "厨二病" },{ kana: "ぶーつ", kanji: "ブーツ" },{ kana: "りゅうがく", kanji: "留学" },{ kana: "けんたうろす", kanji: "ケンタウロス" },
   ];
 
-  // ============ 文章データ ============
+
   const SENTENCE_POOL = [
     { kana: "ちりもつもればやまとなる", kanji: "塵も積もれば山となる" },{ kana: "いまからはれるよ", kanji: "今から晴れるよ" },
     { kana: "いちごいちえ", kanji: "一期一会" }, { kana: "にわのあらし", kanji: "庭の嵐" },
@@ -2328,7 +2312,7 @@
     { kana: "たくしーをりようする", kanji: "タクシーを利用する" },{ kana: "もうすぐでくりすます", kanji: "もうすぐでクリスマス" },{ kana: "せかいのでんせつてきみーむ", kanji: "世界の伝説的ミーム" },
   ];
 
-  // ============ 実績定義 ============
+  
   const ACHIEVEMENTS = {
     'first_typed': { id: 'first_typed', name: '最初の一歩', desc: '初めて文字を打った', icon: '👣', check: () => totalTyped >= 1 },
     'donut_field': { id: 'donut_field', name: 'どんぐり畑', desc: '1分間で1文字だけ打って終了', icon: '🌰', check: () => lastGameTyped === 1 && lastGameDuration === 60 },
@@ -2354,7 +2338,7 @@
     'tree_full': { id: 'tree_full', name: '大樹', desc: '木が完全に成長した', icon: '🌲', check: () => treePhase >= 5 },
     'tree_fruit': { id: 'tree_fruit', name: '実り', desc: 'どんぐりが実った', icon: '🌰', check: () => treePhase >= 6 },
     'tree_master': { id: 'tree_master', name: 'どんぐりマスター', desc: 'どんぐりの木を収穫した', icon: '👑', check: () => treeHarvested },
-    // ★ 収穫報酬実績
+ 
     'harvest_1': { id: 'harvest_1', name: '初収穫', desc: '初めてどんぐりを収穫した', icon: '🌰', check: () => harvestCount >= 1 },
     'harvest_5': { id: 'harvest_5', name: '収穫の達人', desc: '5回収穫した', icon: '🧺', check: () => harvestCount >= 5 },
     'harvest_10': { id: 'harvest_10', name: 'どんぐり農家', desc: '10回収穫した', icon: '🏡', check: () => harvestCount >= 10 },
@@ -2366,7 +2350,7 @@
     'all_bgs': { id: 'all_bgs', name: '背景コンプリート', desc: '全ての背景を集めた', icon: '🌈', check: () => Object.keys(BG_SKINS).every(id => ownedBg.includes(id)) },
   };
 
-  // --- 背景設定 ---
+
   const BG_SKINS = {
     'forest': { name: '森の夜', desc: '落ち着いた夜の森', price: 0, priceType: 'none' },
     'sunset': { name: '夕焼けの森', desc: '暖かい夕日が差す森', price: 100, priceType: 'coin' },
@@ -2382,7 +2366,7 @@
     'beast_room': { name: '野獣先輩の部屋', desc: '24歳学生...？', price: 0, priceType: 'none' },
   };
 
-  // ============ どんぐりスキン ============
+  
   const ACORN_SKINS = {
     'default': { name: '通常どんぐり', desc: '標準のどんぐり', price: 0, priceType: 'none', effect: 'none', shape: 'normal', fontColor: '#d2b48c', fontFamily: "'Zen Maru Gothic', sans-serif" },
     'green': { name: '緑のどんぐり', desc: 'みずみずしい緑色', price: 500, priceType: 'coin', effect: 'bubble', shape: 'bubble', fontColor: '#6aaa4a', fontFamily: "'Kosugi Maru', sans-serif" },
@@ -2402,7 +2386,7 @@
     'spiky': { name: 'トゲトゲどんぐり', desc: '鋭いトゲが生えたどんぐり', price: 35000, priceType: 'coin', effect: 'spiky', shape: 'spiky', fontColor: '#ff8c00', fontFamily: "'Chokokutai', sans-serif" },
     'star': { name: 'スターどんぐり', desc: '星の形をしたどんぐり', price: 40000, priceType: 'coin', effect: 'star', shape: 'star', fontColor: '#ffd700', fontFamily: "'Yuji Boku', serif" },
     'gift_secret': { name: '特別などんぐり', desc: '申し訳ございません', price: 0, priceType: 'none', effect: 'gift', shape: 'gift', fontColor: '#ff6b6b', fontFamily: "'Yuji Syuku', serif" },
-  // ★ 収穫限定・完全新規どんぐり（ショップ非売品）
+
   'new_moon': { name: '月のどんぐり', desc: '月明かりのように淡く輝く収穫限定どんぐり', price: 0, priceType: 'none', effect: 'moon', shape: 'crescent', fontColor: '#e0e0ff', fontFamily: "'Shippori Mincho B1', serif" },
   'new_sun': { name: '太陽のどんぐり', desc: '太陽のように燃える収穫限定どんぐり', price: 0, priceType: 'none', effect: 'sun', shape: 'sun', fontColor: '#ffb300', fontFamily: "'Train One', cursive" },
   'new_sakura': { name: '桜のどんぐり', desc: '桜の花びらが舞う収穫限定どんぐり', price: 0, priceType: 'none', effect: 'sakura', shape: 'sakura', fontColor: '#ffb7c5', fontFamily: "'Kaisei Decol', serif" },
@@ -2425,7 +2409,7 @@
   'new_aurora': { name: '極光のどんぐり', desc: '極光が揺らめく収穫限定どんぐり', price: 0, priceType: 'none', effect: 'aurora', shape: 'aurora', fontColor: '#80cbc4', fontFamily: "'Yuji Boku', serif" },
 };
 
-  // ★ 収穫限定背景
+
   const HARVEST_BG_SKINS = {
     'harvest_forest': { name: '収穫の森', desc: '収穫でしか手に入らない特別な森', price: 0, priceType: 'none' },
     'harvest_night': { name: '収穫の夜', desc: '収穫でしか手に入らない特別な夜', price: 0, priceType: 'none' },
@@ -2434,7 +2418,7 @@
     'harvest_ocean': { name: '収穫の海', desc: '収穫でしか手に入らない特別な海', price: 0, priceType: 'none' },
   };
 
-  // ============ 育成システム定数 ============
+ 
   const TREE_WATER_PER_DAY = 200;
   const TREE_WATER_PER_WEEK = 7;
   const TREE_PHASE_DAYS = 7;
@@ -2448,7 +2432,7 @@
     { id: 6, name: '実り', icon: '🌰', desc: 'どんぐりが実った！タップして収穫しよう' },
   ];
 
-  // ============ デフォルトデータ ============
+
   const DEFAULT_DATA = {
     highscore: 0, totalTyped: 0, coins: 0, useKanji: true,
     equippedBg: 'forest', equippedAcorn: 'default',
@@ -2475,7 +2459,7 @@
     giftVersion: '',
     giftClaimed: false,
     giftClaimedDate: '',
-    // ★ 育成データ
+  
     treePlanted: false,
     treePhase: 0,
     treeDailyWater: 0,
@@ -2484,7 +2468,7 @@
     treePlantedDate: '',
     treeHarvested: false,
     treeLastGrowthDate: '',
-    // ★ 収穫報酬データ
+
     harvestCount: 0,
     rewardSkinCount: 0,
     rewardBgCount: 0,
@@ -2492,7 +2476,7 @@
     lastHarvestDate: '',
   };
 
-  // --- デフォルト音声生成 ---
+
   function generateDefaultSound(type) {
     if (!audioCtx) return null;
     try {
@@ -2530,7 +2514,7 @@
     } catch(e) { return null; }
   }
 
-  // --- データ保存・ロード（localStorage） ---
+ 
   function saveData() {
     const data = { highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
       unlockedAchievements, max10sTyped, soundTyped, soundStart, soundResult, soundBgm, soundMiss,
@@ -2549,7 +2533,7 @@
     catch(e) { return { ...DEFAULT_DATA }; }
   }
 
-  // --- 状態変数 ---
+
   let highscore = 0, totalTyped = 0, coins = 0, useKanji = false,
       equippedBg = 'forest', equippedAcorn = 'default',
       ownedBg = ['forest'], ownedAcorn = ['default'],
@@ -2573,7 +2557,7 @@
       giftVersion = '',
       giftClaimed = false,
       giftClaimedDate = '',
-      // ★ 育成状態
+ 
       treePlanted = false,
       treePhase = 0,
       treeDailyWater = 0,
@@ -2582,14 +2566,14 @@
       treePlantedDate = '',
       treeHarvested = false,
       treeLastGrowthDate = '',
-      // ★ 収穫報酬
+     
       harvestCount = 0,
       rewardSkinCount = 0,
       rewardBgCount = 0,
       rewardRareCount = 0,
       lastHarvestDate = '';
 
-  // --- ゲーム状態 ---
+
   let state = 'menu', queue = [], qIndex = 0, score = 0, multiplier = 1,
       correctTotal = 0, lastMilestoneCount = 0, milestoneStartTime = 0,
       timeLeft = 60, timerInterval = null, popupTimeout = null,
@@ -2600,7 +2584,7 @@
   let achievementToastQueue = [];
   let isAchievementToastShowing = false;
 
-  // --- Audio ---
+
   let audioCtx = null;
   let soundBuffers = { typed: null, start: null, result: null, bgm: null, miss: null };
   let soundUrls = { typed: '', start: '', result: '', bgm: '', miss: '' };
@@ -2705,7 +2689,7 @@
   function playStartSound() { const buf = getSoundBuffer('start'); playSound(buf, soundUrls.start, 'start'); }
   function playResultSound() { const buf = getSoundBuffer('result'); playSound(buf, soundUrls.result, 'result'); }
 
-  // --- 音声設定 ---
+
   async function applySoundSetting(type, url) {
     const statusEl = document.getElementById('status-' + type);
     statusEl.textContent = '⏳ 読み込み中...';
@@ -2756,7 +2740,7 @@
     }
   }
 
-  // --- DOM参照 ---
+  
   const menuScreen = document.getElementById('menu-screen');
   const gameScreen = document.getElementById('game-screen');
   const topNav = document.getElementById('top-nav');
@@ -2827,32 +2811,32 @@
   const toggleSeStart = document.getElementById('toggle-se-start');
   const toggleSeResult = document.getElementById('toggle-se-result');
   const statusSe = document.getElementById('status-se');
-  // ★ ギフト関連DOM
+
   const giftFrame = document.getElementById('gift-frame');
   const giftOverlay = document.getElementById('gift-overlay');
   const giftClose = document.getElementById('gift-close');
   const giftClaimBtn = document.getElementById('gift-claim-btn');
   const giftResult = document.getElementById('gift-result');
-  // ★ データ保存/ロード DOM
+  
   const saveDataFileBtn = document.getElementById('save-data-file-btn');
   const loadDataFileBtn = document.getElementById('load-data-file-btn');
   const loadDataFileInput = document.getElementById('load-data-file-input');
   const statusDataFile = document.getElementById('status-data-file');
-  // ★ 育成 DOM
+
   const treeOverlay = document.getElementById('tree-overlay');
   const treeStage = document.getElementById('tree-stage');
   const treePlant = document.getElementById('tree-plant');
   const treeStatus = document.getElementById('tree-status');
   const treeActions = document.getElementById('tree-actions');
   const treeCloseBtn = document.getElementById('tree-close-btn');
-  // ★ 収穫報酬 DOM
+
   const rewardPopup = document.getElementById('reward-popup');
   const rewardIcon = document.getElementById('reward-icon');
   const rewardTitle = document.getElementById('reward-title');
   const rewardList = document.getElementById('reward-list');
   const rewardCloseBtn = document.getElementById('reward-close-btn');
 
-  // --- Canvas ---
+
   const forestCanvas = document.getElementById('forest-canvas');
   const fCtx = forestCanvas.getContext('2d');
   const acornCanvas = document.getElementById('acorn-canvas');
@@ -2863,7 +2847,7 @@
   let fireworks = [], villageHouses = [];
   let starryYOffset = 0;
 
-  // ============ ひらがな色適用関数 ============
+
   function applyKanaColor(color) {
     kanaSmallEl.style.color = color;
     kanaSmallEl.style.opacity = '1';
@@ -2873,7 +2857,7 @@
     statusKanaColor.className = 'color-status success';
   }
 
-  // ============ 情報バッジ制御 ============
+
   function updateInfoBadge() {
     if (infoBadgeVersion !== INFO_BADGE_VERSION) {
       infoBadge.classList.remove('hidden');
@@ -2894,7 +2878,7 @@
     }
   }
 
-  // ============ お知らせフレーム制御 ============
+ 
   function updateAnnounceVisibility() {
     if (announceVersion !== ANNOUNCE_VERSION) {
       showAnnounce();
@@ -2908,7 +2892,7 @@
   announceDismiss.addEventListener('click', () => { announceVersion = ANNOUNCE_VERSION; saveData(); hideAnnounce(); });
   announceClose.addEventListener('click', () => { hideAnnounce(); });
 
-  // ============ ★ 特別ギフトフレーム制御 ============
+ 
   function updateGiftVisibility() {
     if (giftVersion !== GIFT_VERSION && !giftClaimed) {
       showGift();
@@ -2966,7 +2950,7 @@
     hideGift();
   });
 
-  // ============ 情報モーダル表示 ============
+  
   function renderInfoContent() {
     let html = '';
     html += '<h3>🎪 イベント</h3>';
@@ -3005,7 +2989,7 @@
     markInfoAsRead();
   }
 
-  // ============ 実績システム ============
+ 
   function checkAchievements() {
     let newUnlocked = [];
     for (const [id, ach] of Object.entries(ACHIEVEMENTS)) {
@@ -3062,7 +3046,7 @@
     achievementList.innerHTML = html;
   }
 
-  // ============ 特殊モード ============
+
   function unlockAllAchievementsAndShop() {
     for (const [id] of Object.entries(ACHIEVEMENTS)) { if (!unlockedAchievements.includes(id)) unlockedAchievements.push(id); }
     for (const [id] of Object.entries(BG_SKINS)) { if (!ownedBg.includes(id)) ownedBg.push(id); }
@@ -3115,13 +3099,13 @@
     else { showPopup('🛋️ 野獣先輩の部屋は既に解放されています'); }
   }
 
-  // ============ 幻のどんぐりフォント適用 ============
+ 
   function updatePhantomFont() {
     if (equippedAcorn === 'phantom' || equippedAcorn === 'harvest_phantom') { document.body.classList.add('phantom-font'); }
     else { document.body.classList.remove('phantom-font'); }
   }
 
-  // ============ フォントカラー適用関数 ============
+
   function updateFontColor() {
     const skin = ACORN_SKINS[equippedAcorn];
     const fontColor = skin ? skin.fontColor : '#d2b48c';
@@ -3148,7 +3132,7 @@
     }
   }
 
-  // ============ フォントファミリー適用関数 ============
+  
   function applyFontFamily() {
     const skin = ACORN_SKINS[equippedAcorn];
     const fontFamily = skin ? skin.fontFamily : "'Zen Maru Gothic', sans-serif";
@@ -3170,7 +3154,7 @@
       .forEach(el => { if (el) el.style.fontFamily = fontFamily; });
   }
 
-  // ============ 表示設定 ============
+
   function updateDisplaySettings() {
     if (showRomaji) {
       romajiDisplayEl.classList.remove('hidden');
@@ -3212,7 +3196,7 @@
     updateSeToggleUI();
   }
 
-  // ============ 効果音トグルUI更新 ============
+
   function updateSeToggleUI() {
     const toggles = [
       { btn: toggleSeTyped, enabled: seTypedEnabled, label: 'タイプ音' },
@@ -3236,7 +3220,7 @@
     }
   }
 
-  // ============ 破片形状ボタン ============
+
   document.querySelectorAll('.shape-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const shape = btn.dataset.shape;
@@ -3256,7 +3240,7 @@
     });
   });
 
-  // ============ 背景描画システム ============
+
   function initForest() {
     forestCanvas.width = window.innerWidth; forestCanvas.height = window.innerHeight;
     trees = []; villageHouses = []; fireworks = [];
@@ -3462,7 +3446,7 @@
     requestAnimationFrame(drawForest);
   }
 
-  // ============ どんぐり形状描画 ============
+
   function getAcornStyle(skin) {
     const styles = {
       'default': { cap: '#654321', nut: '#a07346', glow: null, particleColors: ['#654321','#a07346','#8B6B3D'] },
@@ -3488,7 +3472,7 @@
       'harvest_phantom': { cap: '#4a1a6a', nut: '#8a4aaa', glow: 'rgba(155,89,182,0.7)', particleColors: ['#8a4aaa','#bb66dd','#6a2a8a','#dd88ff'] },
       'harvest_cosmic': { cap: '#1a0a3a', nut: '#4a1a6a', glow: 'rgba(74,26,106,0.6)', particleColors: ['#4a1a6a','#8a3aaa','#1a0a3a','#aa6acc'] },
       'harvest_star': { cap: '#b8860b', nut: '#ffd700', glow: 'rgba(255,215,0,0.5)', particleColors: ['#ffd700','#ffec8b','#fff8dc'] },
-    // ... 既存 ...
+  
     'new_moon': { cap: '#5c6bc0', nut: '#e0e0ff', glow: 'rgba(224,224,255,0.5)', particleColors: ['#e0e0ff','#c5cae9','#9fa8da'] },
     'new_sun': { cap: '#e65100', nut: '#ffb300', glow: 'rgba(255,179,0,0.6)', particleColors: ['#ffb300','#ffca28','#ffe082'] },
     'new_sakura': { cap: '#c2185b', nut: '#ffb7c5', glow: 'rgba(255,183,197,0.5)', particleColors: ['#ffb7c5','#f8bbd0','#fce4ec'] },
@@ -3841,7 +3825,7 @@
     ctx.restore();
   }
 
-  // ============ パーティクル・エフェクト ============
+
   function createSpecialParticles(x, y, skin) {
     const style = getAcornStyle(skin);
     const colors = style.particleColors;
@@ -4033,7 +4017,7 @@
   }
   function stopAcornAutoSpawn() { if(acornSpawnTimer) { clearInterval(acornSpawnTimer); acornSpawnTimer = null; } }
 
-  // ============ タイピングシステム ============
+ 
   function getRomajiChoices(char, isLast) {
     const map = {
       "あ":["a"],"い":["i"],"う":["u","wu"],"え":["e"],"お":["o"],
@@ -4227,7 +4211,7 @@
     }
   }
 
-  // ===== コード認証 =====
+ 
   function verifyCode(input) {
     if (input === '67') return 'rainbow';
     const inputHash = hashPassword(input);
@@ -4327,7 +4311,7 @@
       if (superMode) addScore = 500;
       score += addScore;
       gameTotalTyped++;
-      // ★ 育成用水やりカウント
+     
       treeDailyWater += 1;
       saveData();
       checkMilestone();
@@ -4367,7 +4351,7 @@
     }
   }
 
-  // ============ UI更新 ============
+
   function updateTotalTypedDisplay() { totalTypedDisplayEl.textContent = '入力:' + totalTyped + '字'; }
 
   function updateShopUI() {
@@ -4393,7 +4377,7 @@
         </button>
       </div>`;
     }
-    // ★ 収穫限定背景
+  
     for(const [id, skin] of Object.entries(HARVEST_BG_SKINS)) {
       const owned = ownedBg.includes(id), equipped = equippedBg === id;
       if (!owned) continue;
@@ -4454,7 +4438,7 @@
     }
   }
 
-  // ============ 設定関連 ============
+ 
   function updateSettingsUI() {
     soundTypedInput.value = soundTyped;
     soundMissInput.value = soundMiss;
@@ -4520,7 +4504,7 @@
     codeInput.value = '';
   }
 
-  // ============ ファイル保存 / ロード ============
+
   function saveDataToFile() {
     const data = {
       highscore, totalTyped, coins, useKanji, equippedBg, equippedAcorn, ownedBg, ownedAcorn,
@@ -4596,7 +4580,7 @@
         giftVersion = data.giftVersion ?? giftVersion;
         giftClaimed = data.giftClaimed ?? giftClaimed;
         giftClaimedDate = data.giftClaimedDate ?? giftClaimedDate;
-        // ★ 育成データ
+      
         treePlanted = data.treePlanted ?? treePlanted;
         treePhase = data.treePhase ?? treePhase;
         treeDailyWater = data.treeDailyWater ?? treeDailyWater;
@@ -4605,14 +4589,14 @@
         treePlantedDate = data.treePlantedDate ?? treePlantedDate;
         treeHarvested = data.treeHarvested ?? treeHarvested;
         treeLastGrowthDate = data.treeLastGrowthDate ?? treeLastGrowthDate;
-        // ★ 収穫報酬
+       
         harvestCount = data.harvestCount ?? harvestCount;
         rewardSkinCount = data.rewardSkinCount ?? rewardSkinCount;
         rewardBgCount = data.rewardBgCount ?? rewardBgCount;
         rewardRareCount = data.rewardRareCount ?? rewardRareCount;
         lastHarvestDate = data.lastHarvestDate ?? lastHarvestDate;
 
-        // 再適用
+       
         highscoreValueEl.textContent = highscore;
         updateTotalTypedDisplay();
         settingDisplayBtn.textContent = useKanji ? "漢字" : "ひらがな";
@@ -4639,7 +4623,7 @@
     reader.readAsText(file);
   }
 
-  // ============ 育成システム ============
+ 
   function todayStr() {
     const d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
@@ -4677,7 +4661,7 @@
     }
   }
 
-  // ★ 収穫処理
+
   function harvestAcorn() {
     if (!treePlanted || treePhase < 6) return;
     if (treeHarvested) return;
@@ -4685,14 +4669,14 @@
     harvestCount++;
     lastHarvestDate = todayStr();
 
-    // 報酬抽選
+    
     const rewards = [];
     const allAcornIds = Object.keys(ACORN_SKINS).filter(id => !ownedAcorn.includes(id));
     const allBgIds = Object.keys(BG_SKINS).filter(id => !ownedBg.includes(id) && id !== 'beast_room');
     const harvestBgIds = Object.keys(HARVEST_BG_SKINS).filter(id => !ownedBg.includes(id));
     const harvestAcornIds = Object.keys(ACORN_SKINS).filter(id => id.startsWith('harvest_') && !ownedAcorn.includes(id));
 
-    // レア度判定
+   
     const roll = Math.random();
     let rewardCount = 1;
     if (roll < 0.05) rewardCount = 3; // 5%で3個
@@ -4700,9 +4684,9 @@
 
     for (let i = 0; i < rewardCount; i++) {
       const r = Math.random();
-      // レア報酬判定
+      
       if (r < 0.1) {
-        // レア: 収穫限定スキン or 背景
+        
         const rarePool = [...harvestAcornIds, ...harvestBgIds];
         if (rarePool.length > 0) {
           const pick = rarePool[Math.floor(Math.random() * rarePool.length)];
@@ -4729,7 +4713,7 @@
           rewardBgCount++;
         }
       } else if (r < 0.4) {
-        // 背景
+    
         const pool = allBgIds.length > 0 ? allBgIds : harvestBgIds;
         if (pool.length > 0) {
           const pick = pool[Math.floor(Math.random() * pool.length)];
@@ -4745,7 +4729,7 @@
           }
         }
       } else {
-        // どんぐりスキン
+        
         const pool = allAcornIds.length > 0 ? allAcornIds : harvestAcornIds;
         if (pool.length > 0) {
           const pick = pool[Math.floor(Math.random() * pool.length)];
@@ -4758,9 +4742,8 @@
       }
     }
 
-    // 報酬が何もない場合のフォールバック
     if (rewards.length === 0) {
-      // コインやスコアボーナス
+      
       coins += 100;
       rewards.push({ type: 'coin', id: 'coin', name: 'どんぐりコイン ×100', icon: '🪙', rare: false });
     }
@@ -4770,7 +4753,7 @@
     updateAchievementUI();
     checkAchievements();
 
-    // ポップアップ表示
+   
     showRewardPopup(rewards);
   }
 
@@ -4793,7 +4776,7 @@
     rewardPopup.classList.remove('show');
   });
 
-  // ============ 育成UI描画 ============
+ 
   function renderTreeUI() {
     resetDailyWaterIfNeeded();
     updateTreeGrowth();
@@ -4829,7 +4812,7 @@
     }
     treePlant.innerHTML = plantHtml;
 
-    // 実りフェーズならどんぐりをタップ可能に
+   
     const fruitEl = document.getElementById('tree-fruit');
     if (fruitEl && treePhase >= 6 && !treeHarvested) {
       fruitEl.style.cursor = 'pointer';
@@ -4931,7 +4914,7 @@
     treeOverlay.classList.add('active');
   }
 
-  // ============ イベントリスナー ============
+ 
   document.getElementById('info-open-btn').addEventListener('click', (e) => { e.stopPropagation(); openInfoModal(); });
   document.getElementById('info-close-btn').addEventListener('click', () => { infoOverlay.classList.remove('active'); });
   infoOverlay.addEventListener('click', (e) => { if(e.target === infoOverlay) infoOverlay.classList.remove('active'); });
@@ -5130,7 +5113,7 @@
     }
   });
 
-  // ============ 音声復元 ============
+
   async function restoreSavedSounds() {
     const types = ['typed','miss','start','result','bgm'];
     for (const type of types) {
@@ -5164,7 +5147,7 @@
     }
   }
 
-  // ============ 初期化 ============
+ 
   function init() {
     const data = loadData();
     highscore = data.highscore; totalTyped = data.totalTyped; coins = data.coins || 0;
@@ -5277,18 +5260,13 @@
   token: 'mPgVLVub61o0rbhD',
   baseUrl: 'https://udify.app',
   inputs: {
-    // You can define the inputs from the Start node here
-    // key is the variable name
-    // e.g.
-    // name: "NAME"
+
   },
   systemVariables: {
-    // user_id: 'YOU CAN DEFINE USER ID HERE',
-    // conversation_id: 'YOU CAN DEFINE CONVERSATION ID HERE, IT MUST BE A VALID UUID',
+ 
   },
   userVariables: {
-    // avatar_url: 'YOU CAN DEFINE USER AVATAR URL HERE',
-    // name: 'YOU CAN DEFINE USER NAME HERE',
+
   },
  }
 </script>
