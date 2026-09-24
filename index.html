@@ -2702,7 +2702,7 @@
     { kana: "みみをすましてきく", kanji: "耳を澄まして聞く" },
     { kana: "むしをみつけてかんさつする", kanji: "虫を見つけて観察する" },
     { kana: "めをこらしてよむ", kanji: "目を凝らして読む" },
-    { kana: "もりであるいてきのうをたのしむ", kanji: "森を歩いて木の実を楽しむ" },
+    { kana: "もりをあるいてたのしむ", kanji: "森を歩いて木の実を楽しむ" },
     { kana: "やおやでくだものをかう", kanji: "八百屋で果物を買う" },
     { kana: "やまではいきんぐをする", kanji: "山でハイキングをする" },
     { kana: "ゆきのひはゆっくりやすむ", kanji: "雪の日はゆっくり休む" },
@@ -2711,7 +2711,7 @@
     { kana: "ろうそくをふいてけす", kanji: "蝋燭を吹いて消す" },
     { kana: "わかるまでなんどもきく", kanji: "分かるまで何度も聞く" },
     { kana: "あいさつをしてきもちよくすごす", kanji: "挨拶をして気持ちよく過ごす" },
-    { kana: "あきかんをあつめてリサイクル", kanji: "空き缶を集めてリサイクル" },
+    { kana: "あきかんをあつめてりさいくる", kanji: "空き缶を集めてリサイクル" },
     { kana: "いえのまわりをそうじする", kanji: "家の周りを掃除する" },
     { kana: "いぬのさんぽについてあるく", kanji: "犬の散歩について歩く" },
     { kana: "うみべをあるいてかぜをかんじる", kanji: "海辺を歩いて風を感じる" },
@@ -3432,11 +3432,8 @@
 
  
   function updateGiftVisibility() {
-    if (giftVersion !== GIFT_VERSION && !giftClaimed) {
-      showGift();
-    } else {
-      hideGift();
-    }
+    // ギフトフレームは表示しない（全ユーザー）
+    hideGift();
   }
   function showGift() {
     giftFrame.classList.remove('hidden');
